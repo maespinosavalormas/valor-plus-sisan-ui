@@ -1,0 +1,406 @@
+<div class="form-header">
+  <h2 mat-dialog-title class="form-title">
+    {{ data.isEdit ? 'Editar Datos de Notificación' : 'Datos de Notificación' }}
+  </h2>
+
+  <button mat-icon-button class="close-button" (click)="cancelForm()">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+<form [formGroup]="form" mat-dialog-content>
+  <div class="form-grid">
+    <div class="field">
+      <label class="field-label">Fuente de notificación<span class="req">*</span></label>
+
+      <select class="control control-select" formControlName="notificationSourceCode">
+        <option value="">Seleccione fuente</option>
+
+        <option *ngFor="let source of notificationSources$ | async" [value]="source.code">
+          {{ source.name }}
+        </option>
+      </select>
+
+      <div
+        class="field-error"
+        *ngIf="
+          form.get('notificationSourceCode')?.touched &&
+          form.get('notificationSourceCode')?.hasError('required')
+        "
+      >
+        Campo obligatorio
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">País<span class="req">*</span></label>
+      <mat-select
+        class="filter-select"
+        panelClass="evento-select-panel"
+        [formControl]="countryCtrl"
+        placeholder="Seleccione país"
+        disableOptionCentering>
+        <mat-option>
+          <ngx-mat-select-search
+            [formControl]="countryFilterCtrl"
+            placeholderLabel="Buscar país..."
+            noEntriesFoundLabel="No encontrado">
+          </ngx-mat-select-search>
+        </mat-option>
+        <mat-option *ngFor="let pais of filteredCountries" [value]="pais">
+          {{ pais.name }}
+        </mat-option>
+      </mat-select>
+      <div
+        class="field-error"
+        *ngIf="form.get('countryCode')?.touched && form.get('countryCode')?.hasError('required')"
+      >
+        Campo obligatorio
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Departamento<span class="req">*</span></label>
+      <mat-select
+        class="filter-select"
+        panelClass="evento-select-panel"
+        [formControl]="provinceCtrl"
+        placeholder="Seleccione departamento"
+        disableOptionCentering>
+        <mat-option>
+          <ngx-mat-select-search
+            [formControl]="provinceFilterCtrl"
+            placeholderLabel="Buscar departamento..."
+            noEntriesFoundLabel="No encontrado">
+          </ngx-mat-select-search>
+        </mat-option>
+        <mat-option *ngFor="let depto of filteredProvinces" [value]="depto">
+          {{ depto.name }}
+        </mat-option>
+      </mat-select>
+      <div
+        class="field-error"
+        *ngIf="form.get('provinceCode')?.touched && form.get('provinceCode')?.hasError('required')"
+      >
+        Campo obligatorio
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Municipio<span class="req">*</span></label>
+      <mat-select
+        class="filter-select"
+        panelClass="evento-select-panel"
+        [formControl]="cityCtrl"
+        placeholder="Seleccione municipio"
+        disableOptionCentering>
+        <mat-option>
+          <ngx-mat-select-search
+            [formControl]="cityFilterCtrl"
+            placeholderLabel="Buscar municipio..."
+            noEntriesFoundLabel="No encontrado">
+          </ngx-mat-select-search>
+        </mat-option>
+        <mat-option *ngFor="let ciudad of filteredCities" [value]="ciudad">
+          {{ ciudad.name }}
+        </mat-option>
+      </mat-select>
+      <div
+        class="field-error"
+        *ngIf="form.get('cityCode')?.touched && form.get('cityCode')?.hasError('required')"
+      >
+        Campo obligatorio
+      </div>
+    </div>
+
+    <!-- FULL WIDTH -->
+
+    <div class="field">
+      <label class="field-label">Dirección de residencia<span class="req">*</span></label>
+
+      <input
+        class="control"
+        type="text"
+        formControlName="address"
+        placeholder="Ingrese dirección de residencia"
+        maxlength="20"
+        autocomplete="off"
+      />
+
+      <div
+        class="field-error"
+        *ngIf="form.get('address')?.touched && form.get('address')?.hasError('required')"
+      >
+        Campo obligatorio
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Fecha de consulta<span class="req">*</span></label>
+
+      <input class="control" type="date" formControlName="consultationDate" autocomplete="off" />
+
+      <div
+        class="field-error"
+        *ngIf="
+          form.get('consultationDate')?.touched &&
+          form.get('consultationDate')?.hasError('required')
+        "
+      >
+        Campo obligatorio
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Fecha de inicio síntomas<span class="req">*</span></label>
+
+      <input class="control" type="date" formControlName="initialSymptomsDate" autocomplete="off" />
+
+      <div
+        class="field-error"
+        *ngIf="
+          form.get('initialSymptomsDate')?.touched &&
+          form.get('initialSymptomsDate')?.hasError('required')
+        "
+      >
+        Campo obligatorio
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Clasificación inicial del caso<span class="req">*</span></label>
+
+      <select class="control control-select" formControlName="initialClasificationCode">
+        <option value="">Seleccione clasificación</option>
+
+        <option
+          *ngFor="let classification of initialClassifications$ | async"
+          [value]="classification.code"
+        >
+          {{ classification.name }}
+        </option>
+      </select>
+
+      <div
+        class="field-error"
+        *ngIf="
+          form.get('initialClasificationCode')?.touched &&
+          form.get('initialClasificationCode')?.hasError('required')
+        "
+      >
+        Campo obligatorio
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Hospitalizado<span class="req">*</span></label>
+
+      <select class="control control-select" formControlName="hospitalizedCode">
+        <option value="">Seleccione</option>
+
+        <option value="1">Sí</option>
+
+        <option value="2">No</option>
+      </select>
+
+      <div
+        class="field-error"
+        *ngIf="
+          form.get('hospitalizedCode')?.touched &&
+          form.get('hospitalizedCode')?.hasError('required')
+        "
+      >
+        Campo obligatorio
+      </div>
+    </div>
+
+    <div class="field" *ngIf="form.get('hospitalizedCode')?.value === '1'">
+      <label class="field-label">Fecha de hospitalización<span class="req">*</span></label>
+
+      <input class="control" type="date" formControlName="hospitalizedDate" autocomplete="off" />
+
+      <div
+        class="field-error"
+        *ngIf="
+          form.get('hospitalizedDate')?.touched &&
+          form.get('hospitalizedDate')?.hasError('required')
+        "
+      >
+        Campo obligatorio
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Condición final<span class="req">*</span></label>
+
+      <select class="control control-select" formControlName="finalConditionCode">
+        <option value="">Seleccione condición</option>
+
+        <option *ngFor="let condition of finalConditions$ | async" [value]="condition.code">
+          {{ condition.name }}
+        </option>
+      </select>
+
+      <div
+        class="field-error"
+        *ngIf="
+          form.get('finalConditionCode')?.touched &&
+          form.get('finalConditionCode')?.hasError('required')
+        "
+      >
+        Campo obligatorio
+      </div>
+    </div>
+
+    <!-- Campos de defunción condicionales -->
+
+    <div
+      class="field"
+      *ngIf="
+        form.get('finalConditionCode')?.value === '2' ||
+        form.get('finalConditionCode')?.value === '3'
+      "
+    >
+      <label class="field-label">Fecha de defunción<span class="req">*</span></label>
+
+      <input class="control" type="date" formControlName="deathDate" autocomplete="off" />
+
+      <div
+        class="field-error"
+        *ngIf="form.get('deathDate')?.touched && form.get('deathDate')?.hasError('required')"
+      >
+        Campo obligatorio
+      </div>
+    </div>
+
+    <div
+      class="field"
+      *ngIf="
+        form.get('finalConditionCode')?.value === '2' ||
+        form.get('finalConditionCode')?.value === '3'
+      "
+    >
+      <label class="field-label">Número de certificado defunción<span class="req">*</span></label>
+
+      <input
+        class="control"
+        type="text"
+        formControlName="deathCertificateNumber"
+        placeholder="Ingrese número certificado"
+        maxlength="20"
+        autocomplete="off"
+      />
+
+      <div
+        class="field-error"
+        *ngIf="
+          form.get('deathCertificateNumber')?.touched &&
+          form.get('deathCertificateNumber')?.hasError('required')
+        "
+      >
+        Campo obligatorio
+      </div>
+    </div>
+
+    <div
+      class="field"
+      *ngIf="
+        form.get('finalConditionCode')?.value === '2' ||
+        form.get('finalConditionCode')?.value === '3'
+      "
+    >
+      <label class="field-label">Causa de muerte<span class="req">*</span></label>
+      <mat-select
+        class="filter-select"
+        panelClass="evento-select-panel"
+        [formControl]="deathCauseCtrl"
+        placeholder="Seleccione causa"
+        disableOptionCentering>
+        <mat-option>
+          <ngx-mat-select-search
+            [formControl]="deathCauseFilterCtrl"
+            placeholderLabel="Buscar causa..."
+            noEntriesFoundLabel="No encontrado">
+          </ngx-mat-select-search>
+        </mat-option>
+        <mat-option *ngFor="let causa of filteredDeathCauses" [value]="causa">
+          {{ causa.name }}
+        </mat-option>
+      </mat-select>
+      <div
+        class="field-error"
+        *ngIf="
+          form.get('deathCauseCode')?.touched && form.get('deathCauseCode')?.hasError('required')
+        "
+      >
+        Campo obligatorio
+      </div>
+    </div>
+
+    <!-- FULL WIDTH -->
+
+    <div class="field">
+      <label class="field-label"
+        >Nombre del profesional que diligenció la ficha<span class="req">*</span></label
+      >
+
+      <input
+        class="control"
+        type="text"
+        formControlName="professionalName"
+        placeholder="Ingrese nombre del profesional"
+        maxlength="100"
+        autocomplete="off"
+      />
+
+      <div
+        class="field-error"
+        *ngIf="
+          form.get('professionalName')?.touched &&
+          form.get('professionalName')?.hasError('required')
+        "
+      >
+        Campo obligatorio
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Teléfono del profesional<span class="req">*</span></label>
+
+      <input
+        class="control"
+        type="text"
+        formControlName="professionalPhoneNumber"
+        placeholder="Ingrese teléfono del profesional"
+        maxlength="20"
+        autocomplete="off"
+      />
+
+      <div
+        class="field-error"
+        *ngIf="
+          form.get('professionalPhoneNumber')?.touched &&
+          form.get('professionalPhoneNumber')?.hasError('required')
+        "
+      >
+        Campo obligatorio
+      </div>
+    </div>
+  </div>
+</form>
+
+<div class="step-counter">{{ currentStep }}/{{ totalSteps }}</div>
+
+<mat-dialog-actions align="end" class="dialog-actions">
+  <button mat-button class="btn-cancel" type="button" (click)="goBack()">Anterior</button>
+
+  <button
+    mat-flat-button
+    class="btn-guardar"
+    type="button"
+    (click)="saveForm()"
+    [disabled]="form.invalid"
+  >
+    {{ isLastStep ? 'Guardar' : 'Siguiente' }}
+  </button>
+</mat-dialog-actions>

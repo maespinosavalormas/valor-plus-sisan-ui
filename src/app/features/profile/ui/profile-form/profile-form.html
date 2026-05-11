@@ -1,0 +1,179 @@
+<form [formGroup]="form" class="form-grid">
+  <!-- Fila 1: Primer Nombre | Tipo de Identificación -->
+  <div class="field">
+    <label class="field-label">Primer Nombre<span class="req">*</span></label>
+    <div class="input-with-icon">
+      <input class="control" [class.editable]="isFieldEditable('firstName')" type="text" formControlName="firstName" placeholder="Ingrese su primer nombre" autocomplete="off" />
+      <button type="button" class="edit-icon" (click)="toggleEdit('firstName')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="field">
+    <label class="field-label">Tipo de Identificacion<span class="req">*</span></label>
+    <div class="select-wrapper">
+      <select class="control control-select" formControlName="identificationTypeId">
+        <option *ngFor="let t of identificationTypes" [value]="t.id">{{ t.name }}</option>
+      </select>
+      <span class="select-arrow">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </span>
+    </div>
+  </div>
+
+  <!-- Fila 2: Segundo Nombre | Número de Identificación -->
+  <div class="field">
+    <label class="field-label">Segundo Nombre</label>
+    <div class="input-with-icon">
+      <input class="control" [class.editable]="isFieldEditable('secondName')" type="text" formControlName="secondName" placeholder="Ingrese su segundo nombre" autocomplete="off" />
+      <button type="button" class="edit-icon" (click)="toggleEdit('secondName')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="field">
+    <label class="field-label">Numero de Identificacion<span class="req">*</span></label>
+    <div class="input-with-icon">
+      <input class="control" [class.editable]="isFieldEditable('idNumber')" type="text" formControlName="idNumber" placeholder="Ingrese su numero de identificacion" autocomplete="off" />
+      <button type="button" class="edit-icon" (click)="toggleEdit('idNumber')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Fila 3: Primer Apellido | Teléfono -->
+  <div class="field">
+    <label class="field-label">Primer Apellido<span class="req">*</span></label>
+    <div class="input-with-icon">
+      <input class="control" [class.editable]="isFieldEditable('firstLastName')" type="text" formControlName="firstLastName" placeholder="Ingrese su primer apellido" autocomplete="off" />
+      <button type="button" class="edit-icon" (click)="toggleEdit('firstLastName')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="field">
+    <label class="field-label">Telefono<span class="req">*</span></label>
+    <div class="input-with-icon">
+      <input class="control" [class.editable]="isFieldEditable('phone')" type="tel" formControlName="phone" placeholder="Ingrese su numero de telefono" autocomplete="off" />
+      <button type="button" class="edit-icon" (click)="toggleEdit('phone')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Fila 4: Segundo Apellido | Dirección de Residencia -->
+  <div class="field">
+    <label class="field-label">Segundo Apellido</label>
+    <div class="input-with-icon">
+      <input class="control" [class.editable]="isFieldEditable('secondLastName')" type="text" formControlName="secondLastName" placeholder="Ingrese su segundo apellido" autocomplete="off" />
+      <button type="button" class="edit-icon" (click)="toggleEdit('secondLastName')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="field">
+    <label class="field-label">Direccion de Residencia<span class="req">*</span></label>
+    <div class="input-with-icon">
+      <input class="control" [class.editable]="isFieldEditable('address')" type="text" formControlName="address" placeholder="Ingrese su direccion de residencia" autocomplete="off" />
+      <button type="button" class="edit-icon" (click)="toggleEdit('address')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Fila 5: Correo Electrónico | Fecha de Nacimiento -->
+  <div class="field">
+    <label class="field-label">Correo Electronico<span class="req">*</span></label>
+    <div class="input-with-icon">
+      <input class="control" [class.editable]="isFieldEditable('email')" type="email" formControlName="email" placeholder="tucorreo@sitio.com" autocomplete="off" />
+      <button type="button" class="edit-icon" (click)="toggleEdit('email')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="field">
+    <label class="field-label">Fecha de nacimiento<span class="req">*</span></label>
+    <div class="control-icon-wrap">
+      <input class="control control-icon-input" type="date" formControlName="birthDate" autocomplete="off" />
+      <span class="control-icon"></span>
+    </div>
+  </div>
+
+  <!-- Fila 6: Departamento y Municipio (ocupan columna izquierda) -->
+  <div class="field-row-dept">
+    <div class="field">
+      <label class="field-label">Departamento<span class="req">*</span></label>
+      <div class="select-wrapper">
+        <select class="control control-select" formControlName="department">
+          <option *ngFor="let d of departments" [value]="d">{{ d }}</option>
+        </select>
+        <span class="select-arrow">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </span>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Municipio<span class="req">*</span></label>
+      <div class="select-wrapper">
+        <select class="control control-select" formControlName="municipality">
+          <option *ngFor="let m of municipalities" [value]="m">{{ m }}</option>
+        </select>
+        <span class="select-arrow">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fila 7: Espacio vacío | Rol -->
+  <div class="field-empty"></div>
+
+  <div class="field field-rol">
+    <label class="field-label">Rol<span class="req">*</span></label>
+    <div class="select-wrapper">
+      <select class="control control-select" formControlName="role">
+        <option *ngFor="let r of roles" [value]="r">{{ r }}</option>
+      </select>
+      <span class="select-arrow">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </span>
+    </div>
+  </div>
+</form>
+
+<div class="dialog-actions">
+  <button mat-button class="btn-cancel" type="button" (click)="showCancelConfirmation()">Cancelar</button>
+  <button mat-flat-button class="btn-guardar" type="button" (click)="showSaveConfirmation()" [disabled]="form.invalid">
+    Confirmar
+  </button>
+</div>

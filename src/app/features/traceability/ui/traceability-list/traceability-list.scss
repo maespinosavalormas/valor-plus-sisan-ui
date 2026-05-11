@@ -1,0 +1,310 @@
+/* Tabla base - Estilos users-list */
+:host {
+  display: block;
+  background-color: var(--white);
+  border-radius: 8px;
+  overflow: hidden;
+  max-height: calc(100vh - 140px);
+  overflow-x: auto;
+  overflow-y: auto;
+}
+
+.mat-elevation-z8 {
+  box-shadow: none !important;
+  background: var(--blue-primary);
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 6px;
+  background-clip: padding-box;
+}
+
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 6px;
+  background-color: var(--white);
+}
+
+/* Header row - Estilos users-list */
+.mat-mdc-header-row {
+  background-color: var(--background-pages);
+  border-radius: 6px;
+  margin-bottom: 4px;
+  height: 32px;
+
+  &::after {
+    display: none;
+  }
+}
+
+/* Header cells - Estilos users-list */
+.mat-mdc-header-cell {
+  border-bottom: none !important;
+  color: var(--gray-tertiary);
+  font-weight: 400;
+  font-size: 12px;
+  padding: 0 6px;
+}
+
+.mat-mdc-header-cell:first-child {
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
+
+.mat-mdc-header-cell:last-child {
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+/* Estilo para las filas de datos - Estilos users-list */
+.mat-mdc-row {
+  background-color: var(--white);
+  border-radius: 6px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  margin-bottom: 4px;
+  transition: box-shadow 0.2s ease;
+  font-weight: 400;
+  height: 36px;
+  cursor: pointer;
+
+  &:hover {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  }
+}
+
+/* Celdas de datos - Estilos users-list */
+.mdc-data-table__cell {
+  padding: 2px 4px;
+  border-bottom: none;
+  font-size: 12px;
+}
+
+/* Eliminar borde inferior de la tabla - Estilos users-list */
+.mat-mdc-table {
+  background: transparent;
+
+  .mat-mdc-header-row {
+    border-bottom: none;
+  }
+}
+
+// User info container and avatar - Adaptado para trazabilidad
+.user-info-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.user-avatar-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: var(--blue-primary);
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 400;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.user-name {
+  font-weight: 500;
+  color: var(--strong-blue-primary);
+  font-size: 12px;
+}
+
+// Status badge styles - Adaptado para tipos de entidad
+.status-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 8px;
+  font-size: 10px;
+  font-weight: 400;
+  text-transform: uppercase;
+}
+
+.entity-type-program {
+  color: var(--strong-blue-secondary);
+}
+
+.entity-type-task {
+  color: var(--blue-secondary);
+}
+
+.entity-type-case {
+  color: var(--blue-primary);
+}
+
+.entity-type-user {
+  color: var(--black);
+}
+
+// Actions container - Adaptado para trazabilidad
+.actions-container {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 6px;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 2px 0;
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+    gap: 4px;
+  }
+}
+
+// Button base styles - Adaptado para trazabilidad
+.btn-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 6px;
+  border-radius: 8px !important;
+  min-width: 40px !important;
+  height: 26px !important;
+  font-size: 11px;
+  font-weight: 400 !important;
+  line-height: 1.1;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  color: var(--white) !important;
+  background-color: var(--blue-primary) !important;
+
+  mat-icon {
+    margin: 0 auto;
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+
+  @media (max-width: 600px) {
+    width: 100%;
+    min-width: 50px !important;
+    padding: 0 6px;
+    font-size: 10px;
+  }
+}
+
+// Estilos específicos para columnas de trazabilidad
+.action-cell {
+  .action-label {
+    font-weight: 500;
+    color: var(--strong-blue-primary);
+    background: rgba(0, 120, 255, 0.1);
+    padding: 2px 8px;
+    border-radius: 8px;
+    font-size: 10px;
+    display: inline-block;
+  }
+}
+
+.timestamp-cell {
+  .timestamp-value {
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    color: var(--strong-gray-primary);
+  }
+}
+
+.entity-cell {
+  .entity-value {
+    font-weight: 500;
+    color: var(--strong-blue-primary);
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
+  }
+}
+
+.user-cell {
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    .user-icon {
+      font-size: 16px;
+      color: var(--blue-primary);
+      background: rgba(0, 120, 255, 0.1);
+      padding: 2px;
+      border-radius: 50%;
+    }
+
+    .user-value {
+      font-weight: 500;
+      color: var(--strong-blue-primary);
+    }
+  }
+}
+
+.description-cell {
+  .description-value {
+    max-width: 250px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
+    line-height: 1.4;
+    color: var(--strong-blue-primary);
+  }
+}
+
+// No data state - Mantenido pero adaptado
+.no-trazabilidad {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--strong-gray-primary);
+
+  .no-data-icon {
+    font-size: 64px;
+    color: var(--gray-tertiary);
+    margin-bottom: 16px;
+    opacity: 0.6;
+  }
+
+  .no-data-text {
+    font-size: 14px;
+    font-weight: 500;
+  }
+}
+
+/* Responsive - Estilos users-list */
+@media (max-width: 600px) {
+  .mat-mdc-header-row {
+    height: 28px;
+  }
+
+  .mat-mdc-header-cell {
+    font-size: 10px;
+    padding: 0 4px;
+  }
+
+  .mat-mdc-row {
+    height: 32px;
+  }
+
+  .mdc-data-table__cell {
+    font-size: 10px;
+    padding: 2px 3px;
+  }
+
+  .action-cell .action-label {
+    font-size: 8px;
+    padding: 1px 4px;
+  }
+
+  .user-cell .user-info .user-icon {
+    font-size: 12px;
+  }
+
+  .entity-cell .entity-value,
+  .description-cell .description-value {
+    max-width: 120px;
+  }
+}

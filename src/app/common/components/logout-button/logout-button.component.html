@@ -1,0 +1,15 @@
+<button 
+  mat-button 
+  (click)="onLogout()" 
+  [disabled]="isLoggingOut"
+  class="logout-button">
+  
+  <mat-spinner *ngIf="isLoggingOut" diameter="20" class="logout-spinner"></mat-spinner>
+  
+  <span *ngIf="!isLoggingOut">
+    <mat-icon>logout</mat-icon>
+    <span class="logout-text">Cerrar sesión</span>
+  </span>
+  
+  <span *ngIf="isLoggingOut" class="logout-text">Cerrando sesión...</span>
+</button>

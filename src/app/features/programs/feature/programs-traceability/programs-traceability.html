@@ -1,0 +1,111 @@
+<!-- Header reutilizable -->
+<app-program-header
+  [program]="program"
+  [activeView]="'traceability'"
+  (backClicked)="goBack()"
+  (viewChanged)="onViewChange($event)">
+</app-program-header>
+
+<div class="traceability-container">
+  <div class="content-wrapper">
+  <mat-card class="traceability-header">
+    <mat-card-header>
+      <mat-card-title class="header-title">
+        Historial de Cambios del Programa
+      </mat-card-title>
+    </mat-card-header>
+    
+    <!-- Filters Section -->
+    <mat-card-content>
+      <!-- Sección de búsqueda y filtros -->
+      <div class="search-section">
+        <div class="search-container">
+          <mat-icon class="search-icon">search</mat-icon>
+          <input 
+            class="search-input" 
+            placeholder="Buscar por nombre, descripción o usuario..." 
+            (input)="onSearchChange($event.target.value)"
+            [value]="searchTerm">
+          <mat-icon 
+            class="clear-search" 
+            *ngIf="searchTerm"
+            (click)="clearSearch()">clear</mat-icon>
+        </div>
+
+        <div class="filter-container">
+          <select 
+            class="status-filter" 
+            (change)="onEntityTypeFilterChange($any($event).target.value)"
+            [value]="selectedEntityType">
+            <option value="all">Todos los tipos</option>
+            <option value="program">Programas</option>
+            <option value="task">Tareas</option>
+          </select>
+        </div>
+
+        <div class="filter-container">
+          <select 
+            class="status-filter" 
+            (change)="onActionFilterChange($any($event).target.value)"
+            [value]="selectedAction">
+            <option value="all">Todas las acciones</option>
+            <option value="created">Creado</option>
+            <option value="updated">Actualizado</option>
+            <option value="deleted">Eliminado</option>
+            <option value="status_changed">Cambio de Estado</option>
+            <option value="assigned">Asignado</option>
+            <option value="completed">Completado</option>
+          </select>
+        </div>
+
+        <button mat-raised-button 
+                color="primary" 
+                class="clear-btn"
+                (click)="clearFilters()"
+                *ngIf="traceabilityRecords.length > 0">
+          <mat-icon>clear_all</mat-icon>
+          Limpiar filtros
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Results Summary -->
+  <div class="results-summary" *ngIf="filteredRecords.length !== traceabilityRecords.length">
+    <span class="summary-text">
+      Mostrando {{ filteredRecords.length }} de {{ traceabilityRecords.length }} registros
+    </span>
+  </div>
+
+  <!-- Traceability Records Cards -->
+  <div class="trazability-list">
+    <div class="trazabilidad-item" *ngFor="let record of filteredRecords">
+      <div class="trazabilidad-tipo">
+        <span class="tipo-label">Tipo:</span>
+        <span class="tipo-value">{{ record.entityType === 'program' ? 'Programa' : 'Tarea' }}</span>
+      </div>
+      <div class="trazabilidad-accion">
+        <span class="accion-label">Acción:</span>
+        <span class="accion-value">{{ getActionText(record.action) }} del {{ record.entityType === 'program' ? 'programa' : 'tarea' }}</span>
+      </div>
+      <div class="trazabilidad-fecha">
+        <span class="fecha-label">Fecha:</span>
+        <span class="fecha-value">{{ record.timestamp | date:'dd/MM/yyyy HH:mm:ss' }}</span>
+      </div>
+      <div class="trazabilidad-usuario">
+        <span class="usuario-label">Usuario:</span>
+        <span class="usuario-value">{{ record.user }}</span>
+      </div>
+      <div class="trazabilidad-descripcion">
+        <span class="descripcion-label">Descripción:</span>
+        <span class="descripcion-value">{{ record.description }}</span>
+      </div>
+    </div>
+    
+    <div class="no-trazabilidad" *ngIf="filteredRecords.length === 0">
+      <mat-icon>history</mat-icon>
+      <span>No hay registros de trazabilidad para este programa</span>
+    </div>
+  </div>
+</div>
+</div>

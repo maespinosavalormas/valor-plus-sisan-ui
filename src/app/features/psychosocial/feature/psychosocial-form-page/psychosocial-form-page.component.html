@@ -1,0 +1,363 @@
+<div class="form-container">
+  <div class="form-header">
+    <div class="form-title">
+      <span>{{ title }}</span>
+    </div>
+    <button mat-icon-button class="close-button" (click)="onCancel()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <form [formGroup]="form" class="form-grid">
+    <!-- SECCION 1: Datos Generales -->
+    <h4 class="section-title">
+      <mat-icon>person</mat-icon>
+      Datos Generales
+    </h4>
+    <div class="field">
+      <span class="field-label req">Número de identificación del niña/niño:</span>
+      <input class="control" type="number" formControlName="numeroIdentificacionNino" placeholder="Ingrese número" required>
+    </div>
+    <div class="field">
+      <span class="field-label req">Tipo de identificación del niña/niño:</span>
+      <mat-select class="control" formControlName="tipoIdentificacionNino" placeholder="Seleccione" required>
+        <mat-option *ngFor="let tipo of tiposIdentificacion" [value]="tipo">{{ tipo }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Semana:</span>
+      <mat-select class="control" formControlName="semana" placeholder="Seleccione semana" required>
+        <mat-option *ngFor="let semana of semanas" [value]="semana">{{ semana }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Fecha Nacimiento del niña/niño:</span>
+      <input class="control" type="date" formControlName="fechaNacimientoNino" required>
+    </div>
+    <div class="field">
+      <span class="field-label req">Nombres del niña/niño:</span>
+      <input class="control" formControlName="nombresNino" placeholder="Ingrese nombres" required>
+    </div>
+    <div class="field">
+      <span class="field-label req">Género:</span>
+      <mat-select class="control" formControlName="genero" placeholder="Seleccione género" required>
+        <mat-option *ngFor="let genero of generos" [value]="genero">{{ genero }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Dirección de residencia:</span>
+      <input class="control" formControlName="direccionResidencia" placeholder="Ingrese dirección" required>
+    </div>
+    <div class="field">
+      <span class="field-label req">Teléfono:</span>
+      <input class="control" type="text" formControlName="telefono" placeholder="Ingrese teléfono" required>
+    </div>
+    <div class="field">
+      <span class="field-label">Teléfono 2:</span>
+      <input class="control" type="text" formControlName="telefono2" placeholder="Ingrese teléfono 2">
+    </div>
+    <div class="field">
+      <span class="field-label req">Municipio:</span>
+      <mat-select class="control" formControlName="municipio" placeholder="Seleccione municipio" required>
+        <mat-option *ngFor="let municipio of municipios" [value]="municipio">{{ municipio }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Subregión:</span>
+      <mat-select class="control" formControlName="subregion" placeholder="Seleccione subregión" required>
+        <mat-option *ngFor="let subregion of subregiones" [value]="subregion">{{ subregion }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Zona de residencia del niño o niña:</span>
+      <mat-select class="control" formControlName="zonaResidencia" placeholder="Seleccione zona" required>
+        <mat-option *ngFor="let zona of zonasResidencia" [value]="zona">{{ zona }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Barrio o Vereda:</span>
+      <mat-select class="control" formControlName="barrioVereda" placeholder="Seleccione barrio o vereda" required>
+        <mat-option *ngFor="let barrio of barriosVeredas" [value]="barrio">{{ barrio }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">¿Pertenece a población indígena?:</span>
+      <mat-select class="control" formControlName="pertenecePoblacionIndigena" placeholder="Seleccione" required>
+        <mat-option value="si">Sí</mat-option>
+        <mat-option value="no">No</mat-option>
+      </mat-select>
+    </div>
+    <div class="field" *ngIf="form.get('pertenecePoblacionIndigena')?.value === 'si'">
+      <span class="field-label req">Pueblo indígena:</span>
+      <mat-select class="control" formControlName="puebloIndigena" placeholder="Seleccione pueblo" required>
+        <mat-option *ngFor="let pueblo of pueblosIndigenas" [value]="pueblo">{{ pueblo }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field" *ngIf="form.get('puebloIndigena')?.value === 'Otro'">
+      <span class="field-label req">Otro pueblo. ¿Cuál?:</span>
+      <input class="control" formControlName="otroPueblo" placeholder="Ingrese otro pueblo" required>
+    </div>
+    <div class="field">
+      <span class="field-label req">Comunidad:</span>
+      <mat-select class="control" formControlName="comunidad" placeholder="Seleccione comunidad" required>
+        <mat-option *ngFor="let comunidad of comunidades" [value]="comunidad">{{ comunidad }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field" *ngIf="form.get('comunidad')?.value === 'Otro'">
+      <span class="field-label req">Otra Comunidad. ¿Cuál?:</span>
+      <input class="control" formControlName="otraComunidad" placeholder="Ingrese otra comunidad" required>
+    </div>
+    <div class="field full-width">
+      <span class="field-label req">Ubicación:</span>
+      <div
+        *ngIf="isBrowser"
+        class="map-container"
+        #mapContainer>
+      </div>
+      <div class="coordinates-display">
+        <strong>Coordenadas seleccionadas:</strong>
+        <div class="coordinates-row">
+          <div class="field inline-field coordinate-field">
+            <span class="field-label">Latitud:</span>
+            <input class="control" type="number" step="0.000001" formControlName="latitud" (blur)="onCoordinatesInput()" placeholder="No seleccionada">
+          </div>
+          <div class="field inline-field coordinate-field">
+            <span class="field-label">Longitud:</span>
+            <input class="control" type="number" step="0.000001" formControlName="longitud" (blur)="onCoordinatesInput()" placeholder="No seleccionada">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Coordenada X:</span>
+      <input class="control" formControlName="coordenadaX" placeholder="Campo calculado" readonly>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Coordenada Y:</span>
+      <input class="control" formControlName="coordenadaY" placeholder="Campo calculado" readonly>
+    </div>
+
+    <!-- SECCION 2: Datos de Asistencia Social -->
+    <h4 class="section-title">
+      <mat-icon>help</mat-icon>
+      Datos de Asistencia Social
+    </h4>
+    <div class="field">
+      <span class="field-label req">Etnia:</span>
+      <mat-select class="control" formControlName="etnia" placeholder="Seleccione etnia" required>
+        <mat-option *ngFor="let etnia of etnias" [value]="etnia">{{ etnia }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Grupo Poblacional (especificar pregunta hacia la niña o niño):</span>
+      <mat-select class="control" formControlName="grupoPoblacional" placeholder="Seleccione grupo" required>
+        <mat-option *ngFor="let grupo of gruposPoblacionales" [value]="grupo">{{ grupo }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field" *ngIf="form.get('grupoPoblacional')?.value === 'Otro'">
+      <span class="field-label req">Cuál otro grupo poblacional:</span>
+      <input class="control" formControlName="cualOtroGrupoPoblacional" placeholder="Ingrese otro grupo" required>
+    </div>
+    <div class="field">
+      <span class="field-label req">¿La niña o niño tiene alguna discapacidad?:</span>
+      <mat-select class="control" formControlName="tieneDiscapacidad" placeholder="Seleccione" required>
+        <mat-option value="si">Sí</mat-option>
+        <mat-option value="no">No</mat-option>
+      </mat-select>
+    </div>
+    <div class="field" *ngIf="form.get('tieneDiscapacidad')?.value === 'si'">
+      <span class="field-label req">¿La discapacidad es certificada?:</span>
+      <mat-select class="control" formControlName="discapacidadCertificada" placeholder="Seleccione" required>
+        <mat-option value="si">Sí</mat-option>
+        <mat-option value="no">No</mat-option>
+      </mat-select>
+    </div>
+    <div class="field" *ngIf="form.get('tieneDiscapacidad')?.value === 'si'">
+      <span class="field-label req">¿Tipo de discapacidad?:</span>
+      <mat-select class="control" formControlName="tipoDiscapacidad" placeholder="Seleccione tipo" required>
+        <mat-option *ngFor="let tipo of tiposDiscapacidad" [value]="tipo">{{ tipo }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">¿La niña o niño recibe atención integral en algún programa de atención nutricional?:</span>
+      <mat-select class="control" formControlName="recibeAtencionNutricional" placeholder="Seleccione" required>
+        <mat-option value="si">Sí</mat-option>
+        <mat-option value="no">No</mat-option>
+      </mat-select>
+    </div>
+    <div class="field" *ngIf="form.get('recibeAtencionNutricional')?.value === 'si'">
+      <span class="field-label req">¿Cuál es el programa?:</span>
+      <mat-select class="control" formControlName="cualPrograma" placeholder="Seleccione programa" required>
+        <mat-option *ngFor="let programa of programasNutricionales" [value]="programa">{{ programa }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field" *ngIf="form.get('cualPrograma')?.value === 'Otro'">
+      <span class="field-label req">Cuál?:</span>
+      <input class="control" formControlName="cualOtroPrograma" placeholder="Ingrese otro programa" required>
+    </div>
+    <div class="field">
+      <span class="field-label req">Régimen de salud:</span>
+      <mat-select class="control" formControlName="regimenSalud" placeholder="Seleccione régimen" required>
+        <mat-option *ngFor="let regimen of regimenesSalud" [value]="regimen">{{ regimen }}</mat-option>
+      </mat-select>
+    </div>
+
+    <!-- SECCION 3: Datos del hogar y el acudiente -->
+    <h4 class="section-title">
+      <mat-icon>home</mat-icon>
+      Datos del hogar y el acudiente
+    </h4>
+    <div class="field">
+      <span class="field-label req">Tipo de identificación del acudiente principal de la niña o niño:</span>
+      <mat-select class="control" formControlName="tipoIdentificacionAcudiente" placeholder="Seleccione tipo" required>
+        <mat-option *ngFor="let tipo of tiposIdentificacion" [value]="tipo">{{ tipo }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Número de identificación del acudiente:</span>
+      <input class="control" type="text" formControlName="numeroIdentificacionAcudiente" placeholder="Ingrese número" required>
+    </div>
+    <div class="field">
+      <span class="field-label req">Primer nombre del acudiente:</span>
+      <input class="control" formControlName="primerNombreAcudiente" placeholder="Ingrese primer nombre" required>
+    </div>
+    <div class="field">
+      <span class="field-label">Segundo nombre del acudiente:</span>
+      <input class="control" formControlName="segundoNombreAcudiente" placeholder="Ingrese segundo nombre">
+    </div>
+    <div class="field">
+      <span class="field-label req">Primer apellido del acudiente:</span>
+      <input class="control" formControlName="primerApellidoAcudiente" placeholder="Ingrese primer apellido" required>
+    </div>
+    <div class="field">
+      <span class="field-label">Segundo apellido del acudiente:</span>
+      <input class="control" formControlName="segundoApellidoAcudiente" placeholder="Ingrese segundo apellido">
+    </div>
+    <div class="field">
+      <span class="field-label req">Sexo:</span>
+      <mat-select class="control" formControlName="sexoAcudiente" placeholder="Seleccione sexo" required>
+        <mat-option *ngFor="let sexo of sexosAcudiente" [value]="sexo">{{ sexo }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Parentesco de la persona al cuidado del niña/niño:</span>
+      <mat-select class="control" formControlName="parentesco" placeholder="Seleccione parentesco" required>
+        <mat-option *ngFor="let parentesco of parentescos" [value]="parentesco">{{ parentesco }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Grado de escolaridad de la persona al cuidado del niña/niño:</span>
+      <mat-select class="control" formControlName="gradoEscolaridad" placeholder="Seleccione grado" required>
+        <mat-option *ngFor="let grado of gradosEscolaridad" [value]="grado">{{ grado }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Ocupación principal del cuidador principal:</span>
+      <mat-select class="control" formControlName="ocupacionPrincipal" placeholder="Seleccione ocupación" required>
+        <mat-option *ngFor="let ocupacion of ocupaciones" [value]="ocupacion">{{ ocupacion }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">¿El cuidador de la niña o niño tiene una Discapacidad?:</span>
+      <mat-select class="control" formControlName="cuidadorTieneDiscapacidad" placeholder="Seleccione" required>
+        <mat-option value="si">Sí</mat-option>
+        <mat-option value="no">No</mat-option>
+      </mat-select>
+    </div>
+    <div class="field" *ngIf="form.get('cuidadorTieneDiscapacidad')?.value === 'si'">
+      <span class="field-label req">Tipo de discapacidad:</span>
+      <mat-select class="control" formControlName="tipoDiscapacidadCuidador" placeholder="Seleccione tipo" required>
+        <mat-option *ngFor="let tipo of tiposDiscapacidad" [value]="tipo">{{ tipo }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Número de personas que conforman el hogar:</span>
+      <input class="control" type="number" formControlName="numeroPersonasHogar" placeholder="Ingrese número" required>
+    </div>
+    <div class="field">
+      <span class="field-label req">Número de niños menores de cinco años que habitan el hogar:</span>
+      <input class="control" type="number" formControlName="numeroNinosMenores5" placeholder="Ingrese número" required>
+    </div>
+    <div class="field">
+      <span class="field-label req">Ingresos mensuales de la familia:</span>
+      <mat-select class="control" formControlName="ingresosMensuales" placeholder="Seleccione ingresos" required>
+        <mat-option *ngFor="let ingreso of ingresosMensuales" [value]="ingreso">{{ ingreso }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">¿El hogar donde vive el niño(a) cuenta con energía eléctrica?:</span>
+      <mat-select class="control" formControlName="hogarEnergiaElectrica" placeholder="Seleccione" required>
+        <mat-option value="si">Sí</mat-option>
+        <mat-option value="no">No</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">¿El hogar donde vive el niño(a) cuenta con agua potable?:</span>
+      <mat-select class="control" formControlName="hogarAguaPotable" placeholder="Seleccione" required>
+        <mat-option value="si">Sí</mat-option>
+        <mat-option value="no">No</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">¿Con qué servicio sanitario cuenta el hogar donde vive el niño(a)?:</span>
+      <mat-select class="control" formControlName="servicioSanitario" placeholder="Seleccione servicio" required>
+        <mat-option *ngFor="let servicio of serviciosSanitarios" [value]="servicio">{{ servicio }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">¿Cómo se eliminan las basuras del hogar donde vive el niño(a)?:</span>
+      <mat-select class="control" formControlName="eliminacionBasuras" placeholder="Seleccione método" required>
+        <mat-option *ngFor="let metodo of eliminacionBasuras" [value]="metodo">{{ metodo }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">¿Qué tipo de combustible utilizan para cocinar en el hogar?:</span>
+      <mat-select class="control" formControlName="combustibleCocinar" placeholder="Seleccione combustible" required>
+        <mat-option *ngFor="let combustible of combustiblesCocinar" [value]="combustible">{{ combustible }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field full-width">
+      <span class="field-label req">Evolución Psicosocial (Diagnóstico, tratamiento, logros):</span>
+      <textarea class="control" formControlName="evolucionPsicosocial" placeholder="Ingrese evolución psicosocial" rows="4" required></textarea>
+    </div>
+
+    <!-- SECCION 4: Compromisos familiares -->
+    <h4 class="section-title">
+      <mat-icon>assignment</mat-icon>
+      Compromisos familiares
+    </h4>
+    <div class="field full-width">
+      <span class="field-label req">Compromisos adquiridos durante la atención por parte de la familia y el profesional:</span>
+      <textarea class="control" formControlName="compromisosFamiliares" placeholder="Ingrese compromisos" rows="4" required></textarea>
+    </div>
+    <div class="field full-width">
+      <span class="field-label autorizo">1. Yo, actuando en representación y con la autorización expresa de todos los miembros de mi hogar, incluyendo a menores y mayores de edad, autorizo a la GOBERNACIÓN DE ANTIOQUIA para que en cumplimiento a lo determinado en la Ley 1581 de 2012 (uso de los datos personales), en el marco de sus procesos de atención, actúe como responsable del tratamiento de los datos personales de los cuales somos titulares, realice la recolección, uso y tratamiento de nuestros datos, ya sea de forma conjunta o separada, conforme a la política de tratamiento de datos personales de la Gobernación de Antioquia, disponible en https://sedeelectronica.antioquia.gov.co/publicaciones/203/politica-para-el-tratamiento-de-datos-personales/:</span>
+      <mat-select class="control" formControlName="consentimientoDatos" placeholder="Seleccione" required>
+        <mat-option value="si">Sí</mat-option>
+        <mat-option value="no">No</mat-option>
+      </mat-select>
+    </div>
+    <div class="field full-width">
+      <span class="field-label autorizo">2. Asimismo, autorizo a la administración departamental para captar, tomar, almacenar, editar, divulgar y publicar imágenes, audios o datos de nuestra familia, o de alguno de sus integrantes, (incluyendo menores y mayores de edad), con fines estadísticos, académicos o para la promoción de los derechos de los niños, niñas, adolescentes y familias. Esto se realizará conforme a la política de tratamiento de datos personales de la Gobernación de Antioquia, y dando cumplimiento a lo dispuesto en la Ley 1581 de 2012.:</span>
+      <mat-select class="control" formControlName="consentimientoImagenes" placeholder="Seleccione" required>
+        <mat-option value="si">Sí</mat-option>
+        <mat-option value="no">No</mat-option>
+      </mat-select>
+    </div>
+    <div class="field full-width">
+      <span class="field-label req">Firma del cuidador:</span>
+      <div class="file-upload-container">
+        <input class="file-input" type="file" id="firmaCuidador" formControlName="firmaCuidador" accept=".pdf" (change)="onFileSelected($event, 'firmaCuidador')">
+        <label class="file-upload-label" for="firmaCuidador" [class.active]="selectedFiles['firmaCuidador']">
+          <mat-icon class="upload-icon">upload_file</mat-icon>
+          <span class="upload-text">{{ selectedFiles['firmaCuidador'] || 'Seleccionar archivo PDF de firma' }}</span>
+        </label>
+      </div>
+    </div>
+  </form>
+
+  <div class="actions">
+    <button mat-button class="btn-cancel" (click)="onCancel()">Cancelar</button>
+    <button mat-raised-button class="btn-guardar" (click)="onSave()" [disabled]="!form.valid">Guardar</button>
+  </div>
+</div>

@@ -1,0 +1,67 @@
+<div class="search-section">
+  <div class="search-container">
+    <mat-icon class="search-icon">search</mat-icon>
+    <input
+      type="text"
+      placeholder="Buscar beneficiarios PCD..."
+      class="search-input"
+      [(ngModel)]="searchTerm"
+      (input)="filterItems()"
+    >
+    <button
+      *ngIf="searchTerm"
+      class="clear-search"
+      (click)="clearSearch()"
+      mat-icon-button
+    >
+      <mat-icon>clear</mat-icon>
+    </button>
+  </div>
+
+<mat-divider></mat-divider>
+<table mat-table [dataSource]="filteredItems" class="mat-elevation-z8">
+  <ng-container matColumnDef="documento">
+    <th mat-header-cell *matHeaderCellDef>Documento</th>
+    <td mat-cell *matCellDef="let item">{{ item.documento }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="beneficiario">
+    <th mat-header-cell *matHeaderCellDef>Beneficiario</th>
+    <td mat-cell *matCellDef="let item">{{ item.beneficiario }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="municipio">
+    <th mat-header-cell *matHeaderCellDef>Municipio</th>
+    <td mat-cell *matCellDef="let item">{{ item.municipio }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="telefono">
+    <th mat-header-cell *matHeaderCellDef>Teléfono</th>
+    <td mat-cell *matCellDef="let item">{{ item.telefono }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="cuidador">
+    <th mat-header-cell *matHeaderCellDef>Cuidador</th>
+    <td mat-cell *matCellDef="let item">{{ item.cuidador }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef>Acciones</th>
+    <td mat-cell *matCellDef="let item">
+      <div class="actions-container">
+        <button mat-flat-button class="btn-view" (click)="viewItem(item); $event.stopPropagation()" matTooltip="Ver detalles">
+          <mat-icon>visibility</mat-icon>
+        </button>
+        <button mat-flat-button class="btn-editar" (click)="editItem(item); $event.stopPropagation()" matTooltip="Editar">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-flat-button class="btn-eliminar" (click)="deleteItem(item); $event.stopPropagation()" matTooltip="Eliminar">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+</table>

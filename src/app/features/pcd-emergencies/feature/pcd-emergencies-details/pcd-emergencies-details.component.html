@@ -1,0 +1,249 @@
+<div class="pcd-emergencies-details-page">
+  <!-- Header Component -->
+  <app-pcd-emergencies-details-header
+    [emergency]="emergency"
+    [showBackButton]="true"
+    [activeView]="currentView"
+    (backClicked)="onBack()"
+    (viewChanged)="onViewChange($event)"
+    (editClicked)="onEdit()">
+  </app-pcd-emergencies-details-header>
+
+  <!-- Información Detallada de la Emergencia PCD -->
+  <div class="emergency-info-content" *ngIf="currentView === 'details'">
+    <!-- Sección 1: Información del Funcionario -->
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon">
+          <mat-icon>badge</mat-icon>
+        </div>
+        <div class="section-title">
+          <h4>Información del Funcionario del Municipio</h4>
+        </div>
+      </div>
+      <div class="section-content">
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Región:</span>
+            <span class="info-value">{{ emergency?.regionFuncionario || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Municipio:</span>
+            <span class="info-value">{{ emergency?.municipioFuncionario || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Nombres y Apellidos:</span>
+            <span class="info-value">{{ emergency?.nombresApellidosFuncionario || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Tipo de Documento:</span>
+            <span class="info-value">{{ emergency?.tipoDocumentoFuncionario || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Número de Documento:</span>
+            <span class="info-value">{{ emergency?.numeroDocumentoFuncionario || 'N/A' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección 2: Datos del Beneficiario -->
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon">
+          <mat-icon>person</mat-icon>
+        </div>
+        <div class="section-title">
+          <h4>Datos del Beneficiario</h4>
+        </div>
+      </div>
+      <div class="section-content">
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Nombre Completo:</span>
+            <span class="info-value">{{ getFullBeneficiaryName() }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Tipo de Documento:</span>
+            <span class="info-value">{{ emergency?.tipoDocumentoBeneficiario || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Número de Documento:</span>
+            <span class="info-value">{{ emergency?.numeroDocumentoBeneficiario || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Género:</span>
+            <span class="info-value">{{ emergency?.genero || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Región:</span>
+            <span class="info-value">{{ emergency?.regionBeneficiario || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Municipio:</span>
+            <span class="info-value">{{ emergency?.municipioBeneficiario || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Dirección:</span>
+            <span class="info-value">{{ emergency?.direccionUbicacion || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Teléfono de Contacto:</span>
+            <span class="info-value">{{ formatPhone(emergency?.telefonoContactoBeneficiario) }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Teléfono Actual:</span>
+            <span class="info-value">{{ formatPhone(emergency?.telefonoActualBeneficiario) }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Contacto Telefónico:</span>
+            <span class="info-value">{{ emergency?.lograContactoTelefonico || 'N/A' }}</span>
+          </div>
+          <div class="info-item" *ngIf="emergency?.lograContactoTelefonico === 'No'">
+            <span class="info-label">Razón del No Contacto:</span>
+            <span class="info-value">{{ emergency?.razonNoContacto || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Vive aún en el municipio:</span>
+            <span class="info-value">{{ emergency?.viveAunMunicipio || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Conoce municipio actual:</span>
+            <span class="info-value">{{ emergency?.conoceMunicipioActual || 'N/A' }}</span>
+          </div>
+          <div class="info-item" *ngIf="emergency?.conoceMunicipioActual === 'Si'">
+            <span class="info-label">Subregión Actual:</span>
+            <span class="info-value">{{ emergency?.subregionActual || 'N/A' }}</span>
+          </div>
+          <div class="info-item" *ngIf="emergency?.conoceMunicipioActual === 'Si'">
+            <span class="info-label">Municipio Actual:</span>
+            <span class="info-value">{{ emergency?.municipioActual || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Distancia de residencia:</span>
+            <span class="info-value">{{ emergency?.distanciaResidencia || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Transporte a vivienda:</span>
+            <span class="info-value">{{ emergency?.transporteVivienda || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Cuidador permanente:</span>
+            <span class="info-value">{{ emergency?.cuidadorPermanente || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Paquete alimentario ICBF:</span>
+            <span class="info-value">{{ emergency?.icbfPaqueteAlimentario || 'N/A' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección 3: Datos del Cuidador -->
+    <div class="info-section" *ngIf="emergency?.cuidadorPermanente === 'Si'">
+      <div class="section-header">
+        <div class="section-icon">
+          <mat-icon>health_and_safety</mat-icon>
+        </div>
+        <div class="section-title">
+          <h4>Datos del Cuidador</h4>
+        </div>
+      </div>
+      <div class="section-content">
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Nombre Completo:</span>
+            <span class="info-value">{{ getFullCuidadorName() }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Tipo de Documento:</span>
+            <span class="info-value">{{ emergency?.tipoDocumentoCuidador || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Número de Documento:</span>
+            <span class="info-value">{{ emergency?.numeroDocumentoCuidador || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Teléfono Contacto 1:</span>
+            <span class="info-value">{{ formatPhone(emergency?.telefonoContacto1Cuidador) }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Teléfono Contacto 2:</span>
+            <span class="info-value">{{ formatPhone(emergency?.telefonoContacto2Cuidador) }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Tipo de Ubicación:</span>
+            <span class="info-value">{{ emergency?.tipoBarrioVereda || 'N/A' }}</span>
+          </div>
+          <div class="info-item" *ngIf="emergency?.tipoBarrioVereda === 'Barrio'">
+            <span class="info-label">Nombre del Barrio:</span>
+            <span class="info-value">{{ emergency?.nombreBarrio || 'N/A' }}</span>
+          </div>
+          <div class="info-item" *ngIf="emergency?.tipoBarrioVereda === 'Vereda'">
+            <span class="info-label">Vereda Seleccionada:</span>
+            <span class="info-value">{{ emergency?.veredaSeleccionada || 'N/A' }}</span>
+          </div>
+          <div class="info-item" *ngIf="emergency?.otraVereda">
+            <span class="info-label">Otra Vereda:</span>
+            <span class="info-value">{{ emergency?.otraVereda }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Dirección de Residencia:</span>
+            <span class="info-value">{{ emergency?.direccionResidenciaCuidador || 'N/A' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección 4: Consentimiento Informado -->
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon">
+          <mat-icon>verified_user</mat-icon>
+        </div>
+        <div class="section-title">
+          <h4>Consentimiento Informado</h4>
+        </div>
+      </div>
+      <div class="section-content">
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Autorización:</span>
+            <span class="info-value">{{ getAuthorizationLabel(emergency?.autoriza) }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección 5: Información de Auditoría -->
+    <div class="info-section" *ngIf="emergency?.createdAt || emergency?.updatedAt">
+      <div class="section-header">
+        <div class="section-icon">
+          <mat-icon>history</mat-icon>
+        </div>
+        <div class="section-title">
+          <h4>Información de Auditoría</h4>
+        </div>
+      </div>
+      <div class="section-content">
+        <div class="info-grid">
+          <div class="info-item" *ngIf="emergency?.createdAt">
+            <span class="info-label">Fecha de Creación:</span>
+            <span class="info-value">{{ formatDate(emergency?.createdAt) }}</span>
+          </div>
+          <div class="info-item" *ngIf="emergency?.updatedAt">
+            <span class="info-label">Última Actualización:</span>
+            <span class="info-value">{{ formatDate(emergency?.updatedAt) }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PCD Emergencies Traceability Component -->
+  <app-pcd-emergencies-traceability 
+    *ngIf="currentView === 'traceability'"
+    [emergency]="emergency"
+    (back)="onBack()">
+  </app-pcd-emergencies-traceability>
+</div>

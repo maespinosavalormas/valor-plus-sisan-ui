@@ -1,0 +1,216 @@
+  <!-- Header del programa -->
+<app-program-header
+    [program]="program"
+    [showBackButton]="true"
+    [activeView]="'schedule'"
+    (backClicked)="onBackClick()"
+    (viewChanged)="onViewChange($event)"
+></app-program-header>
+<div class="schedule-container">
+  <!-- Contenido principal -->
+  <div class="schedule-content">
+    <!-- Filtros -->
+    <div class="filters-section">
+      <mat-card class="filters-card">
+        <div class="filters-row">
+          <!-- Filtro de Estado -->
+          <div class="filter-container">
+            <select 
+              class="status-filter" 
+              (change)="onStatusFilterChange($any($event).target.value)"
+              [value]="selectedStatus">
+              <option value="">Todos</option>
+              <option value="completed">Completado</option>
+              <option value="in-progress">En Progreso</option>
+              <option value="pending">Pendiente</option>
+              <option value="delayed">Retrasado</option>
+            </select>
+          </div>
+
+          <!-- Filtro de Año -->
+          <div class="filter-container">
+            <select 
+              class="status-filter" 
+              (change)="onYearFilterChange($any($event).target.value)"
+              [value]="selectedYear">
+              <option value="all">Todos</option>
+              <option *ngFor="let year of years" [value]="year">{{ year }}</option>
+            </select>
+          </div>
+
+          <!-- Filtro de Mes -->
+          <div class="filter-container">
+            <select 
+              class="status-filter" 
+              (change)="onMonthFilterChange($any($event).target.value)"
+              [value]="selectedMonth">
+              <option value="all">Todos</option>
+              <option *ngFor="let month of months" [value]="month.value">{{ month.label }}</option>
+            </select>
+          </div>
+
+          <!-- Botón de Limpiar Filtros -->
+          <button mat-raised-button 
+            color="primary" 
+            class="clear-btn"
+            (click)="clearFilters()">
+            <mat-icon>clear_all</mat-icon>
+            Limpiar filtros
+          </button>
+        </div>
+      </mat-card>
+    </div>
+
+    <!-- Vista de Diagrama de Gantt -->
+    <div class="gantt-container">
+      <mat-card class="gantt-card">
+        <!-- Header fijo -->
+        <div class="gantt-header">
+          <!-- Contenedor único de información de tareas (tabla) -->
+          <div class="gantt-info-container" [style.width.px]="infoContainerWidth">
+            <!-- Header de columnas con anchos fijos -->
+            <div class="info-header">
+              <div class="info-col col-activity">Actividad</div>
+              <div class="info-col col-start">Inicio</div>
+              <div class="info-col col-end">Fin</div>
+              <div class="info-col col-status">Estado</div>
+              <div class="info-col col-responsible">Responsable</div>
+              <div class="info-col col-progress">Avance</div>
+              <div class="info-col col-duration">Duracion</div>
+            </div>
+            
+            <!-- Manejador de redimensionamiento -->
+            <div class="resize-handle" 
+                 (mousedown)="onResizeStart($event)"
+                 title="Arrastrar para redimensionar">
+            </div>
+          </div>
+          
+          <!-- Wrapper para el header del timeline que hará scroll -->
+          <div class="gantt-timeline-header-wrapper">
+            <div class="gantt-timeline-header" 
+                 #timelineHeader
+                 (scroll)="onHeaderScroll($event)">
+              <!-- Vista por Años (cuando año = 'all') -->
+              <div *ngIf="selectedYear === 'all'" 
+                   class="timeline-years"
+                   [style.width.px]="getTimelineWidth()">
+                <div *ngFor="let year of years" class="year">{{ year }}</div>
+              </div>
+              
+              <!-- Vista por Meses (cuando año específico y mes = 'all') -->
+              <div *ngIf="selectedYear !== 'all' && selectedMonth === 'all'" 
+                   class="timeline-months"
+                   [style.width.px]="getTimelineWidth()">
+                <div class="month">Ene</div>
+                <div class="month">Feb</div>
+                <div class="month">Mar</div>
+                <div class="month">Abr</div>
+                <div class="month">May</div>
+                <div class="month">Jun</div>
+                <div class="month">Jul</div>
+                <div class="month">Ago</div>
+                <div class="month">Sep</div>
+                <div class="month">Oct</div>
+                <div class="month">Nov</div>
+                <div class="month">Dic</div>
+              </div>
+              
+              <!-- Vista por Días (cuando año específico y mes específico) -->
+              <div *ngIf="selectedYear !== 'all' && selectedMonth !== 'all'" 
+                   class="timeline-days"
+                   [style.width.px]="getTimelineWidth()">
+                <div *ngFor="let day of getDaysInMonth(selectedMonth, selectedYear)" class="day">{{ day }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contenedor con scroll horizontal -->
+        <div class="gantt-scroll-container" #scrollContainer (scroll)="onScroll($event)">
+          <div class="gantt-content" [style.width.px]="getTimelineWidth()">
+            <div class="gantt-body">
+              <div class="gantt-row" *ngFor="let item of filteredItems; let i = index">
+                <!-- Contenedor de información con anchos fijos -->
+                <div class="gantt-info-container" [style.width.px]="infoContainerWidth">
+                  <div class="info-row">
+                    <div class="info-col col-activity" [title]="item.title">{{ item.title }}</div>
+                    <div class="info-col col-start">{{ item.startDate | date:'dd/MM/yyyy' }}</div>
+                    <div class="info-col col-end">{{ item.endDate | date:'dd/MM/yyyy' }}</div>
+                    <div class="info-col col-status">
+                      <span [ngClass]="getStatusClass(item.status)" class="status-badge">
+                        {{ getStatusLabel(item.status) }}
+                      </span>
+                    </div>
+                    <div class="info-col col-responsible">{{ item.responsible }}</div>
+                    <div class="info-col col-progress">
+                      <div class="progress-bar">
+                        <div class="progress-fill" [ngClass]="getProgressClass(item.status)" [style.width.%]="getProgressPercentage(item)"></div>
+                      </div>
+                      <span class="progress-text">{{ getProgressPercentage(item) }}%</span>
+                    </div>
+                    <div class="info-col col-duration">{{ getTaskDuration(item) }}</div>
+                  </div>
+                  
+                  <!-- Manejador de redimensionamiento en cada fila -->
+                  <div class="resize-handle" 
+                       (mousedown)="onResizeStart($event)"
+                       title="Arrastrar para redimensionar">
+                  </div>
+                </div>
+                
+                <!-- Timeline con barras -->
+                <div class="gantt-timeline" [style.width.px]="getTimelineWidth()">
+                  <div class="timeline-grid">
+                    <!-- Líneas de separación -->
+                    <div *ngIf="selectedYear === 'all'" class="grid-lines">
+                      <div class="year-divider" 
+                           *ngFor="let year of years; let i = index" 
+                           [style.left.px]="i * 240"></div>
+                    </div>
+                    <div *ngIf="selectedYear !== 'all' && selectedMonth === 'all'" class="grid-lines">
+                      <div class="month-divider" 
+                           *ngFor="let month of [0,1,2,3,4,5,6,7,8,9,10,11]; let i = index" 
+                           [style.left.px]="i * 80"></div>
+                    </div>
+                    <div *ngIf="selectedYear !== 'all' && selectedMonth !== 'all'" class="grid-lines">
+                      <div class="day-divider" 
+                           *ngFor="let day of getDaysInMonth(selectedMonth, selectedYear); let i = index" 
+                           [style.left.px]="i * 30"></div>
+                    </div>
+                    
+                    <!-- Barra de la actividad -->
+                    <div 
+                      class="task-bar" 
+                      [ngClass]="getStatusClass(item.status)"
+                      [ngStyle]="getTaskBarStyle(item)"
+                      (click)="editScheduleItem(item)"
+                    >
+                      <div class="task-bar-content">
+                        <span class="task-bar-title">{{ item.title }}</span>
+                        <span class="task-bar-duration">{{ getTaskDuration(item) }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Leyenda -->
+        <div class="gantt-legend">
+          <div class="legend-section">
+            <div class="legend-title">Estado:</div>
+            <div class="legend-items">
+              <span class="status-badge status-completed">Completado</span>
+              <span class="status-badge status-in-progress">En Progreso</span>
+              <span class="status-badge status-pending">Pendiente</span>
+              <span class="status-badge status-delayed">Retrasado</span>
+            </div>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+</div>

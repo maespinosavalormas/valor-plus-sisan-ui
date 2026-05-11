@@ -1,0 +1,343 @@
+<div class="stats-grid">
+  <!-- Total Casos -->
+  <div class="stat-card stat-card--total">
+    <div class="stat-card__header">
+      <span class="stat-card__label">Total Casos</span>
+      <div class="stat-card__icon stat-card__icon--total">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/>
+          <path d="M14 2v4a2 2 0 0 0 2 2h4"/>
+          <path d="M10 9H8"/>
+          <path d="M16 13H8"/>
+          <path d="M16 17H8"/>
+        </svg>
+      </div>
+    </div>
+    <div class="stat-card__content">
+      <span class="stat-card__value" id="totalCasesValue">156</span>
+      <div class="stat-card__trend stat-card__trend--up">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/>
+          <polyline points="16 7 22 7 22 13"/>
+        </svg>
+        <span class="stat-card__trend-value">+12%</span>
+        <span class="stat-card__trend-text">vs mes anterior</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Casos Activos -->
+  <div class="stat-card stat-card--active">
+    <div class="stat-card__header">
+      <span class="stat-card__label">Casos Activos</span>
+      <div class="stat-card__icon stat-card__icon--active">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"/>
+        </svg>
+      </div>
+    </div>
+    <div class="stat-card__content">
+      <span class="stat-card__value" id="activeCasesValue">68</span>
+      <span class="stat-card__subtitle">Requieren seguimiento activo</span>
+    </div>
+  </div>
+
+  <!-- Casos Resueltos -->
+  <div class="stat-card stat-card--resolved">
+    <div class="stat-card__header">
+      <span class="stat-card__label">Casos Resueltos</span>
+      <div class="stat-card__icon stat-card__icon--resolved">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21.801 10A10 10 0 1 1 17 3.335"/>
+          <path d="m9 11 3 3L22 4"/>
+        </svg>
+      </div>
+    </div>
+    <div class="stat-card__content">
+      <span class="stat-card__value" id="resolvedCasesValue">89</span>
+      <span class="stat-card__subtitle">
+        Tasa de resolución: <span class="stat-card__highlight stat-card__highlight--resolved">57%</span>
+      </span>
+    </div>
+  </div>
+
+  <!-- Pendientes Asignación -->
+  <div class="stat-card stat-card--pending">
+    <div class="stat-card__header">
+      <span class="stat-card__label">Pendientes Asignación</span>
+      <div class="stat-card__icon stat-card__icon--pending">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <polyline points="12 6 12 12 16 14"/>
+        </svg>
+      </div>
+    </div>
+    <div class="stat-card__content">
+      <span class="stat-card__value" id="pendingCasesValue">23</span>
+      <span class="stat-card__subtitle stat-card__subtitle--urgent">Requieren atención urgente</span>
+    </div>
+  </div>
+</div>
+<div class="dashboard">
+    <div class="card card--trend">
+    <div class="card__header">
+        <div class="card__header-content">
+        <h3 class="card__title">Tendencia de Casos</h3>
+        <p class="card__description">Comparativa mensual de casos notificados vs resueltos</p>
+        </div>
+        <div class="card__header-actions">
+        <select class="select" id="periodSelect">
+            <option value="6">6 meses</option>
+            <option value="8" selected>8 meses</option>
+            <option value="12">12 meses</option>
+        </select>
+        </div>
+    </div>
+    <div class="card__content">
+        <div class="chart-area">
+        <svg class="chart-area__svg" viewBox="0 0 600 300" preserveAspectRatio="xMidYMid meet">
+            <defs>
+            <linearGradient id="gradientCasos" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#00d7ce" stop-opacity="0.3"/>
+                <stop offset="100%" stop-color="#00d7ce" stop-opacity="0"/>
+            </linearGradient>
+            <linearGradient id="gradientResueltos" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#5981DF" stop-opacity="0.3"/>
+                <stop offset="100%" stop-color="#5981DF" stop-opacity="0"/>
+            </linearGradient>
+            </defs>
+            
+            <!-- Grid lines -->
+            <g class="chart-area__grid">
+            <line x1="50" y1="40" x2="580" y2="40" />
+            <line x1="50" y1="90" x2="580" y2="90" />
+            <line x1="50" y1="140" x2="580" y2="140" />
+            <line x1="50" y1="190" x2="580" y2="190" />
+            <line x1="50" y1="240" x2="580" y2="240" />
+            </g>
+            
+            <!-- Y Axis labels -->
+            <g class="chart-area__labels-y">
+            <text x="40" y="45">30</text>
+            <text x="40" y="95">24</text>
+            <text x="40" y="145">18</text>
+            <text x="40" y="195">12</text>
+            <text x="40" y="245">6</text>
+            </g>
+            
+            <!-- X Axis labels -->
+            <g class="chart-area__labels-x">
+            <text x="83" y="270">Ene</text>
+            <text x="149" y="270">Feb</text>
+            <text x="215" y="270">Mar</text>
+            <text x="281" y="270">Abr</text>
+            <text x="347" y="270">May</text>
+            <text x="413" y="270">Jun</text>
+            <text x="479" y="270">Jul</text>
+            <text x="545" y="270">Ago</text>
+            </g>
+            
+            <!-- Area Casos -->
+            <path class="chart-area__fill chart-area__fill--casos" 
+                d="M83,160 L149,113 L215,140 L281,93 L347,120 L413,73 L479,100 L545,53 L545,240 L83,240 Z"/>
+            
+            <!-- Area Resueltos -->
+            <path class="chart-area__fill chart-area__fill--resueltos" 
+                d="M83,187 L149,147 L215,160 L281,127 L347,140 L413,100 L479,113 L545,80 L545,240 L83,240 Z"/>
+            
+            <!-- Line Casos -->
+            <path class="chart-area__line chart-area__line--casos" 
+                d="M83,160 L149,113 L215,140 L281,93 L347,120 L413,73 L479,100 L545,53"/>
+            
+            <!-- Line Resueltos -->
+            <path class="chart-area__line chart-area__line--resueltos" 
+                d="M83,187 L149,147 L215,160 L281,127 L347,140 L413,100 L479,113 L545,80"/>
+            
+            <!-- Dots Casos -->
+            <g class="chart-area__dots chart-area__dots--casos">
+            <circle cx="83" cy="160" r="4" data-value="12" data-month="Ene"/>
+            <circle cx="149" cy="113" r="4" data-value="19" data-month="Feb"/>
+            <circle cx="215" cy="140" r="4" data-value="15" data-month="Mar"/>
+            <circle cx="281" cy="93" r="4" data-value="22" data-month="Abr"/>
+            <circle cx="347" cy="120" r="4" data-value="18" data-month="May"/>
+            <circle cx="413" cy="73" r="4" data-value="25" data-month="Jun"/>
+            <circle cx="479" cy="100" r="4" data-value="20" data-month="Jul"/>
+            <circle cx="545" cy="53" r="4" data-value="28" data-month="Ago"/>
+            </g>
+            
+            <!-- Dots Resueltos -->
+            <g class="chart-area__dots chart-area__dots--resueltos">
+            <circle cx="83" cy="187" r="4" data-value="8" data-month="Ene"/>
+            <circle cx="149" cy="147" r="4" data-value="14" data-month="Feb"/>
+            <circle cx="215" cy="160" r="4" data-value="12" data-month="Mar"/>
+            <circle cx="281" cy="127" r="4" data-value="18" data-month="Abr"/>
+            <circle cx="347" cy="140" r="4" data-value="15" data-month="May"/>
+            <circle cx="413" cy="100" r="4" data-value="20" data-month="Jun"/>
+            <circle cx="479" cy="113" r="4" data-value="17" data-month="Jul"/>
+            <circle cx="545" cy="80" r="4" data-value="22" data-month="Ago"/>
+            </g>
+        </svg>
+        
+        <!-- Tooltip -->
+        <div class="chart-area__tooltip" id="trendTooltip">
+            <span class="chart-area__tooltip-month"></span>
+            <span class="chart-area__tooltip-value"></span>
+        </div>
+        </div>
+        
+        <!-- Legend -->
+        <div class="chart-area__legend">
+        <div class="chart-area__legend-item">
+            <span class="chart-area__legend-color chart-area__legend-color--casos"></span>
+            <span class="chart-area__legend-label">Notificados</span>
+        </div>
+        <div class="chart-area__legend-item">
+            <span class="chart-area__legend-color chart-area__legend-color--resueltos"></span>
+            <span class="chart-area__legend-label">Resueltos</span>
+        </div>
+        </div>
+    </div>
+    </div>
+
+    <div class="card card--category">
+    <div class="card__header">
+        <h3 class="card__title">Por Categoría</h3>
+        <p class="card__description">Distribución según nivel de desnutrición</p>
+    </div>
+    <div class="card__content">
+        <div class="chart-pie">
+        <svg class="chart-pie__svg" viewBox="0 0 200 200">
+            <g class="chart-pie__segments" transform="translate(100, 100)">
+            <!-- Segments will be generated by JS -->
+            </g>
+            <circle class="chart-pie__inner" cx="100" cy="100" r="40"/>
+        </svg>
+        
+        <!-- Tooltip -->
+        <div class="chart-pie__tooltip" id="pieTooltip">
+            <span class="chart-pie__tooltip-name"></span>
+            <span class="chart-pie__tooltip-value"></span>
+        </div>
+        </div>
+        
+        <!-- Legend -->
+        <div class="chart-pie__legend">
+        <div class="chart-pie__legend-item" data-category="riesgo">
+            <span class="chart-pie__legend-color chart-pie__legend-color--riesgo"></span>
+            <span class="chart-pie__legend-label">Riesgo</span>
+            <span class="chart-pie__legend-value">45</span>
+        </div>
+        <div class="chart-pie__legend-item" data-category="moderada">
+            <span class="chart-pie__legend-color chart-pie__legend-color--moderada"></span>
+            <span class="chart-pie__legend-label">Moderada</span>
+            <span class="chart-pie__legend-value">62</span>
+        </div>
+        <div class="chart-pie__legend-item" data-category="severa">
+            <span class="chart-pie__legend-color chart-pie__legend-color--severa"></span>
+            <span class="chart-pie__legend-label">Severa</span>
+            <span class="chart-pie__legend-value">28</span>
+        </div>
+        <div class="chart-pie__legend-item" data-category="cronica">
+            <span class="chart-pie__legend-color chart-pie__legend-color--cronica"></span>
+            <span class="chart-pie__legend-label">Crónica</span>
+            <span class="chart-pie__legend-value">21</span>
+        </div>
+        </div>
+    </div>
+    </div>
+</div>
+<div class="cards-row">
+<div class="severity-card">
+
+  <div class="severity-card__header">
+    <h3 class="severity-card__title">Resumen por Severidad</h3>
+    <p class="severity-card__subtitle">
+      Estado actual de casos por nivel de gravedad
+    </p>
+  </div>
+
+  <div class="severity-card__list">
+
+    <div
+      class="severity-item"
+      *ngFor="let item of severityData"
+      [ngClass]="'severity-item--' + item.type">
+
+      <div class="severity-item__left">
+
+        <div
+          class="severity-item__icon"
+          [ngClass]="'severity-item__icon--' + item.type">
+
+          <i [class]="item.icon"></i>
+
+        </div>
+
+        <div class="severity-item__info">
+          <h4 class="severity-item__title">{{ item.title }}</h4>
+          <p class="severity-item__desc">{{ item.description }}</p>
+        </div>
+
+      </div>
+
+      <div
+        class="severity-item__value"
+        [ngClass]="'severity-item__value--' + item.type">
+
+        {{ item.value }}
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+<!-- casos-municipio.component.html -->
+<div class="card">
+  <div class="card-header">
+    <div class="header-content">
+      <h3 class="card-title">Casos por Municipio</h3>
+      <p class="card-description">Distribución geográfica de casos</p>
+    </div>
+    <div class="icon-container">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
+        <circle cx="12" cy="10" r="3"/>
+      </svg>
+    </div>
+  </div>
+  
+  <div class="card-content">
+    <div class="chart-container">
+      <!-- Bars -->
+      <div class="bars-container">
+        <div class="bar-row" *ngFor="let item of municipioData">
+          <span class="bar-label">{{ item.municipio }}</span>
+          <div class="bar-wrapper">
+            <div 
+              class="bar" 
+              [style.width.%]="getBarWidth(item.casos)"
+              [attr.data-value]="item.casos">
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- X Axis -->
+      <div class="x-axis">
+        <span class="axis-label-spacer"></span>
+        <div class="axis-ticks">
+          <span *ngFor="let tick of xAxisTicks" class="tick">{{ tick }}</span>
+        </div>
+      </div>
+      
+      <!-- Grid lines -->
+      <div class="grid-lines">
+        <div class="grid-line" *ngFor="let tick of xAxisTicks" [style.left.%]="(tick / maxValue) * 100"></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+

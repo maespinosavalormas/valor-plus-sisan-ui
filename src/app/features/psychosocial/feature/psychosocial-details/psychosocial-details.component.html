@@ -1,0 +1,306 @@
+<div class="pcd-emergencies-details-page">
+  <app-psychosocial-details-header
+    [psychosocial]="psychosocial"
+    [showBackButton]="true"
+    [activeView]="currentView"
+    (backClicked)="onBack()"
+    (viewChanged)="onViewChange($event)"
+    (editClicked)="onEdit()">
+  </app-psychosocial-details-header>
+
+  <div class="emergency-info-content" *ngIf="currentView === 'details'">
+    <!-- SECCION 1: Datos Generales -->
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon">
+          <mat-icon>person</mat-icon>
+        </div>
+        <div class="section-title">
+          <h4>Datos Generales</h4>
+        </div>
+      </div>
+      <div class="section-content">
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Número de identificación del niña/niño:</span>
+            <span class="info-value">{{ psychosocial?.numeroIdentificacionNino || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Tipo de identificación del niña/niño:</span>
+            <span class="info-value">{{ psychosocial?.tipoIdentificacionNino || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Semana:</span>
+            <span class="info-value">{{ psychosocial?.semana || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Fecha Nacimiento del niña/niño:</span>
+            <span class="info-value">{{ psychosocial?.fechaNacimientoNino || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Nombres del niña/niño:</span>
+            <span class="info-value">{{ getNinoFullName() }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Género:</span>
+            <span class="info-value">{{ psychosocial?.genero || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Dirección de residencia:</span>
+            <span class="info-value">{{ psychosocial?.direccionResidencia || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Teléfono:</span>
+            <span class="info-value">{{ psychosocial?.telefono || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Teléfono 2:</span>
+            <span class="info-value">{{ psychosocial?.telefono2 || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Municipio:</span>
+            <span class="info-value">{{ psychosocial?.municipio || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Subregión:</span>
+            <span class="info-value">{{ psychosocial?.subregion || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Zona de residencia del niño o niña:</span>
+            <span class="info-value">{{ psychosocial?.zonaResidencia || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Barrio o Vereda:</span>
+            <span class="info-value">{{ psychosocial?.barrioVereda || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">¿Pertenece a población indígena?:</span>
+            <span class="info-value">{{ psychosocial?.pertenecePoblacionIndigena || 'N/A' }}</span>
+          </div>
+          <div class="info-item" *ngIf="psychosocial?.pertenecePoblacionIndigena === 'si'">
+            <span class="info-label">Pueblo indígena:</span>
+            <span class="info-value">{{ psychosocial?.puebloIndigena || 'N/A' }}</span>
+          </div>
+          <div class="info-item" *ngIf="psychosocial?.puebloIndigena === 'Otro'">
+            <span class="info-label">Otro pueblo. ¿Cuál?:</span>
+            <span class="info-value">{{ psychosocial?.otroPueblo || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Comunidad:</span>
+            <span class="info-value">{{ psychosocial?.comunidad || 'N/A' }}</span>
+          </div>
+          <div class="info-item" *ngIf="psychosocial?.comunidad === 'Otro'">
+            <span class="info-label">Otra Comunidad. ¿Cuál?:</span>
+            <span class="info-value">{{ psychosocial?.otraComunidad || 'N/A' }}</span>
+          </div>
+          <div class="info-item full-width">
+            <span class="info-label">Ubicación:</span>
+            <span class="info-value">{{ getCoordinates() }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Coordenada X:</span>
+            <span class="info-value">{{ psychosocial?.coordendaX || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Coordenada Y:</span>
+            <span class="info-value">{{ psychosocial?.coordendaY || 'N/A' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECCION 2: Datos de Asistencia Social -->
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon">
+          <mat-icon>help</mat-icon>
+        </div>
+        <div class="section-title">
+          <h4>Datos de Asistencia Social</h4>
+        </div>
+      </div>
+      <div class="section-content">
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Etnia:</span>
+            <span class="info-value">{{ psychosocial?.etnia || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Grupo Poblacional (especificar pregunta hacia la niña o niño):</span>
+            <span class="info-value">{{ psychosocial?.grupoPoblacional || 'N/A' }}</span>
+          </div>
+          <div class="info-item" *ngIf="psychosocial?.grupoPoblacional === 'Otro'">
+            <span class="info-label">Cuál otro grupo poblacional:</span>
+            <span class="info-value">{{ psychosocial?.cualOtroGrupoPoblacional || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">¿La niña o niño tiene alguna discapacidad?:</span>
+            <span class="info-value">{{ psychosocial?.tieneDiscapacidad || 'N/A' }}</span>
+          </div>
+          <div class="info-item" *ngIf="psychosocial?.tieneDiscapacidad === 'si'">
+            <span class="info-label">¿La discapacidad es certificada?:</span>
+            <span class="info-value">{{ psychosocial?.discapacidadCertificada || 'N/A' }}</span>
+          </div>
+          <div class="info-item" *ngIf="psychosocial?.tieneDiscapacidad === 'si'">
+            <span class="info-label">¿Tipo de discapacidad?:</span>
+            <span class="info-value">{{ psychosocial?.tipoDiscapacidad || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">¿La niña o niño recibe atención integral en algún programa de atención nutricional?:</span>
+            <span class="info-value">{{ psychosocial?.recibeAtencionNutricional || 'N/A' }}</span>
+          </div>
+          <div class="info-item" *ngIf="psychosocial?.recibeAtencionNutricional === 'si'">
+            <span class="info-label">¿Cuál es el programa?:</span>
+            <span class="info-value">{{ psychosocial?.cualPrograma || 'N/A' }}</span>
+          </div>
+          <div class="info-item" *ngIf="psychosocial?.cualPrograma === 'Otro'">
+            <span class="info-label">Cuál?:</span>
+            <span class="info-value">{{ psychosocial?.cualOtroPrograma || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Régimen de salud:</span>
+            <span class="info-value">{{ psychosocial?.regimenSalud || 'N/A' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECCION 3: Datos del hogar y el acudiente -->
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon">
+          <mat-icon>home</mat-icon>
+        </div>
+        <div class="section-title">
+          <h4>Datos del hogar y el acudiente</h4>
+        </div>
+      </div>
+      <div class="section-content">
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Tipo de identificación del acudiente principal de la niña o niño:</span>
+            <span class="info-value">{{ psychosocial?.tipoIdentificacionAcudiente || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Número de identificación del acudiente:</span>
+            <span class="info-value">{{ psychosocial?.numeroIdentificacionAcudiente || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Primer nombre del acudiente:</span>
+            <span class="info-value">{{ psychosocial?.primerNombreAcudiente || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Segundo nombre del acudiente:</span>
+            <span class="info-value">{{ psychosocial?.segundoNombreAcudiente || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Primer apellido del acudiente:</span>
+            <span class="info-value">{{ psychosocial?.primerApellidoAcudiente || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Segundo apellido del acudiente:</span>
+            <span class="info-value">{{ psychosocial?.segundoApellidoAcudiente || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Sexo:</span>
+            <span class="info-value">{{ psychosocial?.sexoAcudiente || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Parentesco de la persona al cuidado del niña/niño:</span>
+            <span class="info-value">{{ psychosocial?.parentesco || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Grado de escolaridad de la persona al cuidado del niña/niño:</span>
+            <span class="info-value">{{ psychosocial?.gradoEscolaridad || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Ocupación principal del cuidador principal:</span>
+            <span class="info-value">{{ psychosocial?.ocupacionPrincipal || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">¿El cuidador de la niña o niño tiene una Discapacidad?:</span>
+            <span class="info-value">{{ psychosocial?.cuidadorTieneDiscapacidad || 'N/A' }}</span>
+          </div>
+          <div class="info-item" *ngIf="psychosocial?.cuidadorTieneDiscapacidad === 'si'">
+            <span class="info-label">Tipo de discapacidad:</span>
+            <span class="info-value">{{ psychosocial?.tipoDiscapacidadCuidador || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Número de personas que conforman el hogar:</span>
+            <span class="info-value">{{ psychosocial?.numeroPersonasHogar || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Número de niños menores de cinco años que habitan el hogar:</span>
+            <span class="info-value">{{ psychosocial?.numeroNinosMenores5 || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Ingresos mensuales de la familia:</span>
+            <span class="info-value">{{ psychosocial?.ingresosMensuales || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">¿El hogar donde vive el niño(a) cuenta con energía eléctrica?:</span>
+            <span class="info-value">{{ psychosocial?.hogarEnergiaElectrica || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">¿El hogar donde vive el niño(a) cuenta con agua potable?:</span>
+            <span class="info-value">{{ psychosocial?.hogarAguaPotable || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">¿Con qué servicio sanitario cuenta el hogar donde vive el niño(a)?:</span>
+            <span class="info-value">{{ psychosocial?.servicioSanitario || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">¿Cómo se eliminan las basuras del hogar donde vive el niño(a)?:</span>
+            <span class="info-value">{{ psychosocial?.eliminacionBasuras || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">¿Qué tipo de combustible utilizan para cocinar en el hogar?:</span>
+            <span class="info-value">{{ psychosocial?.combustibleCocinar || 'N/A' }}</span>
+          </div>
+          <div class="info-item full-width">
+            <span class="info-label">Evolución Psicosocial (Diagnóstico, tratamiento, logros):</span>
+            <span class="info-value">{{ psychosocial?.evolucionPsicosocial || 'N/A' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECCION 4: Compromisos familiares -->
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon">
+          <mat-icon>assignment</mat-icon>
+        </div>
+        <div class="section-title">
+          <h4>Compromisos familiares</h4>
+        </div>
+      </div>
+      <div class="section-content">
+        <div class="info-grid">
+          <div class="info-item full-width">
+            <span class="info-label">Compromisos adquiridos durante la atención por parte de la familia y el profesional:</span>
+            <span class="info-value">{{ psychosocial?.compromisosFamiliares || 'N/A' }}</span>
+          </div>
+          <div class="info-item full-width">
+            <span class="info-label">1. Yo, actuando en representación y con la autorización expresa de todos los miembros de mi hogar, incluyendo a menores y mayores de edad, autorizo a la GOBERNACIÓN DE ANTIOQUIA para que en cumplimiento a lo determinado en la Ley 1581 de 2012 (uso de los datos personales), en el marco de sus procesos de atención, actúe como responsable del tratamiento de los datos personales de los cuales somos titulares, realice la recolección, uso y tratamiento de nuestros datos, ya sea de forma conjunta o separada, conforme a la política de tratamiento de datos personales de la Gobernación de Antioquia, disponible en https://sedeelectronica.antioquia.gov.co/publicaciones/203/política-para-el-tratamiento-de-datos-personales/:</span>
+            <span class="info-value">{{ psychosocial?.consentimientoDatos || 'N/A' }}</span>
+          </div>
+          <div class="info-item full-width">
+            <span class="info-label">2. Asimismo, autorizo a la administración departamental para captar, tomar, almacenar, editar, divulgar y publicar imágenes, audios o datos de nuestra familia, o de alguno de sus integrantes, (incluyendo menores y mayores de edad), con fines estadísticos, académicos o para la promoción de los derechos de los niños, niñas, adolescentes y familias. Esto se realizará conforme a la política de tratamiento de datos personales de la Gobernación de Antioquia, y dando cumplimiento a lo dispuesto en la Ley 1581 de 2012.:</span>
+            <span class="info-value">{{ psychosocial?.consentimientoImagenes || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Firma del cuidador:</span>
+            <span class="info-value">{{ psychosocial?.firmaCuidador || 'N/A' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <app-psychosocial-traceability
+    *ngIf="currentView === 'traceability'"
+    [psychosocial]="psychosocial"
+    (back)="onBack()">
+  </app-psychosocial-traceability>
+</div>

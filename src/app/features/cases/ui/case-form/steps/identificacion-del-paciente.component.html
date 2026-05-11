@@ -1,0 +1,685 @@
+<div class="form-header">
+  <h2 mat-dialog-title class="form-title">
+    {{ data.isEdit ? 'Editar Identificacion del Paciente' : 'Identificacion del Paciente' }}
+  </h2>
+  <button mat-icon-button class="close-button" (click)="cancelForm()">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+<form [formGroup]="form" mat-dialog-content>
+  <div class="form-grid">
+    <!-- IDENTIFICACIÓN -->
+    <div class="section-title">Identificación</div>
+
+    <div class="field">
+      <label class="field-label">Tipo de documento<span class="req">*</span></label>
+      <mat-select
+        class="filter-select"
+        panelClass="evento-select-panel"
+        [formControl]="identificationTypeCtrl"
+        placeholder="Seleccione tipo de documento"
+        disableOptionCentering>
+        <mat-option>
+          <ngx-mat-select-search
+            [formControl]="identificationTypeFilterCtrl"
+            placeholderLabel="Buscar tipo..."
+            noEntriesFoundLabel="No encontrado">
+          </ngx-mat-select-search>
+        </mat-option>
+        <mat-option *ngFor="let tipo of filteredIdentificationTypes" [value]="tipo">
+          {{ tipo.name }}
+        </mat-option>
+      </mat-select>
+      <div
+        class="field-error"
+        *ngIf="
+          form.get('identificationTypeCode')?.touched &&
+          form.get('identificationTypeCode')?.hasError('required')
+        "
+      >
+        Campo obligatorio
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Número de identificación<span class="req">*</span></label>
+      <input
+        class="control"
+        type="text"
+        formControlName="identificationNumber"
+        placeholder="Ingrese número de identificación"
+        maxlength="20"
+        autocomplete="off"
+      />
+      <div
+        class="field-error"
+        *ngIf="
+          form.get('identificationNumber')?.touched &&
+          form.get('identificationNumber')?.hasError('required')
+        "
+      >
+        Campo obligatorio
+      </div>
+    </div>
+
+    <!-- NOMBRES -->
+    <div class="section-title">Nombres</div>
+
+    <div class="field">
+      <label class="field-label">Primer nombre<span class="req">*</span></label>
+      <input
+        class="control"
+        type="text"
+        formControlName="firstName"
+        placeholder="Ingrese primer nombre"
+        maxlength="100"
+        autocomplete="off"
+      />
+      <div
+        class="field-error"
+        *ngIf="form.get('firstName')?.touched && form.get('firstName')?.hasError('required')"
+      >
+        Campo obligatorio
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Segundo nombre</label>
+      <input
+        class="control"
+        type="text"
+        formControlName="middleName"
+        placeholder="Ingrese segundo nombre"
+        maxlength="100"
+        autocomplete="off"
+      />
+    </div>
+
+    <div class="field">
+      <label class="field-label">Primer apellido<span class="req">*</span></label>
+      <input
+        class="control"
+        type="text"
+        formControlName="firstLastName"
+        placeholder="Ingrese primer apellido"
+        maxlength="100"
+        autocomplete="off"
+      />
+      <div
+        class="field-error"
+        *ngIf="
+          form.get('firstLastName')?.touched && form.get('firstLastName')?.hasError('required')
+        "
+      >
+        Campo obligatorio
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Segundo apellido</label>
+      <input
+        class="control"
+        type="text"
+        formControlName="secondLastName"
+        placeholder="Ingrese segundo apellido"
+        maxlength="100"
+        autocomplete="off"
+      />
+    </div>
+
+    <!-- CONTACTO -->
+    <div class="section-title">Contacto</div>
+
+    <div class="field">
+      <label class="field-label">Teléfono<span class="req">*</span></label>
+      <input
+        class="control"
+        type="text"
+        formControlName="phoneNumber"
+        placeholder="Ingrese teléfono"
+        maxlength="20"
+        autocomplete="off"
+      />
+      <div
+        class="field-error"
+        *ngIf="form.get('phoneNumber')?.touched && form.get('phoneNumber')?.hasError('required')"
+      >
+        Campo obligatorio
+      </div>
+    </div>
+
+    <!-- DATOS DEMOGRÁFICOS -->
+    <div class="section-title">Datos Demográficos</div>
+
+    <div class="field">
+      <label class="field-label">Fecha de nacimiento<span class="req">*</span></label>
+      <input class="control" type="date" formControlName="birthDate" autocomplete="off" />
+      <div
+        class="field-error"
+        *ngIf="form.get('birthDate')?.touched && form.get('birthDate')?.hasError('required')"
+      >
+        Campo obligatorio
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Edad<span class="req">*</span></label>
+      <input
+        class="control"
+        type="text"
+        formControlName="age"
+        placeholder="Ingrese edad"
+        maxlength="2"
+        autocomplete="off"
+      />
+      <div
+        class="field-error"
+        *ngIf="form.get('age')?.touched && form.get('age')?.hasError('required')"
+      >
+        Campo obligatorio
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Unidad de medida<span class="req">*</span></label>
+      <select class="control control-select" formControlName="ageUnitCode">
+        <option value="">Seleccione unidad</option>
+        <option *ngFor="let unidad of ageUnits$ | async" [value]="unidad.code">
+          {{ unidad.name }}
+        </option>
+      </select>
+      <div
+        class="field-error"
+        *ngIf="form.get('ageUnitCode')?.touched && form.get('ageUnitCode')?.hasError('required')"
+      >
+        Campo obligatorio
+      </div>
+    </div>
+
+    <!-- NACIONALIDAD Y GÉNERO -->
+    <div class="section-title">Nacionalidad y Género</div>
+
+    <div class="field">
+      <label class="field-label">Nacionalidad<span class="req">*</span></label>
+      <mat-select
+        class="filter-select"
+        panelClass="evento-select-panel"
+        [formControl]="nationalityCtrl"
+        placeholder="Seleccione nacionalidad"
+        disableOptionCentering>
+        <mat-option>
+          <ngx-mat-select-search
+            [formControl]="nationalityFilterCtrl"
+            placeholderLabel="Buscar país..."
+            noEntriesFoundLabel="No encontrado">
+          </ngx-mat-select-search>
+        </mat-option>
+        <mat-option *ngFor="let pais of filteredCountries" [value]="pais">
+          {{ pais.name }}
+        </mat-option>
+      </mat-select>
+      <div
+        class="field-error"
+        *ngIf="
+          form.get('nationalityCountryCode')?.touched &&
+          form.get('nationalityCountryCode')?.hasError('required')
+        "
+      >
+        Campo obligatorio
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Género<span class="req">*</span></label>
+      <select class="control control-select" formControlName="genderCode">
+        <option value="">Seleccione género</option>
+        <option *ngFor="let genero of genders$ | async" [value]="genero.code">
+          {{ genero.name }}
+        </option>
+      </select>
+      <div
+        class="field-error"
+        *ngIf="form.get('genderCode')?.touched && form.get('genderCode')?.hasError('required')"
+      >
+        Campo obligatorio
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Identidad de género<span class="req">*</span></label>
+      <select class="control control-select" formControlName="genderIdentityCode">
+        <option value="">Seleccione identidad de género</option>
+        <option *ngFor="let identidad of genderIdentities$ | async" [value]="identidad.code">
+          {{ identidad.name }}
+        </option>
+      </select>
+      <div
+        class="field-error"
+        *ngIf="
+          form.get('genderIdentityCode')?.touched &&
+          form.get('genderIdentityCode')?.hasError('required')
+        "
+      >
+        Campo obligatorio
+      </div>
+    </div>
+
+    <div class="field" *ngIf="showGenderIdentityOther">
+      <label class="field-label">Otra identidad de género<span class="req">*</span></label>
+      <input
+        class="control"
+        type="text"
+        formControlName="genderIdentityOther"
+        placeholder="Especifique otra identidad de género"
+        maxlength="100"
+        autocomplete="off"
+      />
+      <div
+        class="field-error"
+        *ngIf="
+          form.get('genderIdentityOther')?.touched &&
+          form.get('genderIdentityOther')?.hasError('required')
+        "
+      >
+        Campo obligatorio
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Orientación sexual<span class="req">*</span></label>
+      <select class="control control-select" formControlName="sexualOrientationCode">
+        <option value="">Seleccione orientación sexual</option>
+        <option *ngFor="let orientacion of sexualOrientations$ | async" [value]="orientacion.code">
+          {{ orientacion.name }}
+        </option>
+      </select>
+      <div
+        class="field-error"
+        *ngIf="
+          form.get('sexualOrientationCode')?.touched &&
+          form.get('sexualOrientationCode')?.hasError('required')
+        "
+      >
+        Campo obligatorio
+      </div>
+    </div>
+
+    <div class="field" *ngIf="showSexualOrientationOther">
+      <label class="field-label">Otra orientación sexual<span class="req">*</span></label>
+      <input
+        class="control"
+        type="text"
+        formControlName="sexualOrientationOther"
+        placeholder="Especifique otra orientación sexual"
+        maxlength="100"
+        autocomplete="off"
+      />
+      <div
+        class="field-error"
+        *ngIf="
+          form.get('sexualOrientationOther')?.touched &&
+          form.get('sexualOrientationOther')?.hasError('required')
+        "
+      >
+        Campo obligatorio
+      </div>
+    </div>
+
+    <!-- UBICACIÓN -->
+    <div class="section-title">Ubicación</div>
+
+    <div class="field">
+      <label class="field-label">País<span class="req">*</span></label>
+      <mat-select
+        class="filter-select"
+        panelClass="evento-select-panel"
+        [formControl]="countryCtrl"
+        placeholder="Seleccione país"
+        disableOptionCentering>
+        <mat-option>
+          <ngx-mat-select-search
+            [formControl]="countryFilterCtrl"
+            placeholderLabel="Buscar país..."
+            noEntriesFoundLabel="No encontrado">
+          </ngx-mat-select-search>
+        </mat-option>
+        <mat-option *ngFor="let pais of filteredCountries" [value]="pais">
+          {{ pais.name }}
+        </mat-option>
+      </mat-select>
+      <div
+        class="field-error"
+        *ngIf="form.get('countryCode')?.touched && form.get('countryCode')?.hasError('required')"
+      >
+        Campo obligatorio
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Departamento<span class="req">*</span></label>
+      <mat-select
+        class="filter-select"
+        panelClass="evento-select-panel"
+        [formControl]="provinceCtrl"
+        placeholder="Seleccione departamento"
+        disableOptionCentering>
+        <mat-option>
+          <ngx-mat-select-search
+            [formControl]="provinceFilterCtrl"
+            placeholderLabel="Buscar departamento..."
+            noEntriesFoundLabel="No encontrado">
+          </ngx-mat-select-search>
+        </mat-option>
+        <mat-option *ngFor="let depto of filteredProvinces" [value]="depto">
+          {{ depto.name }}
+        </mat-option>
+      </mat-select>
+      <div
+        class="field-error"
+        *ngIf="form.get('provinceCode')?.touched && form.get('provinceCode')?.hasError('required')"
+      >
+        Campo obligatorio
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Ciudad<span class="req">*</span></label>
+      <mat-select
+        class="filter-select"
+        panelClass="evento-select-panel"
+        [formControl]="cityCtrl"
+        placeholder="Seleccione ciudad"
+        disableOptionCentering>
+        <mat-option>
+          <ngx-mat-select-search
+            [formControl]="cityFilterCtrl"
+            placeholderLabel="Buscar ciudad..."
+            noEntriesFoundLabel="No encontrado">
+          </ngx-mat-select-search>
+        </mat-option>
+        <mat-option *ngFor="let ciudad of filteredCities" [value]="ciudad">
+          {{ ciudad.name }}
+        </mat-option>
+      </mat-select>
+      <div
+        class="field-error"
+        *ngIf="form.get('cityCode')?.touched && form.get('cityCode')?.hasError('required')"
+      >
+        Campo obligatorio
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Área<span class="req">*</span></label>
+      <select class="control control-select" formControlName="areaCode">
+        <option value="">Seleccione área</option>
+        <option *ngFor="let area of areas$ | async" [value]="area.code">
+          {{ area.name }}
+        </option>
+      </select>
+      <div
+        class="field-error"
+        *ngIf="form.get('areaCode')?.touched && form.get('areaCode')?.hasError('required')"
+      >
+        Campo obligatorio
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Localidad<span class="req">*</span></label>
+      <input
+        class="control"
+        type="text"
+        formControlName="locality"
+        placeholder="Ingrese localidad"
+        maxlength="20"
+        autocomplete="off"
+      />
+      <div
+        class="field-error"
+        *ngIf="form.get('locality')?.touched && form.get('locality')?.hasError('required')"
+      >
+        Campo obligatorio
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Barrio<span class="req">*</span></label>
+      <input
+        class="control"
+        type="text"
+        formControlName="neighborhood"
+        placeholder="Ingrese barrio"
+        maxlength="20"
+        autocomplete="off"
+      />
+      <div
+        class="field-error"
+        *ngIf="form.get('neighborhood')?.touched && form.get('neighborhood')?.hasError('required')"
+      >
+        Campo obligatorio
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Centro poblado<span class="req">*</span></label>
+      <input
+        class="control"
+        type="text"
+        formControlName="populatedCenter"
+        placeholder="Ingrese centro poblado"
+        maxlength="20"
+        autocomplete="off"
+      />
+      <div
+        class="field-error"
+        *ngIf="
+          form.get('populatedCenter')?.touched && form.get('populatedCenter')?.hasError('required')
+        "
+      >
+        Campo obligatorio
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Zona rural<span class="req">*</span></label>
+      <input
+        class="control"
+        type="text"
+        formControlName="ruralArea"
+        placeholder="Ingrese zona rural"
+        maxlength="20"
+        autocomplete="off"
+      />
+      <div
+        class="field-error"
+        *ngIf="form.get('ruralArea')?.touched && form.get('ruralArea')?.hasError('required')"
+      >
+        Campo obligatorio
+      </div>
+    </div>
+
+    <!-- OCUPACIÓN Y SALUD -->
+    <div class="section-title">Ocupación y Salud</div>
+
+    <div class="field">
+      <label class="field-label">Ocupación<span class="req">*</span></label>
+      <mat-select
+        class="filter-select"
+        panelClass="evento-select-panel"
+        [formControl]="occupationCtrl"
+        placeholder="Seleccione ocupación"
+        disableOptionCentering>
+        <mat-option>
+          <ngx-mat-select-search
+            [formControl]="occupationFilterCtrl"
+            placeholderLabel="Buscar ocupación..."
+            noEntriesFoundLabel="No encontrado">
+          </ngx-mat-select-search>
+        </mat-option>
+        <mat-option *ngFor="let ocupacion of filteredOccupations" [value]="ocupacion">
+          {{ ocupacion.name }}
+        </mat-option>
+      </mat-select>
+      <div
+        class="field-error"
+        *ngIf="
+          form.get('occupationCode')?.touched && form.get('occupationCode')?.hasError('required')
+        "
+      >
+        Campo obligatorio
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Régimen de salud<span class="req">*</span></label>
+      <select class="control control-select" formControlName="healthInsuranceRegimeCode">
+        <option value="">Seleccione régimen</option>
+        <option *ngFor="let regimen of healthInsuranceRegimes$ | async" [value]="regimen.code">
+          {{ regimen.name }}
+        </option>
+      </select>
+      <div
+        class="field-error"
+        *ngIf="
+          form.get('healthInsuranceRegimeCode')?.touched &&
+          form.get('healthInsuranceRegimeCode')?.hasError('required')
+        "
+      >
+        Campo obligatorio
+      </div>
+    </div>
+
+    <div class="field full-width">
+      <label class="field-label">Administradora del plan<span class="req">*</span></label>
+      <input
+        class="control"
+        type="text"
+        formControlName="benefitsPlanAdministratorName"
+        placeholder="Ingrese administradora del plan"
+        maxlength="20"
+        autocomplete="off"
+      />
+      <div
+        class="field-error"
+        *ngIf="
+          form.get('benefitsPlanAdministratorName')?.touched &&
+          form.get('benefitsPlanAdministratorName')?.hasError('required')
+        "
+      >
+        Campo obligatorio
+      </div>
+    </div>
+
+    <!-- ETNIA Y ESTRATO -->
+    <div class="section-title">Etnia y Estrato</div>
+
+    <div class="field">
+      <label class="field-label">Etnia<span class="req">*</span></label>
+      <select class="control control-select" formControlName="ethnicityCode">
+        <option value="">Seleccione etnia</option>
+        <option *ngFor="let etnia of ethnicities$ | async" [value]="etnia.code">
+          {{ etnia.name }}
+        </option>
+      </select>
+      <div
+        class="field-error"
+        *ngIf="
+          form.get('ethnicityCode')?.touched && form.get('ethnicityCode')?.hasError('required')
+        "
+      >
+        Campo obligatorio
+      </div>
+    </div>
+
+    <div class="field" *ngIf="showEthnicityOther">
+      <label class="field-label">Otra etnia<span class="req">*</span></label>
+      <input
+        class="control"
+        type="text"
+        formControlName="ethnicityOther"
+        placeholder="Especifique otra etnia"
+        maxlength="100"
+        autocomplete="off"
+      />
+      <div
+        class="field-error"
+        *ngIf="
+          form.get('ethnicityOther')?.touched &&
+          form.get('ethnicityOther')?.hasError('required')
+        "
+      >
+        Campo obligatorio
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Estrato<span class="req">*</span></label>
+      <select class="control control-select" formControlName="stratumCode">
+        <option value="">Seleccione estrato</option>
+        <option *ngFor="let estrato of strata$ | async" [value]="estrato.code">
+          {{ estrato.name }}
+        </option>
+      </select>
+      <div
+        class="field-error"
+        *ngIf="form.get('stratumCode')?.touched && form.get('stratumCode')?.hasError('required')"
+      >
+        Campo obligatorio
+      </div>
+    </div>
+
+    <!-- GRUPOS POBLACIONALES -->
+    <div class="section-title">Grupos Poblacionales</div>
+
+    <div class="field full-width">
+      <label class="field-label">Grupos poblacionales</label>
+      <mat-select
+        class="filter-select filter-select-multiple"
+        panelClass="evento-select-panel"
+        [formControl]="populationGroupCtrl"
+        placeholder="Seleccione grupos poblacionales"
+        multiple
+        disableOptionCentering>
+        <mat-option>
+          <ngx-mat-select-search
+            [formControl]="populationGroupFilterCtrl"
+            placeholderLabel="Buscar grupo..."
+            noEntriesFoundLabel="No encontrado">
+          </ngx-mat-select-search>
+        </mat-option>
+        <mat-option *ngFor="let grupo of filteredPopulationGroups" [value]="grupo">
+          {{ grupo.name }}
+        </mat-option>
+      </mat-select>
+    </div>
+
+    <div class="field" *ngIf="isGestanteSelected">
+      <label class="field-label">Semanas de gestación</label>
+      <input
+        type="number"
+        class="control"
+        formControlName="populationGroupPregnantWeek"
+        placeholder="Ingrese semanas de gestación"
+        min="0"
+        max="42"
+      />
+    </div>
+  </div>
+</form>
+
+<div class="step-counter">{{ currentStep }}/{{ totalSteps }}</div>
+
+<mat-dialog-actions align="end" class="dialog-actions">
+  <button mat-flat-button class="btn-cancel" (click)="goBack()">Anterior</button>
+  <button
+    mat-flat-button
+    class="btn-guardar"
+    type="button"
+    (click)="saveForm()"
+    [disabled]="form.invalid"
+  >
+    {{ isLastStep ? (isEdit ? 'Actualizar' : 'Guardar') : 'Siguiente' }}
+  </button>
+</mat-dialog-actions>

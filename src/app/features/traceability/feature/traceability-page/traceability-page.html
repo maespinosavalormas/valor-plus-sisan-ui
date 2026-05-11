@@ -1,0 +1,78 @@
+<div class="traceability-page">
+  <div class="page-header">
+    <div class="title-section">
+      <mat-icon class="title-icon">history</mat-icon>
+      <h1 class="page-title">Trazabilidad del Sistema</h1>
+    </div>
+  </div>
+
+  <div class="info-section">
+    <!-- Sección de búsqueda y filtros -->
+    <div class="search-section">
+      <div class="search-container">
+        <mat-icon class="search-icon">search</mat-icon>
+        <input 
+          class="search-input" 
+          placeholder="Buscar por acción, usuario o descripción..." 
+          (input)="onSearchChange($any($event).target.value)"
+          [value]="searchTerm">
+        <mat-icon 
+          class="clear-search" 
+          *ngIf="searchTerm"
+          (click)="clearSearch()">clear</mat-icon>
+      </div>
+
+      <div class="filter-container">
+        <select 
+          class="status-filter" 
+          (change)="onEntityTypeFilterChange($any($event).target.value)"
+          [value]="selectedEntityType">
+          <option value="all">Todos los tipos</option>
+          <option value="program">Programas</option>
+          <option value="task">Tareas</option>
+          <option value="case">Casos</option>
+          <option value="user">Usuarios</option>
+        </select>
+      </div>
+
+      <div class="filter-container">
+        <select 
+          class="status-filter" 
+          (change)="onActionFilterChange($any($event).target.value)"
+          [value]="selectedAction">
+          <option value="all">Todas las acciones</option>
+          <option value="created">Creado</option>
+          <option value="updated">Actualizado</option>
+          <option value="deleted">Eliminado</option>
+          <option value="status_changed">Cambio de Estado</option>
+          <option value="assigned">Asignado</option>
+          <option value="completed">Completado</option>
+        </select>
+      </div>
+
+      <button mat-raised-button 
+              color="primary" 
+              class="clear-btn"
+              (click)="clearFilters()"
+              *ngIf="traceabilityRecords.length > 0">
+        <mat-icon>clear_all</mat-icon>
+        Limpiar filtros
+      </button>
+    </div>
+
+    <!-- Results Summary -->
+    <div class="results-summary" *ngIf="filteredRecords.length !== traceabilityRecords.length">
+      <span class="summary-text">
+        Mostrando {{ filteredRecords.length }} de {{ traceabilityRecords.length }} registros
+      </span>
+    </div>
+
+    <div class="trazabilidad-list">
+      <app-traceability-list 
+        [records]="filteredRecords" 
+        [totalCount]="traceabilityRecords.length"
+        (recordClick)="onRecordClick($event)">
+      </app-traceability-list>
+    </div>
+  </div>
+</div>

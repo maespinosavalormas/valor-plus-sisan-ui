@@ -1,0 +1,263 @@
+<h2 mat-dialog-title class="form-title">{{ data ? 'Editar usuario' : 'Crear usuario' }}</h2>
+
+<form [formGroup]="form" mat-dialog-content>
+  <div class="form-grid">
+    <!--  -->
+    <div class="form-col">
+      <div class="field">
+        <label class="field-label">Primer Nombre<span class="req">*</span></label>
+        <input
+          class="control"
+          type="text"
+          formControlName="firstName"
+          placeholder="Ingrese su primer nombre"
+          autocomplete="off"
+        />
+        <div
+          class="field-error"
+          *ngIf="form.get('firstName')?.touched && form.get('firstName')?.hasError('required')"
+        >
+          Campo obligatorio
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label">Segundo Nombre</label>
+        <input
+          class="control"
+          type="text"
+          formControlName="middleName"
+          placeholder="Ingrese su segundo nombre"
+          autocomplete="off"
+        />
+      </div>
+
+      <div class="field">
+        <label class="field-label">Primer Apellido<span class="req">*</span></label>
+        <input
+          class="control"
+          type="text"
+          formControlName="lastName"
+          placeholder="Ingrese su primer apellido"
+          autocomplete="off"
+        />
+        <div
+          class="field-error"
+          *ngIf="form.get('lastName')?.touched && form.get('lastName')?.hasError('required')"
+        >
+          Campo obligatorio
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label">Segundo Apellido</label>
+        <input
+          class="control"
+          type="text"
+          formControlName="secondSurname"
+          placeholder="Ingrese su segundo apellido"
+          autocomplete="off"
+        />
+      </div>
+
+      <div class="field">
+        <label class="field-label">Correo Electronico<span class="req">*</span></label>
+        <input
+          class="control"
+          type="email"
+          formControlName="email"
+          placeholder="tucorreo@sitio.com"
+          autocomplete="off"
+        />
+        <div
+          class="field-error"
+          *ngIf="form.get('email')?.touched && form.get('email')?.hasError('required')"
+        >
+          Campo obligatorio
+        </div>
+        <div
+          class="field-error"
+          *ngIf="form.get('email')?.touched && form.get('email')?.hasError('email')"
+        >
+          Correo no válido
+        </div>
+      </div>
+
+      <div formGroupName="userInfo">
+        <div class="field-row">
+          <div class="field field-no-label">
+            <label class="field-label">Departamento<span class="req">*</span></label>
+            <select class="control control-select" formControlName="provinceId">
+              <option value="">Departamento</option>
+              <option *ngFor="let province of provinces" [value]="province.id">
+                {{ province.name }}
+              </option>
+            </select>
+            <div
+              class="field-error"
+              *ngIf="
+                form.get('userInfo.provinceId')?.touched &&
+                form.get('userInfo.provinceId')?.hasError('required')
+              "
+            >
+              Campo obligatorio
+            </div>
+          </div>
+
+          <div class="field field-no-label">
+            <label class="field-label">Municipio<span class="req">*</span></label>
+            <select class="control control-select" formControlName="cityId">
+              <option value="">Municipio</option>
+              <option *ngFor="let city of cities" [value]="city.id">
+                {{ city.name }}
+              </option>
+            </select>
+            <div
+              class="field-error"
+              *ngIf="
+                form.get('userInfo.cityId')?.touched &&
+                form.get('userInfo.cityId')?.hasError('required')
+              "
+            >
+              Campo obligatorio
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-col">
+      <div formGroupName="userInfo" class="form-col">
+        <div class="field field-no-label">
+          <label class="field-label">Tipo de Identificacion<span class="req">*</span></label>
+          <select class="control control-select" formControlName="identificationTypeId">
+            <option value="">Tipo de identificacion</option>
+            <option *ngFor="let type of identificationTypes" [value]="type.id">
+              {{ type.name }}
+            </option>
+          </select>
+          <div
+            class="field-error"
+            *ngIf="
+              form.get('userInfo.identificationTypeId')?.touched &&
+              form.get('userInfo.identificationTypeId')?.hasError('required')
+            "
+          >
+            Campo obligatorio
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label">Numero de Identificacion<span class="req">*</span></label>
+          <input
+            class="control"
+            type="text"
+            formControlName="identificationNumber"
+            placeholder="Ingrese su numero de identificacion"
+            autocomplete="off"
+          />
+          <div
+            class="field-error"
+            *ngIf="
+              form.get('userInfo.identificationNumber')?.touched &&
+              form.get('userInfo.identificationNumber')?.hasError('required')
+            "
+          >
+            Campo obligatorio
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label">Telefono<span class="req">*</span></label>
+          <input
+            class="control"
+            type="tel"
+            formControlName="phone"
+            placeholder="Ingrese su numero de telefono"
+            autocomplete="off"
+          />
+          <div
+            class="field-error"
+            *ngIf="
+              form.get('userInfo.phone')?.touched &&
+              form.get('userInfo.phone')?.hasError('required')
+            "
+          >
+            Campo obligatorio
+          </div>
+          <div
+            class="field-error"
+            *ngIf="
+              form.get('userInfo.phone')?.touched &&
+              form.get('userInfo.phone')?.hasError('pattern')
+            "
+          >
+            Debe iniciar con +57 y tener 10 dígitos
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label">Direccion de Residencia<span class="req">*</span></label>
+          <input
+            class="control"
+            type="text"
+            formControlName="address"
+            placeholder="Ingrese su direccion de residencia"
+            autocomplete="off"
+          />
+          <div
+            class="field-error"
+            *ngIf="
+              form.get('userInfo.address')?.touched &&
+              form.get('userInfo.address')?.hasError('required')
+            "
+          >
+            Campo obligatorio
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label">Fecha de nacimiento<span class="req">*</span></label>
+          <input class="control" type="date" formControlName="birthdate" autocomplete="off" />
+          <div
+            class="field-error"
+            *ngIf="
+              form.get('userInfo.birthdate')?.touched &&
+              form.get('userInfo.birthdate')?.hasError('required')
+            "
+          >
+            Campo obligatorio
+          </div>
+        </div>
+      </div>
+
+      <div class="field field-no-label">
+        <label class="field-label">Rol<span class="req">*</span></label>
+        <select class="control control-select" formControlName="roleIds" multiple>
+          <option *ngFor="let role of roles" [value]="role">
+            {{ role }}
+          </option>
+        </select>
+        <div
+          class="field-error"
+          *ngIf="form.get('roleIds')?.touched && form.get('roleIds')?.hasError('required')"
+        >
+          Campo obligatorio
+        </div>
+      </div>
+    </div>
+    <!--  -->
+  </div>
+  <mat-dialog-actions align="end" class="dialog-actions">
+    <button mat-button class="btn-cancel" type="button" (click)="showCancelConfirmation()">Cancelar</button>
+    <button
+      mat-flat-button
+      class="btn-guardar"
+      type="button"
+      (click)="showSaveConfirmation()"
+      [disabled]="form.invalid"
+    >
+      {{ isEdit ? 'Actualizar' : 'Guardar' }}
+    </button>
+  </mat-dialog-actions>
+</form>

@@ -1,0 +1,41 @@
+<div class="nutritional-follow-up-details-page">
+  <app-nutritional-follow-up-details-header
+    [followUp]="followUp"
+    [showBackButton]="true"
+    [activeView]="currentView"
+    (backClicked)="onBack()"
+    (viewChanged)="onViewChange($event)"
+    (editClicked)="onEdit()">
+  </app-nutritional-follow-up-details-header>
+
+  <div class="details-content" *ngIf="currentView === 'details'">
+    <div class="info-section" *ngFor="let section of sections">
+      <div class="section-header">
+        <div class="section-icon">
+          <mat-icon>{{ section.icon }}</mat-icon>
+        </div>
+        <div class="section-title">
+          <h4>{{ section.title }}</h4>
+        </div>
+      </div>
+
+      <div class="section-content">
+        <div class="info-grid">
+          <div
+            class="info-item"
+            *ngFor="let field of section.fields"
+            [class.full-width]="field.fullWidth">
+            <span class="info-label">{{ field.label }}:</span>
+            <span class="info-value">{{ getValue(field.key) }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <app-nutritional-follow-up-traceability
+    *ngIf="currentView === 'traceability'"
+    [followUp]="followUp"
+    (back)="onBack()">
+  </app-nutritional-follow-up-traceability>
+</div>

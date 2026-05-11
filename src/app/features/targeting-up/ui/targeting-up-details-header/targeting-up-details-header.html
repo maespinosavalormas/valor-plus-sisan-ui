@@ -1,0 +1,38 @@
+<!-- Header de la página -->
+<div class="targeting-up-details-header">
+  <div class="page-header">
+    <button
+      mat-icon-button
+      class="back-button"
+      (click)="onBack()"
+      *ngIf="showBackButton"
+    >
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+
+    <div class="title-section">
+      <h1 class="page-title">{{ getTitle() }}</h1>
+    </div>
+  </div>
+
+  <div class="view-toggle">
+    <button
+      mat-button
+      class="toggle-btn"
+      [class.active]="activeView === 'details'"
+      (click)="onViewChange('details')"
+    >
+      <mat-icon>description</mat-icon>
+      Información
+    </button>
+    <button
+      mat-button
+      class="toggle-btn"
+      [class.active]="activeView === 'traceability'"
+      (click)="onViewChange('traceability')"
+    >
+      <mat-icon>history</mat-icon>
+      Trazabilidad
+    </button>
+  </div>
+</div>

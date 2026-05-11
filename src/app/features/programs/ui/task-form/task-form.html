@@ -1,0 +1,116 @@
+<div class="form-header">
+  <h2 mat-dialog-title class="form-title">{{ isEditing ? 'Editar Actividad' : 'Crear Nueva Actividad' }}</h2>
+  <button mat-icon-button class="close-button" (click)="onCancel()">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+<form [formGroup]="form" mat-dialog-content>
+  <div class="form-grid">
+    <div class="form-col">
+      <div class="field">
+        <label class="field-label">Nombre de la actividad<span class="req">*</span></label>
+        <input
+          class="control"
+          type="text"
+          formControlName="nombreActividad"
+          placeholder="Ingrese el nombre de la actividad"
+          autocomplete="off"
+          maxlength="200"
+        />
+        <div
+          class="field-error"
+          *ngIf="nombreActividad?.touched && nombreActividad?.hasError('required')"
+        >
+          Requerido
+        </div>
+        <div
+          class="field-error"
+          *ngIf="nombreActividad?.touched && nombreActividad?.hasError('maxlength')"
+        >
+          Máximo 200 caracteres
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="field">
+          <label class="field-label">Fecha Inicio Actividad<span class="req">*</span></label>
+          <input
+            class="control"
+            type="date"
+            formControlName="fechaInicioActividad"
+          />
+          <div class="field-error" *ngIf="form.get('fechaInicioActividad')?.touched && form.get('fechaInicioActividad')?.hasError('required')">
+            Requerido
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label">Fecha Fin Actividad<span class="req">*</span></label>
+          <input
+            class="control"
+            type="date"
+            formControlName="fechaFinActividad"
+          />
+          <div class="field-error" *ngIf="form.get('fechaFinActividad')?.touched && form.get('fechaFinActividad')?.hasError('required')">
+            Requerido
+          </div>
+        </div>
+      </div>
+
+      <!-- Descripción -->
+      <div class="field full-width">
+        <label class="field-label">Descripción<span class="req">*</span></label>
+        <textarea 
+          class="control" 
+          formControlName="descripcion" 
+          placeholder="Ingrese la descripción de la actividad" 
+          rows="4" 
+          maxlength="500">
+        </textarea>
+        <div 
+          class="field-error" 
+          *ngIf="descripcion?.touched && descripcion?.hasError('required')"
+        >
+          Requerido
+        </div>
+        <div 
+          class="field-error" 
+          *ngIf="descripcion?.touched && descripcion?.hasError('maxlength')"
+        >
+          Máximo 500 caracteres
+        </div>
+      </div>
+
+      <!-- Responsable -->
+      <div class="field">
+        <label class="field-label">Responsable<span class="req">*</span></label>
+        <mat-select class="control" formControlName="responsable" multiple>
+          <mat-option value="">Seleccione responsable(es)</mat-option>
+          <mat-option *ngFor="let responsable of responsables" [value]="responsable.id">
+            {{ responsable.name }}
+          </mat-option>
+        </mat-select>
+        <div
+          class="field-error"
+          *ngIf="responsable?.touched && responsable?.hasError('required')"
+        >
+          Requerido
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+<mat-dialog-actions align="end" class="dialog-actions">
+  <button mat-button class="btn-cancel" type="button" (click)="onCancel()">Cancelar</button>
+  <button
+    mat-flat-button
+    class="btn-guardar"
+    type="button"
+    (click)="onSave()"
+    [disabled]="form.invalid"
+  >
+    Confirmar
+  </button>
+</mat-dialog-actions>

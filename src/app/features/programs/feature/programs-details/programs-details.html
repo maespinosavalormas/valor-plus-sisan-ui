@@ -1,0 +1,222 @@
+<!-- Header reutilizable -->
+<app-program-header
+  [program]="program"
+  [activeView]="'info'"
+  (backClicked)="goBack()"
+  (viewChanged)="onViewChange($event)">
+</app-program-header>
+
+<div class="programs-details-page">
+  <div class="main-content">
+    <!-- Vista de Información -->
+    <div class="info-view" *ngIf="program">
+      <div class="info-section">
+        <div class="section-header">
+          <h2 class="section-title">Descripción del Programa</h2>
+          <div class="info-actions">
+            <mat-select 
+              class="status-select"
+              [(ngModel)]="selectedStatus"
+              (selectionChange)="changeProgramStatus($event)"
+              placeholder="Cambiar Estado">
+              <mat-option value="ACTIVE">Activo</mat-option>
+              <mat-option value="COMPLETED">Finalizado</mat-option>
+              <mat-option value="CANCELLED">Cancelado</mat-option>
+            </mat-select>
+            <button mat-raised-button color="primary" class="update-btn" (click)="updateProgram()">
+              <mat-icon>edit</mat-icon>
+              Editar Programa
+            </button>
+          </div>
+        </div>
+      <p class="description-text">{{ program.description }}</p>
+      </div>
+      
+      <!-- Sección de Objetivos -->
+      <div class="info-section">
+        <h2 class="section-title">Objetivo del Programa</h2>
+        <p class="description-text">{{ program.objetivos }}</p>
+        <h3 class="subsection-title">Objetivos Específicos</h3>
+        <ul class="objectives-list">
+          <li *ngFor="let objetivo of program.objetivosEspecificos" class="objective-item">
+            <mat-icon class="objective-icon">check</mat-icon>
+            {{ objetivo }}
+          </li>
+        </ul>
+      </div>
+      
+      <!-- Sección de Responsables -->
+      <div class="info-section">
+        <h2 class="section-title">Responsables del Programa</h2>
+        <div class="responsables-grid">
+          <div *ngFor="let responsable of program.responsables" class="responsable-card">
+            <mat-icon class="responsable-icon">person</mat-icon>
+            <span class="responsable-name">{{ responsable }}</span>
+          </div>
+        </div>
+      </div>
+      </div>
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-header">
+            <mat-icon class="metric-icon">people</mat-icon>
+            <span class="metric-title">Casos Vinculados</span>
+          </div>
+          <div class="metric-value">{{ program.applications || 0 }}</div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-header">
+            <mat-icon class="metric-icon">event</mat-icon>
+            <span class="metric-title">Fecha de Inicio</span>
+          </div>
+          <div class="metric-value">{{ program.startDate || 'No definida' }}</div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-header">
+            <mat-icon class="metric-icon">event_available</mat-icon>
+            <span class="metric-title">Fecha de Fin</span>
+          </div>
+          <div class="metric-value">{{ program.endDate || 'No definida' }}</div>
+        </div>
+        <!-- <div class="metric-card progress-card">
+          <div class="metric-header">
+            <mat-icon class="metric-icon">trending_up</mat-icon>
+            <span class="metric-title">Tasa de Efectividad</span>
+          </div>
+          <div class="progress-header">
+            <span class="progress-label">Porcentaje</span>
+            <span class="progress-value">{{ program.effectivenessRate || 0 }}%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" [style.width.%]="program.effectivenessRate || 0"></div>
+          </div>
+        </div> -->
+      </div>
+
+      <!-- Sección de Casos Vinculados -->
+      <div class="info-section">
+        <h2 class="section-title">Casos de Desnutrición Vinculados</h2>
+        <div class="cases-container">
+          <div class="cases-header">
+            <span class="header-item">Número de Caso</span>
+            <span class="header-item">Paciente</span>
+            <span class="header-item">Estado</span>
+          </div>
+          <div class="cases-list">
+            <div *ngFor="let caso of program.casosVinculados" class="case-row">
+              <span class="case-number">{{ caso.numeroCaso }}</span>
+              <div class="case-patient">
+                <mat-icon class="case-icon">person</mat-icon>
+                <span class="patient-name">{{ caso.nombrePaciente }}</span>
+              </div>
+              <span [ngClass]="getEstadoClass(caso.estado)" class="case-status">{{ caso.estado }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección de Evidencias -->
+      <!-- <div class="info-section">
+        <div class="section-header">
+          <h2 class="section-title">Evidencias</h2>
+          <button mat-raised-button color="primary" class="add-btn" (click)="addEvidencia()">
+            <mat-icon>upload_file</mat-icon>
+            Agregar PDF
+          </button>
+        </div>
+        
+        <div class="evidences-container">
+          <div class="evidences-header">
+            <span class="header-item">Nombre del Archivo</span>
+            <span class="header-item">Fecha</span>
+            <span class="header-item">Tamaño</span>
+            <span class="header-item">Acciones</span>
+          </div>
+          <div class="evidences-list" *ngIf="program.evidencias.length > 0; else noEvidences">
+            <div *ngFor="let evidencia of program.evidencias; let i = index" class="evidence-item">
+              <div class="evidence-name">
+                <mat-icon class="evidence-icon">picture_as_pdf</mat-icon>
+                {{ evidencia.nombre }}
+              </div>
+              <span class="evidence-date">{{ evidencia.fecha }}</span>
+              <span class="evidence-size">{{ evidencia.tamano }}</span>
+              <div class="evidence-actions">
+                <button mat-icon-button class="download-btn" (click)="downloadEvidencia(evidencia)" title="Descargar PDF">
+                  <mat-icon>download</mat-icon>
+                </button>
+                <button mat-icon-button class="delete-btn" (click)="deleteEvidencia(i)" title="Eliminar PDF">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <ng-template #noEvidences>
+            <div class="empty-state">
+              <mat-icon>folder_open</mat-icon>
+              <p>No hay evidencias cargadas</p>
+            </div>
+          </ng-template>
+        </div>
+      </div> -->
+
+      <!-- Sección de Comentarios -->
+      <!-- <div class="info-section">
+        <div class="section-header">
+          <h2 class="section-title">Comentarios</h2>
+          <button mat-raised-button color="primary" class="add-btn" (click)="addComentario()">
+            <mat-icon>add_comment</mat-icon>
+            Agregar Comentario
+          </button>
+        </div>
+        
+        <div class="comments-container">
+          <div class="comments-header">
+            <span class="header-item">Comentarios ({{ program.comentarios.length }})</span>
+            <button mat-icon-button class="sort-btn" (click)="sortComments()">
+              <mat-icon>sort</mat-icon>
+            </button>
+          </div>
+          <div class="comments-list" *ngIf="program.comentarios.length > 0; else noComments">
+            <div *ngFor="let comentario of program.comentarios; let i = index" class="comment-item">
+              <div class="comment-header">
+                <div class="comment-avatar">{{ comentario.autor.charAt(0).toUpperCase() }}</div>
+                <div class="comment-author">{{ comentario.autor }}</div>
+                <div class="comment-date">{{ comentario.fecha | date:'dd/MM/yyyy' }}</div>
+              </div>
+              <p class="comment-text">{{ comentario.texto }}</p>
+              <div class="comment-actions">
+                <div class="comment-dots" (click)="toggleCommentActions(i)">
+                  <mat-icon>more_vert</mat-icon>
+                </div>
+                <div class="comment-options" [id]="'actions-' + i">
+                  <button mat-icon-button class="delete-btn" (click)="deleteComentario(i)">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                  <button mat-icon-button class="delete-btn" (click)="deleteComentario(i)">
+                    <mat-icon>reply</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <ng-template #noComments>
+            <div class="empty-state">
+              <mat-icon>chat_bubble_outline</mat-icon>
+              <p>No hay comentarios</p>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </div> -->
+
+  <!-- Estado de carga -->
+  <div class="loading-state" *ngIf="!program">
+    <mat-icon>hourglass_empty</mat-icon>
+    <h2>Cargando...</h2>
+    <p>Obteniendo detalles del programa.</p>
+  </div>
+</div>

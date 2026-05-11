@@ -1,0 +1,42 @@
+<!-- Header de la página -->
+<div class="user-details-header">
+  <div class="page-header">
+    <button 
+      mat-icon-button 
+      class="back-button" 
+      (click)="onBack()"
+      *ngIf="showBackButton"
+    >
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+
+    <div class="title-section">
+      <h1 class="page-title">{{ user?.firstName }} {{ user?.lastName }}</h1>
+      <span [ngClass]="getStatusClass(user?.isActive)" class="status-badge">
+        {{ getStatusLabel(user?.isActive) }}
+      </span>
+    </div>
+  </div>
+
+  <!-- Toggle de vista -->
+  <div class="view-toggle">
+    <button 
+      mat-button 
+      class="toggle-btn"
+      [class.active]="activeView === 'details'"
+      (click)="onViewChange('details')"
+    >
+      <mat-icon>person</mat-icon>
+      Información
+    </button>
+    <button 
+      mat-button 
+      class="toggle-btn"
+      [class.active]="activeView === 'traceability'"
+      (click)="onViewChange('traceability')"
+    >
+      <mat-icon>history</mat-icon>
+      Trazabilidad
+    </button>
+  </div>
+</div>

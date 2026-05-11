@@ -1,0 +1,168 @@
+<div class="at-comprehensive-up-details-page">
+  <app-at-comprehensive-up-details-header
+    [atComprehensiveUp]="atComprehensiveUp"
+    [showBackButton]="true"
+    [activeView]="currentView"
+    (backClicked)="onBack()"
+    (viewChanged)="onViewChange($event)"
+    (editClicked)="onEdit()">
+  </app-at-comprehensive-up-details-header>
+
+  <div class="at-comprehensive-up-info-content" *ngIf="currentView === 'details'">
+    <!-- SECCION 1: Información General -->
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon"><mat-icon>info</mat-icon></div>
+        <div class="section-title"><h4>Información General</h4></div>
+      </div>
+      <div class="section-content">
+        <div class="info-grid">
+          <div class="info-item"><span class="info-label">Código de la unidad productiva (código registrado en la focalización):</span><span class="info-value">{{ atComprehensiveUp?.codigoUnidadProductiva || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Nombre completo del beneficiario:</span><span class="info-value">{{ atComprehensiveUp?.nombreCompletoBeneficiario || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Tipo de unidad productiva:</span><span class="info-value">{{ atComprehensiveUp?.tipoUnidadProductiva || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">No se encuentra caracterizado:</span><span class="info-value">{{ atComprehensiveUp?.noSeEncuentraCaracterizado || 'N/A' }}</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECCION 2: Datos Representante Unidad Productiva -->
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon"><mat-icon>person</mat-icon></div>
+        <div class="section-title"><h4>Datos Representante Unidad Productiva</h4></div>
+      </div>
+      <div class="section-content">
+        <div class="info-grid">
+          <div class="info-item"><span class="info-label">Nombre del responsable:</span><span class="info-value">{{ atComprehensiveUp?.nombreResponsable || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Tipo de documento del responsable (a):</span><span class="info-value">{{ atComprehensiveUp?.tipoDocumentoResponsable || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Número de documento representante o responsable de la unidad productiva:</span><span class="info-value">{{ atComprehensiveUp?.numeroDocumentoResponsable || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Teléfono de contacto:</span><span class="info-value">{{ atComprehensiveUp?.telefonoContactoResponsable || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Convenio:</span><span class="info-value">{{ atComprehensiveUp?.convenio || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Región:</span><span class="info-value">{{ atComprehensiveUp?.region || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Municipio:</span><span class="info-value">{{ atComprehensiveUp?.municipio || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Zona:</span><span class="info-value">{{ atComprehensiveUp?.zona || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Tipo Barrio o Vereda:</span><span class="info-value">{{ atComprehensiveUp?.tipoBarrioVereda || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Nombre del barrio:</span><span class="info-value">{{ atComprehensiveUp?.nombreBarrio || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Vereda:</span><span class="info-value">{{ atComprehensiveUp?.vereda || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Dirección o ubicación:</span><span class="info-value">{{ atComprehensiveUp?.direccionUbicacion || 'N/A' }}</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECCION 3: Información del funcionario -->
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon"><mat-icon>engineering</mat-icon></div>
+        <div class="section-title"><h4>Información del funcionario</h4></div>
+      </div>
+      <div class="section-content">
+        <div class="info-grid">
+          <div class="info-item"><span class="info-label">Número de documento del funcionario:</span><span class="info-value">{{ atComprehensiveUp?.numeroDocumentoFuncionario || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Nombres y apellidos del funcionario que realiza la visita:</span><span class="info-value">{{ atComprehensiveUp?.nombreFuncionario || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Función de quién realiza la visita:</span><span class="info-value">{{ atComprehensiveUp?.funcionFuncionario || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Fecha Asistencia tecnica:</span><span class="info-value">{{ atComprehensiveUp?.fechaAsistenciaTecnica || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Numero de la asistencia tecnica:</span><span class="info-value">{{ atComprehensiveUp?.numeroAsistenciaTecnica || 'N/A' }}</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECCION 4: Detalles de la asistencia -->
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon"><mat-icon>location_on</mat-icon></div>
+        <div class="section-title"><h4>Detalles de la asistencia</h4></div>
+      </div>
+      <div class="section-content">
+        <div class="info-grid">
+          <div class="info-item"><span class="info-label">Latitud:</span><span class="info-value">{{ atComprehensiveUp?.latitud || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Longitud:</span><span class="info-value">{{ atComprehensiveUp?.longitud || 'N/A' }}</span></div>
+          <div class="info-item full-width"><span class="info-label">Fase del proceso de producción:</span><span class="info-value">{{ atComprehensiveUp?.faseProcesoProduccion || 'N/A' }}</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECCION 5: Detalles de la cosecha -->
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon"><mat-icon>agriculture</mat-icon></div>
+        <div class="section-title"><h4>Detalles de la cosecha</h4></div>
+      </div>
+      <div class="section-content">
+        <div class="info-grid" *ngIf="atComprehensiveUp?.productosProducidos?.length; else noProductos">
+          <div class="info-item full-width" *ngFor="let producto of atComprehensiveUp?.productosProducidos; let i = index">
+            <div class="repeat-block">
+              <div class="repeat-title">Producto {{ i + 1 }}</div>
+              <div class="info-grid">
+                <div class="info-item"><span class="info-label">Seleccione el producto:</span><span class="info-value">{{ producto?.seleccioneProducto || 'N/A' }}</span></div>
+                <div class="info-item"><span class="info-label">¿Cuál?:</span><span class="info-value">{{ producto?.cualProducto || 'N/A' }}</span></div>
+                <div class="info-item"><span class="info-label">Kilos producidos:</span><span class="info-value">{{ producto?.kilosProducidos ?? 'N/A' }}</span></div>
+                <div class="info-item"><span class="info-label">Lista productos total:</span><span class="info-value">{{ producto?.listaProductosTotal || 'N/A' }}</span></div>
+                <div class="info-item"><span class="info-label">productos check:</span><span class="info-value">{{ producto?.productosCheck ?? 'N/A' }}</span></div>
+                <div class="info-item"><span class="info-label">suma de los kilos producidos:</span><span class="info-value">{{ producto?.sumaKilosProducidos ?? 'N/A' }}</span></div>
+                <div class="info-item"><span class="info-label">Foto formato seguimiento a la producción:</span><span class="info-value">{{ formatFileName(producto?.fotoSeguimiento) }}</span></div>
+                <div class="info-item"><span class="info-label">¿Cuántos kilos destinados en Autoconsumo?:</span><span class="info-value">{{ producto?.kilosAutoconsumo ?? 'N/A' }}</span></div>
+                <div class="info-item"><span class="info-label">¿Cuántos kilos destinados en PAE?:</span><span class="info-value">{{ producto?.kilosPAE ?? 'N/A' }}</span></div>
+                <div class="info-item"><span class="info-label">¿Cuántos kilos destinados en Trueque?:</span><span class="info-value">{{ producto?.kilosTrueque ?? 'N/A' }}</span></div>
+                <div class="info-item"><span class="info-label">¿Cuántos kilos destinados en Venta Directa?:</span><span class="info-value">{{ producto?.kilosVentaDirecta ?? 'N/A' }}</span></div>
+                <div class="info-item"><span class="info-label">¿Cuántos kilos destinados en Donación?:</span><span class="info-value">{{ producto?.kilosDonacion ?? 'N/A' }}</span></div>
+                <div class="info-item"><span class="info-label">¿Cuántos kilos destinados en Hoteles?:</span><span class="info-value">{{ producto?.kilosHoteles ?? 'N/A' }}</span></div>
+                <div class="info-item"><span class="info-label">¿Cuántos kilos destinados en Restaurantes?:</span><span class="info-value">{{ producto?.kilosRestaurantes ?? 'N/A' }}</span></div>
+                <div class="info-item"><span class="info-label">¿Cuántos kilos destinados en Cafeteria?:</span><span class="info-value">{{ producto?.kilosCafeteria ?? 'N/A' }}</span></div>
+                <div class="info-item"><span class="info-label">suma de todos los destinos:</span><span class="info-value">{{ producto?.sumaTodosDestinos ?? 'N/A' }}</span></div>
+                <div class="info-item"><span class="info-label">total producido - total destinos:</span><span class="info-value">{{ producto?.totalProducidoMenosDestinos ?? 'N/A' }}</span></div>
+                <div class="info-item full-width"><span class="info-label">Total destinos: {{ producto?.sumaTodosDestinos ?? 0 }} kg Diferencia con producción: {{ producto?.totalProducidoMenosDestinos ?? 0 }} kg:</span><span class="info-value">{{ producto?.totalDestinosKg || 'N/A' }}</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <ng-template #noProductos>
+          <div class="info-grid">
+            <div class="info-item full-width"><span class="info-label">Productos:</span><span class="info-value">N/A</span></div>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+
+    <!-- SECCION 6: Detalles de la asistencia tecnica -->
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon"><mat-icon>support</mat-icon></div>
+        <div class="section-title"><h4>Detalles de la asistencia tecnica</h4></div>
+      </div>
+      <div class="section-content">
+        <div class="info-grid">
+          <div class="info-item"><span class="info-label">mostrar situacion previa:</span><span class="info-value">{{ atComprehensiveUp?.mostrarSituacionPrevia || 'N/A' }}</span></div>
+          <div class="info-item full-width"><span class="info-label">¿Cual es la Situación encontrada en la Unidad Productiva?:</span><span class="info-value">{{ atComprehensiveUp?.situacionEncontrada || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">mostrar recomendacion previa:</span><span class="info-value">{{ atComprehensiveUp?.mostrarRecomendacionPrevia || 'N/A' }}</span></div>
+          <div class="info-item full-width"><span class="info-label">Recomendaciones técnicas:</span><span class="info-value">{{ atComprehensiveUp?.recomendacionesTecnicas || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Fotografía del interior de la Unidad Productiva:</span><span class="info-value">{{ formatFileName(atComprehensiveUp?.fotografiaInterior) }}</span></div>
+          <div class="info-item"><span class="info-label">¿La unidad productiva esta implementada?:</span><span class="info-value">{{ atComprehensiveUp?.unidadProductivaImplementada || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">¿La unidad productiva esta activa o inactiva?:</span><span class="info-value">{{ atComprehensiveUp?.unidadProductivaActiva || 'N/A' }}</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECCION 7: Consentimiento informado -->
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon"><mat-icon>assignment</mat-icon></div>
+        <div class="section-title"><h4>Consentimiento informado</h4></div>
+      </div>
+      <div class="section-content">
+        <div class="info-grid">
+          <div class="info-item"><span class="info-label">Fecha y hora de finalización de la encuesta:</span><span class="info-value">{{ atComprehensiveUp?.fechaHoraFinalizacion || 'N/A' }}</span></div>
+          <div class="info-item full-width"><span class="info-label">1. Yo, actuando en representación y con la autorización expresa de todos los miembros de mi hogar, incluyendo a menores y mayores de edad, autorizo a la GOBERNACIÓN DE ANTIOQUIA para que en cumplimiento a lo determinado en la Ley 1581 de 2012 (uso de los datos personales), en el marco de sus procesos de atención, actúe como responsable del tratamiento de los datos personales de los cuales somos titulares, realice la recolección, uso y tratamiento de nuestros datos, ya sea de forma conjunta o separada, conforme a la política de tratamiento de datos personales de la Gobernación de Antioquia, disponible en https://sedeelectronica.antioquia.gov.co/publicaciones/203/politica-para-el-tratamiento-de-datos-personales/:</span><span class="info-value">{{ atComprehensiveUp?.consentimientoDatosPersonales || 'N/A' }}</span></div>
+          <div class="info-item full-width"><span class="info-label">2. Asimismo, autorizo a la administración departamental para captar, tomar, almacenar, editar, divulgar y publicar imágenes, audios o datos de nuestra familia, o de alguno de sus integrantes, (incluyendo menores y mayores de edad), con fines estadísticos, académicos o para la promoción de los derechos de los niños, niñas, adolescentes y familias. Esto se realizará conforme a la política de tratamiento de datos personales de la Gobernación de Antioquia, y dando cumplimiento a lo dispuesto en la Ley 1581 de 2012.:</span><span class="info-value">{{ atComprehensiveUp?.consentimientoImagenesAudios || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Firma del representante de la Unidad productiva:</span><span class="info-value">{{ formatFileName(atComprehensiveUp?.firmaRepresentante) }}</span></div>
+          <div class="info-item"><span class="info-label">Año de realización de la encuesta:</span><span class="info-value">{{ atComprehensiveUp?.anoRealizacionEncuesta || 'N/A' }}</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <app-at-comprehensive-up-traceability
+    *ngIf="currentView === 'traceability'"
+    [atComprehensiveUp]="atComprehensiveUp"
+    (back)="onBack()">
+  </app-at-comprehensive-up-traceability>
+</div>

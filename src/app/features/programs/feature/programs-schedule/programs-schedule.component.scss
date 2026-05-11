@@ -1,0 +1,686 @@
+.schedule-container {
+  padding: 24px;
+  min-width: 100% !important;
+  min-height: 60vh !important;
+  margin: 0 auto;
+  background-color: var(--white);
+  border-radius: 8px !important;
+}
+
+.schedule-content {
+  margin-top: 0;
+}
+
+.filters-section {
+  margin-bottom: 0;
+}
+
+.filters-card {
+  padding: 16px;
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
+.filters-row {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.filter-container {
+  min-width: 160px;
+  height: 32px;
+}
+
+.status-filter {
+  width: 100%;
+  background: var(--background-pages) !important;
+  border: 1px solid var(--gray-primary);
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 12px;
+  color: var(--strong-blue-primary);
+  height: 32px;
+
+  &:focus {
+    border-color: var(--blue-primary);
+    outline: none;
+  }
+}
+
+.clear-btn {
+  height: 32px;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 16px;
+  border-radius: 6px;
+  background-color: var(--blue-primary) !important;
+  color: var(--white) !important;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+
+  &:hover {
+    background-color: var(--blue-secondary) !important;
+  }
+}
+
+// Estilos del Diagrama de Gantt
+.gantt-container {
+  margin-bottom: 0;
+}
+
+.gantt-card {
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  max-height: 55vh !important;
+  min-height: 55vh;
+  box-shadow: none;
+  background-color: var(--background-pages);
+}
+
+.gantt-header {
+  display: flex;
+  background: var(--white);
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+// ===============================================
+// CONTENEDOR DE INFORMACIÓN CON ANCHOS FIJOS
+// ===============================================
+.gantt-info-container {
+  position: relative;
+  min-width: 200px;
+  max-width: 2000px;
+  min-height: 100% !important;
+  background: var(--white) !important;
+  border-right: 2px solid var(--gray-secondary);
+  overflow: hidden;
+  flex-shrink: 0;
+  
+  // Header de columnas con anchos FIJOS
+  .info-header {
+    display: flex;
+    padding: 12px 0;
+    background: var(--background-pages);
+    border-bottom: 1px solid var(--gray-secondary);
+  }
+  
+  // Fila de datos con anchos FIJOS
+  .info-row {
+    display: flex;
+    padding: 12px 0;
+    align-items: center;
+    min-height: 100% !important;
+    height: 100% !important;
+    background-color: var(--white) !important;
+  }
+  
+  // Columnas individuales con ANCHOS FIJOS EN PX
+  .info-col {
+    flex-shrink: 0; // No se encogen
+    flex-grow: 0;   // No crecen
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 0 6px;
+    height: 100% !important;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    background-color: var(--white) !important;
+    
+    // ACTIVIDAD: 160px fijos
+    &.col-activity {
+      width: 160px;
+      font-weight: 500;
+      color: var(--strong-blue-primary);
+      font-size: 11px;
+      text-align: left;
+    }
+    
+    // INICIO: 80px fijos
+    &.col-start {
+      width: 80px;
+      font-size: 9px;
+      color: var(--gray-primary);
+      font-weight: 500;
+      text-align: center;
+    }
+    
+    // FIN: 80px fijos
+    &.col-end {
+      width: 80px;
+      font-size: 9px;
+      color: var(--gray-primary);
+      font-weight: 500;
+      text-align: center;
+    }
+    
+    // ESTADO: 90px fijos
+    &.col-status {
+      width: 90px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    // RESPONSABLE: 100px fijos
+    &.col-responsible {
+      width: 100px;
+      font-size: 9px;
+      color: var(--gray-primary);
+      font-weight: 500;
+      text-align: center;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    // AVANCE: 70px fijos
+    &.col-progress {
+      width: 70px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2px;
+    }
+    
+    // DURACIÓN: 70px fijos
+    &.col-duration {
+      width: 70px;
+      font-size: 9px;
+      color: var(--gray-primary);
+      font-weight: 500;
+      text-align: center;
+    }
+  }
+  
+  // Header específico
+  .info-header .info-col {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--strong-blue-primary);
+    text-transform: uppercase;
+    
+    &.col-activity {
+      text-align: left;
+    }
+    
+    &.col-start,
+    &.col-end,
+    &.col-status,
+    &.col-responsible,
+    &.col-progress,
+    &.col-duration {
+      text-align: center;
+    }
+  }
+}
+
+// Manejador de redimensionamiento - TODA LA ALTURA
+.resize-handle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 4px;
+  height: 100%;
+  cursor: col-resize;
+  background-color: transparent;
+  z-index: 100;
+  transition: background-color 0.15s ease;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+  }
+  
+  &:hover {
+    background-color: var(--blue-primary);
+    
+    &::after {
+      background-color: var(--blue-primary);
+    }
+  }
+  
+  &:active {
+    background-color: var(--blue-secondary);
+  }
+}
+
+// Estado de redimensionamiento
+.gantt-card.resizing {
+  user-select: none;
+  cursor: col-resize;
+  
+  * {
+    cursor: col-resize !important;
+  }
+}
+
+// Badge de estado
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  white-space: nowrap;
+  display: inline-block;
+  
+  &.status-completed {
+    background-color: var(--blue-primary);
+    color: var(--white);
+  }
+  
+  &.status-in-progress {
+    background-color: var(--strong-blue-secondary);
+    color: var(--white);
+  }
+  
+  &.status-delayed {
+    background-color: var(--warning);
+    color: var(--white);
+  }
+  
+  &.status-pending {
+    background-color: var(--strong-gray-primary);
+    color: var(--white);
+  }
+}
+
+// ===============================================
+// TIMELINE HEADER
+// ===============================================
+.gantt-timeline-header-wrapper {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+.gantt-timeline-header {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;  
+  -ms-overflow-style: none; 
+  margin-right: 5px !important;
+  
+  // Ocultar scrollbar en todos los navegadores
+  &::-webkit-scrollbar {
+    display: none;  
+  }
+}
+
+.timeline-months {
+  display: flex;
+  border-bottom: 1px solid var(--gray-primary);
+  min-width: fit-content;
+}
+
+.month {
+  flex: 0 0 80px;
+  text-align: center;
+  padding: 8px 2px;
+  font-size: 11px;
+  color: var(--gray-primary);
+  border-right: 1px solid var(--gray-secondary);
+  background: var(--background-pages);
+  
+  &:last-child {
+    border-right: none;
+  }
+}
+
+// VISTA POR AÑOS: Ancho fijo de 240px por año
+.timeline-years {
+  display: flex;
+  border-bottom: 1px solid var(--background-pages);
+  min-width: fit-content;
+}
+
+.year {
+  flex: 0 0 240px;
+  text-align: center;
+  padding: 8px;
+  font-weight: 600;
+  color: var(--gray-primary);
+  border-right: 1px solid var(--gray-secondary);
+  
+  &:last-child {
+    border-right: none;
+  }
+}
+
+// VISTA POR DÍAS: Ancho fijo de 30px por día
+.timeline-days {
+  display: flex;
+  border-bottom: 1px solid var(--gray-primary);
+  min-width: fit-content;
+}
+
+.day {
+  flex: 0 0 30px;
+  text-align: center;
+  padding: 8px 4px;
+  font-size: 11px;
+  color: var(--gray-primary);
+  border-right: 1px solid var(--gray-secondary);
+  
+  &:last-child {
+    border-right: none;
+  }
+}
+
+// ===============================================
+// CONTENEDOR DE SCROLL Y CUERPO
+// ===============================================
+.gantt-scroll-container {
+  flex: 1;
+  overflow: auto; 
+  position: relative;
+  max-height: 40vh;
+  
+  &::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: var(--background-pages);
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: var(--gray-primary);
+    border-radius: 4px;
+    
+    &:hover {
+      background: var(--strong-blue-primary);
+    }
+  }
+}
+
+.gantt-content {
+  display: flex;
+  flex-direction: column;
+  max-height: 40vh;
+  min-width: fit-content;
+}
+
+.gantt-body {
+  display: flex;
+  flex-direction: column;
+  min-width: 100%;
+}
+
+.gantt-row {
+  display: flex;
+  border-bottom: 1px solid var(--gray-secondary);
+  min-height: 60px;
+  align-items: stretch;
+  position: relative;
+  
+  &:last-child {
+    border-bottom: none;
+  }
+  
+  // CRÍTICO: El contenedor de info se queda ABSOLUTAMENTE fijo a la izquierda
+  .gantt-info-container {
+    position: sticky;
+    left: 0; // Siempre en left: 0, no se mueve
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
+    // Asegurar que el fondo sea sólido para cubrir el contenido que pasa por debajo
+    background-color: var(--white);
+  }
+  
+  // Manejador de resize también en cada fila
+  .resize-handle {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 4px;
+    height: 100%;
+    cursor: col-resize;
+    background-color: transparent;
+    z-index: 10;
+    
+    &:hover {
+      background-color: var(--blue-primary);
+    }
+  }
+}
+
+// ===============================================
+// TIMELINE Y BARRAS
+// ===============================================
+.gantt-timeline {
+  position: relative;
+  min-height: 60px;
+  flex-shrink: 0;
+}
+
+.timeline-grid {
+  position: relative;
+  height: 100%;
+  margin: 15px 0 0 0;
+  display: flex;
+  align-items: center;
+}
+
+// Contenedor de líneas de división
+.grid-lines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+// Líneas divisorias
+.year-divider,
+.month-divider,
+.day-divider {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background-color: var(--gray-secondary);
+  z-index: 1;
+}
+
+.task-bar {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 32px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 2;
+  min-width: 40px;
+  color: var(--white);
+  
+  &:hover {
+    transform: translateY(-50%) scale(1.02);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    z-index: 3;
+  }
+  
+  &.status-completed {
+    background: var(--blue-primary);
+  }
+  
+  &.status-in-progress {
+    background: var(--strong-blue-secondary);
+  }
+  
+  &.status-pending {
+    background: var(--strong-gray-primary);
+  }
+  
+  &.status-delayed {
+    background: var(--warning);
+  }
+}
+
+.task-bar-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  height: 100%;
+  overflow: visible; // Cambiado a visible para mostrar todo el contenido
+  width: 100%;
+  padding: 2px 4px; // Añadir padding para espacio interno
+}
+
+.task-bar-title {
+  font-weight: 600;
+  font-size: 11px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  line-height: 1.2;
+  margin-bottom: 1px; // Espacio entre título y duración
+}
+
+.task-bar-duration {
+  font-size: 9px;
+  opacity: 0.9;
+  font-weight: 500;
+  white-space: nowrap; // Asegurar que la duración no se corte
+}
+
+// ===============================================
+// LEYENDA
+// ===============================================
+.gantt-legend {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px 24px;
+  border-top: 1px solid var(--gray-primary);
+  background: var(--white);
+  position: sticky;
+  bottom: 0;
+  margin-top: auto;
+}
+
+.legend-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.legend-title {
+  font-weight: 600;
+  color: var(--strong-blue-primary);
+  font-size: 14px;
+  margin-right: 8px;
+}
+
+.legend-items {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+// ===============================================
+// BARRAS DE PROGRESO
+// ===============================================
+.progress-bar {
+  width: 60px;
+  height: 6px;
+  background-color: var(--background-pages);
+  border-radius: 3px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.3s ease;
+  
+  &.progress-complete {
+    background: linear-gradient(90deg, var(--blue-primary) 0%, var(--blue-secondary) 100%);
+  }
+  
+  &.progress-in-progress {
+    background: linear-gradient(90deg, var(--strong-blue-secondary) 0%, var(--blue-primary) 100%);
+    animation: progress-pulse 2s infinite;
+  }
+  
+  &.progress-delayed {
+    background: linear-gradient(90deg, var(--warning) 0%, #f57c00 100%);
+  }
+  
+  &.progress-pending {
+    background: var(--strong-gray-primary);
+  }
+}
+
+.progress-text {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--gray-primary);
+  margin-top: 2px;
+}
+
+@keyframes progress-pulse {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; }
+}
+
+.no-items {
+  text-align: center;
+  padding: 5px 20px;
+  color: var(--strong-gray-primary);
+
+  mat-icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+  }
+
+  h3 {
+    margin: 0 0 8px 0;
+    font-size: 20px;
+    font-weight: 500;
+  }
+
+  p {
+    margin: 0;
+    font-size: 14px;
+  }
+}

@@ -1,0 +1,289 @@
+<mat-sidenav-container class="sidenav-container">
+  <!-- Sidenav -->
+  <mat-sidenav #sidenav mode="side" class="sidenav" [opened]="true">
+    <!-- Logo Container with Close Button -->
+    <div class="logo-header">
+      <div class="logo-container">
+        <img src="../../../assets/images/logo-sisan.png" alt="Logo" class="logo">
+      </div>
+      <button (click)="sidenav.close()" class="sidenav-close-btn clean-btn">
+        <mat-icon class="close-icon" style="background-color: transparent; border-radius: 0;">chevron_right</mat-icon>
+      </button>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- Navigation List -->
+  <mat-nav-list>
+      <a mat-list-item routerLink="/home" routerLinkActive="active">
+        <mat-icon matListItemIcon>insert_chart_outlined</mat-icon>
+        <span matLine>Dashboard</span>
+      </a>
+      <a mat-list-item routerLink="/users" routerLinkActive="active">
+        <mat-icon matListItemIcon>people</mat-icon>
+        <span matLine>Usuarios</span>
+      </a>
+      <a mat-list-item routerLink="/cases" routerLinkActive="active">
+        <mat-icon matListItemIcon>medical_services</mat-icon>
+        <span matLine>Casos</span>
+      </a>
+  <div class="nav-expandable">
+  <a mat-list-item 
+     class="expandable-item"
+     [class.active]="isLifestylesActive()"
+     (click)="toggleLifestyles($event)"
+     #lifestylesItem>
+    <mat-icon matListItemIcon>spa</mat-icon>
+    <span matLine>Estilos de Vida</span>
+    <mat-icon class="expand-arrow" [class.rotated]="lifestylesExpanded">chevron_right</mat-icon>
+  </a>
+</div>
+
+<!-- Panel flotante FUERA del sidenav, a nivel del sidenav-container -->
+<ng-container *ngIf="lifestylesExpanded">
+  <div class="lifestyle-overlay" (click)="lifestylesExpanded = false"></div>
+  <div class="lifestyle-floating-panel" [style.top.px]="lifestylesPanelTop">
+    <div class="floating-panel-header">
+      <mat-icon>spa</mat-icon>
+      <span>Estilos de Vida</span>
+    </div>
+    <mat-nav-list class="floating-nav-list">
+      <a mat-list-item routerLink="/pcd-emergencies" routerLinkActive="active-sub" (click)="lifestylesExpanded = false">
+        <mat-icon matListItemIcon>warning</mat-icon>
+        <span matLine>PCD y Emergencias</span>
+      </a>
+      <a mat-list-item routerLink="/legalization-packages" routerLinkActive="active-sub" (click)="lifestylesExpanded = false">
+        <mat-icon matListItemIcon>email</mat-icon>
+        <span matLine>Legalizacion Paquetes</span>
+      </a>
+      <a mat-list-item routerLink="/legalization-rectification" routerLinkActive="active-sub" (click)="lifestylesExpanded = false">
+        <mat-icon matListItemIcon>create_new_folder</mat-icon>
+        <span matLine>Subsanación Legalización</span>
+      </a> 
+    </mat-nav-list>
+  </div>
+</ng-container>
+      <!-- Menú Monitoreo y Control -->
+      <div class="nav-expandable">
+        <a mat-list-item 
+           class="expandable-item"
+           [class.active]="isMonitoringActive()"
+           (click)="toggleMonitoring($event)"
+           #monitoringItem>
+          <mat-icon matListItemIcon>visibility</mat-icon>
+          <span matLine>Monitoreo y Control</span>
+          <mat-icon class="expand-arrow" [class.rotated]="monitoringExpanded">chevron_right</mat-icon>
+        </a>
+      </div>
+
+      <!-- Panel flotante para Monitoreo y Control -->
+      <ng-container *ngIf="monitoringExpanded">
+        <div class="monitoring-overlay" (click)="monitoringExpanded = false"></div>
+        <div class="monitoring-floating-panel" [style.top.px]="monitoringPanelTop">
+          <div class="floating-panel-header">
+            <mat-icon>visibility</mat-icon>
+            <span>Monitoreo y Control</span>
+          </div>
+          <mat-nav-list class="floating-nav-list">
+            <a mat-list-item routerLink="/nutritional-follow-up" routerLinkActive="active-sub" (click)="lifestylesExpanded = false">
+                <mat-icon matListItemIcon>restaurant</mat-icon>
+                <span matLine>Seguimiento Nutricional</span>
+              </a>
+              <a mat-list-item routerLink="/psychosocial" routerLinkActive="active-sub" (click)="lifestylesExpanded = false">
+                <mat-icon matListItemIcon>insert_emoticon</mat-icon>
+                <span matLine>Psicosocial</span>
+              </a>
+              <a mat-list-item routerLink="/complements" routerLinkActive="active-sub" (click)="lifestylesExpanded = false">
+                <mat-icon matListItemIcon>extension</mat-icon>
+                <span matLine>Complementos</span>
+              </a>
+          </mat-nav-list>
+        </div>
+      </ng-container>
+      
+      <!-- Menú Unidades Productivas -->
+      <div class="nav-expandable">
+        <a mat-list-item 
+           class="expandable-item"
+           [class.active]="isProductiveUnitsActive()"
+           (click)="toggleProductiveUnits($event)"
+           #productiveUnitsItem>
+          <mat-icon matListItemIcon>food_bank</mat-icon>
+          <span matLine>Unidades Productivas</span>
+          <mat-icon class="expand-arrow" [class.rotated]="productiveUnitsExpanded">chevron_right</mat-icon>
+        </a>
+      </div>
+
+      <!-- Panel flotante para Unidades Productivas -->
+      <ng-container *ngIf="productiveUnitsExpanded">
+        <div class="productive-units-overlay" (click)="productiveUnitsExpanded = false"></div>
+        <div class="productive-units-floating-panel" [style.top.px]="productiveUnitsPanelTop">
+          <div class="floating-panel-header">
+            <mat-icon>food_bank</mat-icon>
+            <span>Unidades Productivas</span>
+          </div>
+          <mat-nav-list class="floating-nav-list">
+            <a mat-list-item routerLink="/targeting-up" routerLinkActive="active-sub" (click)="lifestylesExpanded = false">
+              <mat-icon matListItemIcon>search</mat-icon>
+              <span matLine>Focalizacion UP</span>
+            </a>
+            <a mat-list-item routerLink="/characterization-up" routerLinkActive="active-sub" (click)="lifestylesExpanded = false">
+              <mat-icon matListItemIcon>settings</mat-icon>
+              <span matLine>Caracterizacion UP</span>
+            </a>
+            <a mat-list-item routerLink="/at-comprehensive-up" routerLinkActive="active-sub" (click)="lifestylesExpanded = false">
+              <mat-icon matListItemIcon>health_and_safety</mat-icon>
+              <span matLine>AT Integral UP</span>
+            </a>
+            <a mat-list-item routerLink="/legalization-supplies" routerLinkActive="active-sub" (click)="lifestylesExpanded = false">
+              <mat-icon matListItemIcon>featured_play_list</mat-icon>
+              <span matLine>Legalización Insumos UP</span>
+            </a>
+          </mat-nav-list>
+        </div>
+      </ng-container>
+      
+      <!-- <a mat-list-item routerLink="/programs" routerLinkActive="active">
+        <mat-icon matListItemIcon>assignment</mat-icon>
+        <span matLine>Programas</span>
+      </a> -->
+      <a mat-list-item routerLink="/traceability" routerLinkActive="active">
+        <mat-icon matListItemIcon>history</mat-icon>
+        <span matLine>Trazabilidad</span>
+      </a>
+      <a mat-list-item routerLink="/reports" routerLinkActive="active">
+        <mat-icon matListItemIcon>notification_important</mat-icon>
+        <span matLine>Reportes</span>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <!-- Header Toolbar -->
+    <mat-toolbar class="header-toolbar">
+      <div class="header-content">
+        <div class="left-section">
+          <button mat-icon-button (click)="sidenav.toggle()" class="menu-btn">
+            <mat-icon>menu</mat-icon>
+          </button>
+          <h1 class="page-title">{{ pageTitle }}</h1>
+        </div>
+        <div class="header-actions">
+          <button mat-icon-button class="notification-bell" [matMenuTriggerFor]="notificationMenu">
+            <mat-icon>notifications</mat-icon>
+          </button>
+          <div class="user-avatar" [matMenuTriggerFor]="userMenu">
+            {{ userInitials }}
+          </div>
+          <div class="user-info-header">
+            <div class="user-name-header">{{ userName }}</div>
+            <div class="user-email-header">{{ userEmail }}</div>
+          </div>
+        </div>
+
+        <!-- Notification Menu -->
+        <mat-menu #notificationMenu="matMenu" class="notification-menu" xPosition="before">
+          <!-- Header -->
+          <div class="notification-header" (click)="$event.stopPropagation()">
+            <span class="notification-title">Notificaciones</span>
+            <a class="mark-all-read-link" (click)="markAllAsRead(); $event.preventDefault();">
+              Marcar todas como leídas
+            </a>
+          </div>
+
+          <!-- Filtros con badges -->
+          <div class="notification-filters" (click)="$event.stopPropagation()">
+            <button 
+              class="filter-btn" 
+              [class.active]="activeFilter === 'all'" 
+              (click)="setFilter('all')">
+              Todas 
+              <span class="filter-badge">{{ getFilterCount('all') }}</span>
+            </button>
+            <button 
+              class="filter-btn" 
+              [class.active]="activeFilter === 'following'" 
+              (click)="setFilter('following')">
+              Leidos
+              <span class="filter-badge">{{ getFilterCount('following') }}</span>
+            </button>
+            <button 
+              class="filter-btn" 
+              [class.active]="activeFilter === 'archive'" 
+              (click)="setFilter('archive')">
+              Sin Leer
+            </button>
+          </div>
+
+          <!-- Lista de Notificaciones -->
+          <div class="notification-list">
+            <div *ngIf="getFilteredNotifications().length === 0" class="empty-state">
+              <mat-icon>notifications_none</mat-icon>
+              <p>No hay notificaciones</p>
+            </div>
+
+            <button 
+              mat-menu-item 
+              *ngFor="let notification of getFilteredNotifications()" 
+              class="notification-item"
+              [class.unread]="!notification.read"
+              (click)="handleNotificationClick(notification)">
+              
+              <div class="notification-content">
+                <div class="notification-message" [innerHTML]="notification.message"></div>
+                <div class="notification-meta">
+                  {{ notification.time }} • {{ notification.category }}
+                </div>
+                
+                <!-- Archivo adjunto -->
+                <div class="notification-attachment" *ngIf="notification.attachment">
+                  <mat-icon>insert_drive_file</mat-icon>
+                  <span class="attachment-name">{{ notification.attachment.name }}</span>
+                  <span class="attachment-size">{{ notification.attachment.size }}</span>
+                </div>
+
+                <!-- Vista previa de texto -->
+                <div class="notification-preview" *ngIf="notification.preview">
+                  {{ notification.preview }}
+                </div>
+
+                <!-- Acciones para solicitudes -->
+                <div class="notification-actions" *ngIf="notification.actions">
+                  <button 
+                    class="action-btn accept" 
+                    (click)="handleAction($event, notification, 'accept')">
+                    Aceptar
+                  </button>
+                  <button 
+                    class="action-btn decline" 
+                    (click)="handleAction($event, notification, 'decline')">
+                    Rechazar
+                  </button>
+                </div>
+              </div>
+
+              <div class="notification-indicator" *ngIf="!notification.read"></div>
+            </button>
+          </div>
+        </mat-menu>
+
+        <!-- User Menu -->
+        <mat-menu #userMenu="matMenu" class="user-menu">
+          <button mat-menu-item (click)="editProfile()">
+            <mat-icon>edit</mat-icon>
+            <span>Editar perfil</span>
+          </button>
+          <mat-divider></mat-divider>
+          <div (click)="$event.stopPropagation()">
+            <app-logout-button></app-logout-button>
+          </div>
+        </mat-menu>
+      </div>
+    </mat-toolbar>
+
+    <!-- Main Content -->
+    <div class="content">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

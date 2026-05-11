@@ -1,0 +1,538 @@
+<div class="form-container">
+  <div class="form-header">
+    <div class="form-title">
+      <span>{{ title }}</span>
+    </div>
+    <button mat-icon-button class="close-button" (click)="onCancel()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <form [formGroup]="form" class="form-grid">
+    <!-- SECCION 1: Información General -->
+    <h4 class="section-title">
+      <mat-icon>info</mat-icon>
+      Información General
+    </h4>
+    <div class="field">
+      <span class="field-label req">Código de la unidad productiva (codigo registrado en la focalización):</span>
+      <input class="control" formControlName="codigoUnidadProductiva" placeholder="Ingrese código" required>
+    </div>
+    <div class="field">
+      <span class="field-label req">Tipo de unidad productiva sobre la cual va a Caracterizar:</span>
+      <mat-select class="control" formControlName="tipoUnidadProductiva" placeholder="Seleccione tipo" required>
+        <mat-option *ngFor="let tipo of tiposUnidadProductiva" [value]="tipo">{{ tipo }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Nombre del Representantes de la Unidad productiva y el codigo de la unidad productiva:</span>
+      <input class="control" formControlName="nombreRepresentanteUnidad" placeholder="Campo informativo" readonly>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Convenio:</span>
+      <input class="control" formControlName="convenio" placeholder="Campo de solo lectura" readonly>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Nombres y apellidos del funcionario que realiza la visita:</span>
+      <input class="control" formControlName="funcionarioVisita" placeholder="Campo de solo lectura" readonly>
+    </div>
+    <div class="field full-width">
+      <span class="field-label req">Ubicación Georeferenciación unidad productiva:</span>
+      <div
+        *ngIf="isBrowser"
+        class="map-container"
+        #mapContainer>
+      </div>
+      <div class="coordinates-display">
+        <strong>Coordenadas seleccionadas:</strong>
+        <div class="coordinates-row">
+          <div class="field inline-field coordinate-field">
+            <span class="field-label">Latitud:</span>
+            <input class="control" type="number" step="0.000001" formControlName="latitud" (blur)="onCoordinatesInput()" placeholder="No seleccionada">
+          </div>
+          <div class="field inline-field coordinate-field">
+            <span class="field-label">Longitud:</span>
+            <input class="control" type="number" step="0.000001" formControlName="longitud" (blur)="onCoordinatesInput()" placeholder="No seleccionada">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Región:</span>
+      <mat-select class="control" formControlName="region" placeholder="Campo de solo lectura" readonly>
+        <mat-option *ngFor="let region of regions" [value]="region">{{ region }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Municipio:</span>
+      <mat-select class="control" formControlName="municipio" placeholder="Campo de solo lectura" readonly>
+        <mat-option *ngFor="let municipio of municipios" [value]="municipio">{{ municipio }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Zona:</span>
+      <mat-select class="control" formControlName="zona" placeholder="Campo de solo lectura" readonly>
+        <mat-option *ngFor="let zona of zonas" [value]="zona">{{ zona }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Tipo Barrio o Vereda:</span>
+      <mat-select class="control" formControlName="tipoBarrioVereda" placeholder="Campo de solo lectura" readonly>
+        <mat-option *ngFor="let tipo of tiposBarrioVereda" [value]="tipo">{{ tipo }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Diligencie el nombre del barrio:</span>
+      <input class="control" formControlName="nombreBarrio" placeholder="Campo de solo lectura" readonly>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Seleccione la vereda:</span>
+      <mat-select class="control" formControlName="vereda" placeholder="Campo de solo lectura" readonly>
+        <mat-option *ngFor="let vereda of veredas" [value]="vereda">{{ vereda }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Dirección o ubicación:</span>
+      <input class="control" formControlName="direccionUbicacion" placeholder="Ingrese dirección" required>
+    </div>
+    <div class="field">
+      <span class="field-label req">Teléfono de contacto:</span>
+      <input class="control" type="text" formControlName="telefonoContacto" placeholder="Ingrese teléfono" pattern="[0-9]*" required>
+    </div>
+    <div class="field">
+      <span class="field-label req">Tipo de encuesta:</span>
+      <mat-select class="control" formControlName="tipoEncuesta" placeholder="Seleccione tipo" required>
+        <mat-option *ngFor="let tipo of tiposEncuesta" [value]="tipo">{{ tipo }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">¿Es víctima del conflicto armado?:</span>
+      <mat-select class="control" formControlName="victimaConflicto" placeholder="Seleccione" required>
+        <mat-option value="si">Sí</mat-option>
+        <mat-option value="no">No</mat-option>
+      </mat-select>
+    </div>
+    <div class="field" *ngIf="form.get('victimaConflicto')?.value === 'si'">
+      <span class="field-label req">Número de Registro Único de Victimas - RUV:</span>
+      <input class="control" formControlName="numeroRUV" placeholder="Ingrese número RUV" required>
+    </div>
+
+    <!-- SECCION 2: Representante UP -->
+    <h4 class="section-title">
+      <mat-icon>person</mat-icon>
+      Representante UP
+    </h4>
+    <div class="field readonly-field">
+      <span class="field-label">Tipo de documento del responsable (a):</span>
+      <mat-select class="control" formControlName="tipoDocumentoResponsable" placeholder="Campo de solo lectura" readonly>
+        <mat-option *ngFor="let tipo of tiposDocumento" [value]="tipo">{{ tipo }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Número de documento representante o responsable de la unidad productiva:</span>
+      <input class="control" type="text" formControlName="numeroDocumentoResponsable" placeholder="Campo de solo lectura" readonly pattern="[0-9]*">
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Primer nombre del responsable (a):</span>
+      <input class="control" formControlName="primerNombreResponsable" placeholder="Campo de solo lectura" readonly>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Segundo nombre del responsable (a):</span>
+      <input class="control" formControlName="segundoNombreResponsable" placeholder="Campo de solo lectura" readonly>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Primer apellido del responsable (a):</span>
+      <input class="control" formControlName="primerApellidoResponsable" placeholder="Campo de solo lectura" readonly>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Segundo apellido del responsable (a):</span>
+      <input class="control" formControlName="segundoApellidoResponsable" placeholder="Campo de solo lectura" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label req">Fecha de nacimiento:</span>
+      <input class="control" type="date" formControlName="fechaNacimientoResponsable" (change)="onBirthDateChange()" required>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Edad en años:</span>
+      <input class="control" type="number" formControlName="edadResponsable" placeholder="Campo de solo lectura" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label req">Sexo:</span>
+      <mat-select class="control" formControlName="sexoResponsable" placeholder="Seleccione sexo" required>
+        <mat-option *ngFor="let sexo of sexos" [value]="sexo">{{ sexo }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Estado civil:</span>
+      <mat-select class="control" formControlName="estadoCivilResponsable" placeholder="Seleccione estado civil" required>
+        <mat-option *ngFor="let estado of estadosCiviles" [value]="estado">{{ estado }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Grupo Etnico:</span>
+      <mat-select class="control" formControlName="grupoEtnicoResponsable" placeholder="Seleccione grupo étnico" required>
+        <mat-option *ngFor="let grupo of gruposEtnicos" [value]="grupo">{{ grupo }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Grupos poblacionales vulnerables:</span>
+      <mat-select class="control" formControlName="gruposVulnerablesResponsable" placeholder="Seleccione grupos vulnerables" multiple required>
+        <mat-option *ngFor="let grupo of gruposVulnerables" [value]="grupo">{{ grupo }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Ocupación:</span>
+      <mat-select class="control" formControlName="ocupacionResponsable" placeholder="Seleccione ocupación" required>
+        <mat-option *ngFor="let ocupacion of ocupaciones" [value]="ocupacion">{{ ocupacion }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field" *ngIf="form.get('ocupacionResponsable')?.value === 'Otra'">
+      <span class="field-label req">Cual?:</span>
+      <input class="control" formControlName="cualOcupacionResponsable" placeholder="Ingrese ocupación" required>
+    </div>
+    <div class="field">
+      <span class="field-label req">Actividad laboral:</span>
+      <mat-select class="control" formControlName="actividadLaboralResponsable" placeholder="Seleccione actividad laboral" required>
+        <mat-option *ngFor="let actividad of actividadesLaborales" [value]="actividad">{{ actividad }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Nombre IE ó CER:</span>
+      <input class="control" formControlName="nombreIEResponsable" placeholder="Campo de solo lectura" readonly>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Codigo consecutivo DANE sede IE o CER:</span>
+      <input class="control" formControlName="codigoDaneResponsable" placeholder="Campo de solo lectura" readonly>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Area disponible en m2 para implementación de la unidad productiva:</span>
+      <input class="control" type="number" formControlName="areaDisponibleResponsable" placeholder="Campo de solo lectura" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label req">Numero de miembros participantes de la asociación:</span>
+      <input class="control" type="number" formControlName="numeroMiembrosAsociacion" placeholder="Ingrese número" required>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Número de estudiantes participantes:</span>
+      <input class="control" type="number" formControlName="numeroEstudiantesParticipantes" placeholder="Campo de solo lectura" readonly>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Número de estudiantes participantes de primaria:</span>
+      <input class="control" type="number" formControlName="numeroEstudiantesPrimaria" placeholder="Campo de solo lectura" readonly>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Número de estudiantes participantes de secundaria:</span>
+      <input class="control" type="number" formControlName="numeroEstudiantesSecundaria" placeholder="Campo de solo lectura" readonly>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">La Institución Educativa tiene experiencia en la producción de alimentos frescos:</span>
+      <mat-select class="control" formControlName="experienciaAlimentosFrescos" placeholder="Campo de solo lectura" readonly>
+        <mat-option value="si">Sí</mat-option>
+        <mat-option value="no">No</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Nombre de la asociación:</span>
+      <input class="control" formControlName="nombreAsociacion" placeholder="Ingrese nombre de la asociación" required>
+    </div>
+    <div class="field">
+      <span class="field-label req">Código o NIT de la asociación:</span>
+      <input class="control" formControlName="codigoNitAsociacion" placeholder="Ingrese código o NIT" required>
+    </div>
+    <div class="field">
+      <span class="field-label req">Número telefónico de contacto del representante legal de la asociación comunitaria:</span>
+      <input class="control" type="text" formControlName="telefonoContactoRepresentante" placeholder="Ingrese teléfono" pattern="[0-9]*" required>
+    </div>
+    <div class="field">
+      <span class="field-label req">Correo electronico de contacto del representante legal de la asociación comunitaria:</span>
+      <input class="control" type="email" formControlName="correoContactoRepresentante" placeholder="Ingrese correo electrónico" required>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Area disponible en m2 para implementación de la unidad productiva:</span>
+      <input class="control" type="number" formControlName="areaDisponibleAsociacion" placeholder="Campo de solo lectura" readonly>
+    </div>
+
+    <!-- SECCION 3: CARAC GRU FAM -->
+    <h4 class="section-title">
+      <mat-icon>family_restroom</mat-icon>
+      Datos Integrantes de la Familia
+    </h4>
+    <div formArrayName="integrantesGrupoFamiliar" class="field full-width">
+      <div *ngFor="let integrante of getIntegrantesGrupoFamiliar().controls; let i = index" [formGroupName]="i" class="field full-width repeat-container">
+        <div class="section-title">Integrante {{ i + 1 }}</div>
+        <div class="repeat-fields-grid">
+        <div class="field">
+          <span class="field-label req">Parentesco familiar:</span>
+          <mat-select class="control" formControlName="parentescoFamiliar" placeholder="Seleccione parentesco" required>
+            <mat-option *ngFor="let parentesco of parentescosFamiliares" [value]="parentesco">{{ parentesco }}</mat-option>
+          </mat-select>
+        </div>
+        <div class="field">
+          <span class="field-label req">Tipo documento identidad:</span>
+          <mat-select class="control" formControlName="tipoDocumentoIdentidad" placeholder="Seleccione tipo documento" required>
+            <mat-option *ngFor="let tipo of tiposDocumento" [value]="tipo">{{ tipo }}</mat-option>
+          </mat-select>
+        </div>
+        <div class="field">
+          <span class="field-label req">Número documento identidad:</span>
+          <input class="control" type="text" formControlName="numeroDocumentoIdentidad" placeholder="Ingrese número documento" pattern="[0-9]*" required>
+        </div>
+        <div class="field">
+          <span class="field-label req">Primer nombre:</span>
+          <input class="control" formControlName="primerNombre" placeholder="Ingrese primer nombre" required>
+        </div>
+        <div class="field">
+          <span class="field-label">Segundo nombre:</span>
+          <input class="control" formControlName="segundoNombre" placeholder="Ingrese segundo nombre">
+        </div>
+        <div class="field">
+          <span class="field-label req">Primer apellido:</span>
+          <input class="control" formControlName="primerApellido" placeholder="Ingrese primer apellido" required>
+        </div>
+        <div class="field">
+          <span class="field-label">Segundo apellido:</span>
+          <input class="control" formControlName="segundoApellido" placeholder="Ingrese segundo apellido">
+        </div>
+        <div class="field">
+          <span class="field-label req">Fecha de nacimiento:</span>
+          <input class="control" type="date" formControlName="fechaNacimiento" (change)="onBirthDateChange()" required>
+        </div>
+        <div class="field readonly-field">
+          <span class="field-label">Edad en años:</span>
+          <input class="control" type="number" formControlName="edad" placeholder="Campo de solo lectura" readonly>
+        </div>
+        <div class="field">
+          <span class="field-label req">Sexo:</span>
+          <mat-select class="control" formControlName="sexo" placeholder="Seleccione sexo" required>
+            <mat-option *ngFor="let sexo of sexos" [value]="sexo">{{ sexo }}</mat-option>
+          </mat-select>
+        </div>
+        <div class="field">
+          <span class="field-label req">Participa en un programa de atención a la primera infancia:</span>
+          <mat-select class="control" formControlName="participaProgramaPrimeraInfancia" placeholder="Seleccione" required>
+            <mat-option value="si">Sí</mat-option>
+            <mat-option value="no">No</mat-option>
+          </mat-select>
+        </div>
+        <div class="field" *ngIf="integrante.get('participaProgramaPrimeraInfancia')?.value === 'si'">
+          <span class="field-label req">¿Cual programa?:</span>
+          <mat-select class="control" formControlName="cualProgramaPrimeraInfancia" placeholder="Seleccione programa" multiple required>
+            <mat-option *ngFor="let programa of programasPrimeraInfancia" [value]="programa">{{ programa }}</mat-option>
+          </mat-select>
+        </div>
+        <div class="field" *ngIf="integrante.get('participaProgramaPrimeraInfancia')?.value === 'si' && integrante.get('cualProgramaPrimeraInfancia')?.value?.includes('Otro')">
+          <span class="field-label req">Cual otro programa?:</span>
+          <input class="control" formControlName="cualOtroPrograma" placeholder="Ingrese otro programa" required>
+        </div>
+        </div>
+        <button mat-button type="button" (click)="removeIntegrante(i)">Remover Integrante</button>
+      </div>
+      <button mat-button type="button" (click)="addIntegrante()" class="repeat-container">Agregar Integrante</button>
+    </div>
+
+    <!-- SECCION 4: CARAC GRUP UPC -->
+    <h4 class="section-title">
+      <mat-icon>groups</mat-icon>
+      Datos Integrantes Unidad Productiva Comunitaria 
+    </h4>
+    <div class="field">
+      <span class="field-label req">Numero de miembros participantes de la asociación:</span>
+      <mat-select class="control" formControlName="numeroMiembrosParticipantesAsociacion" placeholder="Seleccione número" required>
+        <mat-option [value]="1">1</mat-option>
+        <mat-option [value]="2">2</mat-option>
+        <mat-option [value]="3">3</mat-option>
+        <mat-option [value]="4">4</mat-option>
+        <mat-option [value]="5">5</mat-option>
+        <mat-option [value]="10">10+</mat-option>
+      </mat-select>
+    </div>
+    <div formArrayName="participantesUnidadProductiva" class="field full-width">
+      <div *ngFor="let participante of getParticipantesUnidadProductiva().controls; let i = index" [formGroupName]="i" class="field full-width repeat-container">
+        <div class="section-title">Participante {{ i + 1 }}</div>
+        <div class="repeat-fields-grid">
+        <div class="field">
+          <span class="field-label req">Tipo de documento del Participante de la Unidad productiva comunitaria:</span>
+          <mat-select class="control" formControlName="tipoDocumentoParticipante" placeholder="Seleccione tipo documento" required>
+            <mat-option *ngFor="let tipo of tiposDocumento" [value]="tipo">{{ tipo }}</mat-option>
+          </mat-select>
+        </div>
+        <div class="field">
+          <span class="field-label req">Número de documento del Participante de la Unidad productiva comunitaria:</span>
+          <input class="control" type="text" formControlName="numeroDocumentoParticipante" placeholder="Ingrese número documento" pattern="[0-9]*" required>
+        </div>
+        <div class="field">
+          <span class="field-label req">Primer nombre del Participante de la Unidad productiva comunitaria:</span>
+          <input class="control" formControlName="primerNombreParticipante" placeholder="Ingrese primer nombre" required>
+        </div>
+        <div class="field">
+          <span class="field-label">Segundo nombre del Participante de la Unidad productiva comunitaria:</span>
+          <input class="control" formControlName="segundoNombreParticipante" placeholder="Ingrese segundo nombre">
+        </div>
+        <div class="field">
+          <span class="field-label req">Primer apellido del Participante de la Unidad productiva comunitaria:</span>
+          <input class="control" formControlName="primerApellidoParticipante" placeholder="Ingrese primer apellido" required>
+        </div>
+        <div class="field">
+          <span class="field-label">Segundo apellido del Participante de la Unidad productiva comunitaria:</span>
+          <input class="control" formControlName="segundoApellidoParticipante" placeholder="Ingrese segundo apellido">
+        </div>
+        <div class="field">
+          <span class="field-label req">Fecha de nacimiento:</span>
+          <input class="control" type="date" formControlName="fechaNacimientoParticipante" (change)="onBirthDateChange()" required>
+        </div>
+        <div class="field readonly-field">
+          <span class="field-label">Edad en años:</span>
+          <input class="control" type="number" formControlName="edadParticipante" placeholder="Campo de solo lectura" readonly>
+        </div>
+        <div class="field">
+          <span class="field-label req">Sexo:</span>
+          <mat-select class="control" formControlName="sexoParticipante" placeholder="Seleccione sexo" required>
+            <mat-option *ngFor="let sexo of sexos" [value]="sexo">{{ sexo }}</mat-option>
+          </mat-select>
+        </div>
+        <div class="field">
+          <span class="field-label req">Número telefónico de contacto del Participante de la Unidad productiva comunitaria:</span>
+          <input class="control" type="text" formControlName="telefonoContactoParticipante" placeholder="Ingrese teléfono" pattern="[0-9]*" required>
+        </div>
+        </div>
+        <button mat-button type="button" (click)="removeParticipante(i)">Remover Participante</button>
+      </div>
+      <button mat-button type="button" (click)="addParticipante()" class="repeat-container">Agregar Participante</button>
+    </div>
+
+    <!-- SECCION 5: Residuos -->
+    <h4 class="section-title">
+      <mat-icon>recycling</mat-icon>
+      Residuos
+    </h4>
+    <div class="field">
+      <span class="field-label req">La asociación tiene experiencia en la producción de alimentos frescos:</span>
+      <mat-select class="control" formControlName="experienciaProduccionAlimentos" placeholder="Seleccione" required>
+        <mat-option value="si">Sí</mat-option>
+        <mat-option value="no">No</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">La asociación utiliza en la siembra semillas nativas:</span>
+      <mat-select class="control" formControlName="utilizaSemillasNativas" placeholder="Seleccione" required>
+        <mat-option value="si">Sí</mat-option>
+        <mat-option value="no">No</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">La asociación tiene otros procesos de producción agricola?:</span>
+      <mat-select class="control" formControlName="otrosProcesosProduccionAgricola" placeholder="Seleccione" required>
+        <mat-option value="si">Sí</mat-option>
+        <mat-option value="no">No</mat-option>
+      </mat-select>
+    </div>
+    <div class="field" *ngIf="form.get('otrosProcesosProduccionAgricola')?.value === 'si'">
+      <span class="field-label req">Cuales otros tipos de producción:</span>
+      <input class="control" formControlName="cualesOtrosProcesosProduccion" placeholder="Ingrese otros procesos" required>
+    </div>
+    <div class="field">
+      <span class="field-label req">Se realiza comercialización de estos productos:</span>
+      <mat-select class="control" formControlName="realizaComercializacion" placeholder="Seleccione" required>
+        <mat-option value="si">Sí</mat-option>
+        <mat-option value="no">No</mat-option>
+      </mat-select>
+    </div>
+    <div class="field" *ngIf="form.get('realizaComercializacion')?.value === 'si'">
+      <span class="field-label req">Donde realiza su proceso de comercialización:</span>
+      <mat-select class="control" formControlName="dondeComercializacion" placeholder="Seleccione lugar" required>
+        <mat-option *ngFor="let lugar of lugaresComercializacion" [value]="lugar">{{ lugar }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field" *ngIf="form.get('realizaComercializacion')?.value === 'si'">
+      <span class="field-label req">La asociación se encuentra registrada en el COMPAN:</span>
+      <mat-select class="control" formControlName="registradaCompan" placeholder="Seleccione" required>
+        <mat-option value="si">Sí</mat-option>
+        <mat-option value="no">No</mat-option>
+      </mat-select>
+    </div>
+    <div class="field" *ngIf="form.get('registradaCompan')?.value === 'si'">
+      <span class="field-label req">Ha participado en los procesos del COMPAN:</span>
+      <mat-select class="control" formControlName="participadoCompan" placeholder="Seleccione" required>
+        <mat-option value="si">Sí</mat-option>
+        <mat-option value="no">No</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">¿Suelen separar o clasificar los residuos sólidos generados en el hogar? (separa los biodegradables -residuos de alimento, material vegetal – de los no biodegradables) Separación en la fuente:</span>
+      <mat-select class="control" formControlName="separacionResiduosHogar" placeholder="Seleccione" required>
+        <mat-option value="si">Sí</mat-option>
+        <mat-option value="no">No</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">¿Suelen separar o clasificar los residuos sólidos generados en el plantel educativo? (separa los biodegradables -residuos de alimento, material vegetal – de los no biodegradables) Separación en la fuente:</span>
+      <mat-select class="control" formControlName="separacionResiduosEducativo" placeholder="Seleccione" required>
+        <mat-option value="si">Sí</mat-option>
+        <mat-option value="no">No</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">¿Qué estrategias utilizan en el hogar para el aprovechamiento de los residuos sólidos no biodegradables?:</span>
+      <mat-select class="control" formControlName="estrategiasAprovechamientoResiduos" placeholder="Seleccione estrategias" multiple required>
+        <mat-option *ngFor="let estrategia of estrategiasAprovechamiento" [value]="estrategia">{{ estrategia }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field" *ngIf="form.get('separacionResiduosHogar')?.value === 'si'">
+      <span class="field-label req">El predio cuenta con compostera:</span>
+      <mat-select class="control" formControlName="cuentaCompostera" placeholder="Seleccione" required>
+        <mat-option value="si">Sí</mat-option>
+        <mat-option value="no">No</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Cual será el destino de la producción de la Institución Educativa:</span>
+      <mat-select class="control" formControlName="destinoProduccionInstitucion" placeholder="Seleccione destino" required>
+        <mat-option *ngFor="let destino of destinosProduccion" [value]="destino">{{ destino }}</mat-option>
+      </mat-select>
+    </div>
+
+    <!-- SECCION 6: Consentimiento informado -->
+    <h4 class="section-title">
+      <mat-icon>assignment</mat-icon>
+      Consentimiento informado
+    </h4>
+    <div class="field readonly-field">
+      <span class="field-label">Fecha y hora de finalización de la encuesta:</span>
+      <input class="control" type="datetime-local" formControlName="fechaHoraFinalizacion" placeholder="Campo de solo lectura" readonly>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Año de realización de la encuesta:</span>
+      <input class="control" type="number" formControlName="anoRealizacionEncuesta" placeholder="Campo de solo lectura" readonly>
+    </div>
+    <div class="field full-width">
+      <span class="field-label autorizo">1. Yo, actuando en representación y con la autorización expresa de todos los miembros de mi hogar, incluyendo a menores y mayores de edad, autorizo a la GOBERNACIÓN DE ANTIOQUIA para que en cumplimiento a lo determinado en la Ley 1581 de 2012 (uso de los datos personales), en el marco de sus procesos de atención, actúe como responsable del tratamiento de los datos personales de los cuales somos titulares, realice la recolección, uso y tratamiento de nuestros datos, ya sea de forma conjunta o separada, conforme a la política de tratamiento de datos personales de la Gobernación de Antioquia, disponible en https://sedeelectronica.antioquia.gov.co/publicaciones/203/politica-para-el-tratamiento-de-datos-personales/:</span>
+      <mat-select class="control" formControlName="consentimientoDatosPersonales" placeholder="Seleccione" required>
+        <mat-option value="si">Sí</mat-option>
+        <mat-option value="no">No</mat-option>
+      </mat-select>
+    </div>
+    <div class="field full-width">
+      <span class="field-label autorizo">2. Asimismo, autorizo a la administración departamental para captar, tomar, almacenar, editar, divulgar y publicar imágenes, audios o datos de nuestra familia, o de alguno de sus integrantes, (incluyendo menores y mayores de edad), con fines estadísticos, académicos o para la promoción de los derechos de los niños, niñas, adolescentes y familias. Esto se realizará conforme a la política de tratamiento de datos personales de la Gobernación de Antioquia, y dando cumplimiento a lo dispuesto en la Ley 1581 de 2012.:</span>
+      <mat-select class="control" formControlName="consentimientoImagenesAudios" placeholder="Seleccione" required>
+        <mat-option value="si">Sí</mat-option>
+        <mat-option value="no">No</mat-option>
+      </mat-select>
+    </div>
+    <div class="field full-width">
+      <span class="field-label req">Firma del representante de la Unidad productiva:</span>
+      <div class="file-upload-container">
+        <input class="file-input" type="file" id="firmaRepresentante" formControlName="firmaRepresentante" accept=".pdf" (change)="onFileSelected($event, 'firmaRepresentante')">
+        <label class="file-upload-label" for="firmaRepresentante" [class.active]="selectedFiles['firmaRepresentante']">
+          <mat-icon class="upload-icon">upload_file</mat-icon>
+          <span class="upload-text">{{ selectedFiles['firmaRepresentante'] || 'Seleccionar archivo PDF de firma' }}</span>
+        </label>
+      </div>
+    </div>
+
+  </form>
+
+  <div class="actions">
+    <button mat-button class="btn-cancel" (click)="onCancel()">Cancelar</button>
+    <button mat-raised-button class="btn-guardar" (click)="onSave()" [disabled]="!form.valid">Guardar</button>
+  </div>
+</div>

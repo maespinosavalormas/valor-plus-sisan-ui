@@ -1,0 +1,857 @@
+<div class="form-container">
+  <div class="form-header">
+    <div class="form-title">
+      <span>{{ title }}</span>
+    </div>
+    <button mat-icon-button class="close-button" (click)="onCancel()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <form [formGroup]="form" class="form-grid">
+    <!-- SECCION 1: Inicio -->
+    <h4 class="section-title">
+      <mat-icon>restaurant</mat-icon>
+      Inicio
+    </h4>
+    <div class="field">
+      <span class="field-label req">¿El niño/niña es un registro nuevo o del SIVIGILA?</span>
+      <mat-select class="control" formControlName="registroSivigila" placeholder="Seleccione tipo de registro" required>
+        <mat-option value="sivigila">El niño/niña se encuentra en SIVIGILA</mat-option>
+        <mat-option value="arrullos">El niño/niña se encuentra en ARRULLOS</mat-option>
+        <mat-option value="nuevo">El niño/niña es nuevo en la base de datos</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Fecha valoración nutricional</span>
+      <input class="control" type="date" formControlName="fechaValoracionNutricional" placeholder="Seleccione fecha" required>
+    </div>
+
+    <!-- SECCION 2: Datos Personales -->
+    <h4 class="section-title">
+      <mat-icon>person</mat-icon>
+      Datos Personales
+    </h4>
+    <div class="field">
+      <span class="field-label req">Número de documento</span>
+      <input class="control" type="text" formControlName="numeroDocumento" placeholder="Ingrese número documento" pattern="[0-9]*" required>
+    </div>
+    <div class="field">
+      <span class="field-label req">Tipo de participante</span>
+      <mat-select class="control" formControlName="tipoParticipante" placeholder="Seleccione tipo participante" required>
+        <mat-option value="menor6meses">Menor de 6 meses</mat-option>
+        <mat-option value="nino5anos">Niña o niño entre 6 meses y 5 años</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Tipo documento</span>
+      <mat-select class="control" formControlName="tipoDocumento" placeholder="Seleccione tipo documento" required>
+        <mat-option value="cc">Cedula Ciudadania</mat-option>
+        <mat-option value="ce">Cedula De Extranjeria</mat-option>
+        <mat-option value="pe">Permiso Especial De Permanencia</mat-option>
+        <mat-option value="ti">Tarjeta De Identidad</mat-option>
+        <mat-option value="rc">Registro Civil</mat-option>
+        <mat-option value="pa">Partida O Acta De Nacimiento</mat-option>
+        <mat-option value="mi">Menor Sin Identificar</mat-option>
+        <mat-option value="cv">Certificado Nacido Vivo</mat-option>
+        <mat-option value="pas">Pasaporte</mat-option>
+        <mat-option value="ai">Adulto Sin Identificar</mat-option>
+        <mat-option value="de">Documentos Extranjero</mat-option>
+      </mat-select>
+    </div>
+
+    <!-- SECCION 3: Datos Personales de Sivigila -->
+    <h4 class="section-title">
+      <mat-icon>health_and_safety</mat-icon>
+      Datos Personales de Sivigila
+    </h4>
+    <div class="field">
+      <span class="field-label">Numero de semana</span>
+      <input class="control" type="text" formControlName="numeroSemana" placeholder="Campo precargado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label">Nombres y apellidos completos</span>
+      <input class="control" type="text" formControlName="nombresApellidosCompletos" placeholder="Campo precargado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label">Fecha nacimiento</span>
+      <input class="control" type="date" formControlName="fechaNacimiento" placeholder="Campo precargado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label">Edad</span>
+      <input class="control" type="text" formControlName="edad" placeholder="Campo precargado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label">Género</span>
+      <mat-select class="control" formControlName="genero" placeholder="Campo precargado">
+        <mat-option value="masculino">Masculino</mat-option>
+        <mat-option value="femenino">Femenino</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label">Sexo</span>
+      <input class="control" type="text" formControlName="sexo" placeholder="Campo precargado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label">Municipio</span>
+      <input class="control" type="text" formControlName="municipio" placeholder="Campo precargado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label">Subregión</span>
+      <input class="control" type="text" formControlName="subregion" placeholder="Campo precargado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label">Telefono</span>
+      <input class="control" type="text" formControlName="telefono" placeholder="Campo precargado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label">Telefono SIVIGILA 1</span>
+      <input class="control" type="text" formControlName="telefonoSivigila1" placeholder="Campo precargado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label">Telefono SIVIGILA 2</span>
+      <input class="control" type="text" formControlName="telefonoSivigila2" placeholder="Campo precargado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label">Peso al nacer en gramos</span>
+      <input class="control" type="text" formControlName="pesoAlNacer" placeholder="Campo precargado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label">Tipo seguridad social</span>
+      <mat-select class="control" formControlName="tipoSeguridadSocial" placeholder="Campo precargado">
+        <!-- Options to be populated -->
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label">Nombre EAPB</span>
+      <mat-select class="control" formControlName="nombreEAPB" placeholder="Campo precargado">
+        <!-- Options to be populated -->
+      </mat-select>
+    </div>
+
+    <!-- SECCION 4: Datos Personales Nuevos -->
+    <h4 class="section-title">
+      <mat-icon>person_add</mat-icon>
+      Datos Personales Nuevos
+    </h4>
+    <div class="field">
+      <span class="field-label req">Primer nombre nuevo</span>
+      <input class="control" type="text" formControlName="primerNombreNuevo" placeholder="Ingrese primer nombre" required>
+    </div>
+    <div class="field">
+      <span class="field-label">Segundo nombre nuevo</span>
+      <input class="control" type="text" formControlName="segundoNombreNuevo" placeholder="Ingrese segundo nombre">
+    </div>
+    <div class="field">
+      <span class="field-label req">Primer apellido nuevo</span>
+      <input class="control" type="text" formControlName="primerApellidoNuevo" placeholder="Ingrese primer apellido" required>
+    </div>
+    <div class="field">
+      <span class="field-label">Segundo apellido nuevo</span>
+      <input class="control" type="text" formControlName="segundoApellidoNuevo" placeholder="Ingrese segundo apellido">
+    </div>
+    <div class="field">
+      <span class="field-label req">Fecha nac 2</span>
+      <input class="control" type="date" formControlName="fechaNac2" placeholder="Seleccione fecha nacimiento" required>
+    </div>
+    <div class="field">
+      <span class="field-label">Mostrar edad 2</span>
+      <input class="control" type="text" formControlName="edad2" placeholder="Campo calculado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label req">Género nuevo</span>
+      <mat-select class="control" formControlName="generoNuevo" placeholder="Seleccione género" required>
+        <mat-option value="masculino">Masculino</mat-option>
+        <mat-option value="femenino">Femenino</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label">Sexo 2</span>
+      <input class="control" type="text" formControlName="sexo2" placeholder="Ingrese sexo">
+    </div>
+    <div class="field">
+      <span class="field-label req">Municipio nuevo</span>
+      <mat-select class="control" formControlName="municipioNuevo" placeholder="Seleccione municipio" required>
+        <!-- Options to be populated -->
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Subregión calc</span>
+      <mat-select class="control" formControlName="subregionCalc" placeholder="Seleccione subregión" required>
+        <!-- Options to be populated -->
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Dirección nuevos</span>
+      <input class="control" type="text" formControlName="direccionNuevos" placeholder="Ingrese dirección" required>
+    </div>
+    <div class="field">
+      <span class="field-label req">Teléfono nuevos</span>
+      <input class="control" type="text" formControlName="telefonoNuevos" placeholder="Ingrese teléfono" required>
+    </div>
+    <div class="field">
+      <span class="field-label req">Teléfono nuevos_validación</span>
+      <input class="control" type="text" formControlName="telefonoNuevosValidacion" placeholder="Ingrese teléfono validación" required>
+    </div>
+    <div class="field">
+      <span class="field-label req">Tipo sgss 2</span>
+      <mat-select class="control" formControlName="tipoSgss2" placeholder="Seleccione tipo seguridad social" required>
+        <!-- Options to be populated -->
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Nombre eps 2</span>
+      <mat-select class="control" formControlName="nombreEps2" placeholder="Seleccione EPS" required>
+        <!-- Options to be populated -->
+      </mat-select>
+    </div>
+
+    <!-- SECCION 5: Datos Personales (Edades y otros) -->
+    <h4 class="section-title">
+      <mat-icon>calculate</mat-icon>
+      Datos Personales
+    </h4>
+    <div class="field">
+      <span class="field-label">Años</span>
+      <input class="control" type="text" formControlName="anios" placeholder="Campo calculado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label">Meses</span>
+      <input class="control" type="text" formControlName="meses" placeholder="Campo calculado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label">Edad</span>
+      <input class="control" type="text" formControlName="edadCompleta" placeholder="Campo calculado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label req">Prematuro</span>
+      <mat-select class="control" formControlName="prematuro" placeholder="Seleccione si o no" required>
+        <mat-option value="si">Sí</mat-option>
+        <mat-option value="no">No</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label">Semanas prematuro</span>
+      <input class="control" type="number" formControlName="semanasPrematuro" placeholder="Ingrese semanas">
+    </div>
+    <div class="field">
+      <span class="field-label">Edad sin corregir</span>
+      <input class="control" type="text" formControlName="edadSinCorregir" placeholder="Campo calculado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label">Edad corregida</span>
+      <input class="control" type="text" formControlName="edadCorregida" placeholder="Campo calculado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label">Edad 3</span>
+      <input class="control" type="text" formControlName="edad3" placeholder="Campo calculado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label">Edad meses</span>
+      <input class="control" type="text" formControlName="edadMeses" placeholder="Campo calculado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label">Categoria edad</span>
+      <input class="control" type="text" formControlName="categoriaEdad" placeholder="Campo calculado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label req">Grupo etnia</span>
+      <mat-select class="control" formControlName="grupoEtnia" placeholder="Seleccione grupo étnico" required>
+        <!-- Options to be populated -->
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Discapacidad</span>
+      <mat-select class="control" formControlName="discapacidad" placeholder="Seleccione discapacidad" required>
+        <!-- Options to be populated -->
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Patologia base</span>
+      <mat-select class="control" formControlName="patologiaBase" placeholder="Seleccione patología" required>
+        <!-- Options to be populated -->
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Edema bilateral</span>
+      <mat-select class="control" formControlName="edemaBilateral" placeholder="Seleccione si o no" required>
+        <mat-option value="si">Sí</mat-option>
+        <mat-option value="no">No</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Esquema vacunación CPN</span>
+      <mat-select class="control" formControlName="esquemaVacunacionCPN" placeholder="Seleccione si o no" required>
+        <mat-option value="si">Sí</mat-option>
+        <mat-option value="no">No</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Asiste CPN</span>
+      <mat-select class="control" formControlName="asisteCPN" placeholder="Seleccione si o no" required>
+        <mat-option value="si">Sí</mat-option>
+        <mat-option value="no">No</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label">Fecha último CPN</span>
+      <input class="control" type="date" formControlName="fechaUltimoCPN" placeholder="Seleccione fecha">
+    </div>
+    <div class="field">
+      <span class="field-label req">Esquema vacunación CYD</span>
+      <mat-select class="control" formControlName="esquemaVacunacionCYD" placeholder="Seleccione si o no" required>
+        <mat-option value="si">Sí</mat-option>
+        <mat-option value="no">No</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Asiste CYD</span>
+      <mat-select class="control" formControlName="asisteCYD" placeholder="Seleccione si o no" required>
+        <mat-option value="si">Sí</mat-option>
+        <mat-option value="no">No</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label">Fecha último CYD</span>
+      <input class="control" type="date" formControlName="fechaUltimoCYD" placeholder="Seleccione fecha">
+    </div>
+
+    <!-- SECCION 6: Tamizaje anterior -->
+    <h4 class="section-title">
+      <mat-icon>search</mat-icon>
+      Tamizaje anterior
+    </h4>
+    <div class="field">
+      <span class="field-label req">Fecha toma 1</span>
+      <input class="control" type="date" formControlName="fechaToma1" placeholder="Seleccione fecha" required>
+    </div>
+    <div class="field">
+      <span class="field-label">Edad toma 1</span>
+      <input class="control" type="text" formControlName="edadToma1" placeholder="Campo precargado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label">Peso 1</span>
+      <input class="control" type="text" formControlName="peso1" placeholder="Campo precargado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label">Estatura 1</span>
+      <input class="control" type="text" formControlName="estatura1" placeholder="Campo precargado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label">Puntaje z Pt 1</span>
+      <input class="control" type="text" formControlName="puntajezPt1" placeholder="Campo precargado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label">Clasificación peso/talla 1</span>
+      <input class="control" type="text" formControlName="clasificacionPesoTalla1" placeholder="Campo precargado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label">Puntaje z Te 1</span>
+      <input class="control" type="text" formControlName="puntajezTe1" placeholder="Campo precargado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label">Clasificación talla/edad 1</span>
+      <input class="control" type="text" formControlName="clasificacionTallaEdad1" placeholder="Campo precargado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label">Puntaje z Pe 1</span>
+      <input class="control" type="text" formControlName="puntajezPe1" placeholder="Campo precargado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label">Clasificación peso/edad 1</span>
+      <input class="control" type="text" formControlName="clasificacionPesoEdad1" placeholder="Campo precargado" readonly>
+    </div>
+
+    <!-- SECCION 7: Medidas antropometricas actuales -->
+    <h4 class="section-title">
+      <mat-icon>straighten</mat-icon>
+      Medidas antropometricas actuales
+    </h4>
+    <div class="field">
+      <span class="field-label req">Peso</span>
+      <input class="control" type="number" step="0.01" formControlName="peso" placeholder="kg" required>
+    </div>
+    <div class="field">
+      <span class="field-label req">Estatura</span>
+      <input class="control" type="number" step="0.01" formControlName="estatura" placeholder="cm" required>
+    </div>
+    <div class="field">
+      <span class="field-label">Semanas gestación</span>
+      <input class="control" type="number" formControlName="semanasGestacion" placeholder="semanas">
+    </div>
+    <div class="field">
+      <span class="field-label">Perímetro braquial cms</span>
+      <input class="control" type="number" step="0.01" formControlName="perimetroBraquial" placeholder="cm">
+    </div>
+    <div class="field">
+      <span class="field-label">Perímetro cefálico</span>
+      <input class="control" type="number" step="0.01" formControlName="perimetroCefalico" placeholder="cm">
+    </div>
+
+    <!-- SECCION 8: Clasificacion nutricional -->
+    <h4 class="section-title">
+      <mat-icon>assessment</mat-icon>
+      Clasificación nutricional
+    </h4>
+    <div class="field">
+      <span class="field-label">Puntaje z Pt</span>
+      <input class="control" type="number" step="0.01" formControlName="puntajezPt" placeholder="Campo calculado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label">Clasificación peso/talla</span>
+      <input class="control" type="text" formControlName="clasificacionPesoTalla" placeholder="Campo calculado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label">Puntaje z Te</span>
+      <input class="control" type="number" step="0.01" formControlName="puntajezTe" placeholder="Campo calculado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label">Clasificación talla/edad</span>
+      <input class="control" type="text" formControlName="clasificacionTallaEdad" placeholder="Campo calculado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label">Puntaje z Pe</span>
+      <input class="control" type="number" step="0.01" formControlName="puntajezPe" placeholder="Campo calculado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label">Clasificación peso/edad</span>
+      <input class="control" type="text" formControlName="clasificacionPesoEdad" placeholder="Campo calculado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label">Puntaje z Te imc</span>
+      <input class="control" type="number" step="0.01" formControlName="puntajezTeImc" placeholder="Campo calculado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label">Clasificación talla/edad IMC</span>
+      <input class="control" type="text" formControlName="clasificacionTallaEdadImc" placeholder="Campo calculado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label">Puntaje z imc</span>
+      <input class="control" type="number" step="0.01" formControlName="puntajezImc" placeholder="Campo calculado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label">Clasificación IMC</span>
+      <input class="control" type="text" formControlName="clasificacionImc" placeholder="Campo calculado" readonly>
+    </div>
+
+    <!-- SECCION 9: Clasificacion nutricional gestional -->
+    <h4 class="section-title">
+      <mat-icon>pregnant_woman</mat-icon>
+      Clasificación nutricional gestional
+    </h4>
+    <div class="field">
+      <span class="field-label req">Clasificación gestante</span>
+      <mat-select class="control" formControlName="clasificacionGestante" placeholder="Seleccione clasificación" required>
+        <!-- Options to be populated -->
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label">IMC gestante</span>
+      <input class="control" type="number" step="0.01" formControlName="imcGestante" placeholder="Campo calculado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label">Clasificación IMC/Edad gestacional</span>
+      <input class="control" type="text" formControlName="clasificacionImcEdadGestacional" placeholder="Campo calculado" readonly>
+    </div>
+
+    <!-- SECCION 10: Clasificacion paralisis cerebral -->
+    <h4 class="section-title">
+      <mat-icon>accessible</mat-icon>
+      Clasificación parálisis cerebral
+    </h4>
+    <div class="field full-width">
+    <div class="gmfcs-info">
+      <h5><strong>Grado (GMFCS)</strong></h5>
+      <ul>
+        <li><strong>GMFCS I:</strong> Camina sin limitaciones</li>
+        <li><strong>GMFCS II:</strong> Camina con limitaciones</li>
+        <li><strong>GMFCS III:</strong> Paseos utilizando un dispositivo de movilidad de mano</li>
+        <li><strong>GMFCS IV:</strong> Automovilidad con limitaciones, puede utilizar la movilidad motorizada</li>
+        <li><strong>GMFCS V:</strong> Movilidad mediante una silla de ruedas</li>
+      </ul>
+    </div>
+  </div>
+    <div class="field">
+      <span class="field-label req">Selecciona grado</span>
+      <mat-select class="control" formControlName="gradoGMFCS" placeholder="Seleccione grado" required>
+        <mat-option value="i">GMFCS I</mat-option>
+        <mat-option value="ii">GMFCS II</mat-option>
+        <mat-option value="iii">GMFCS III</mat-option>
+        <mat-option value="iv">GMFCS IV</mat-option>
+        <mat-option value="v">GMFCS V</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label">Percentil Pesos Edad PC</span>
+      <input class="control" type="number" step="0.01" formControlName="percentilPesoEdadPC" placeholder="Campo calculado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label">Clasificación Peso/Edad PC</span>
+      <input class="control" type="text" formControlName="clasificacionPesoEdadPC" placeholder="Campo calculado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label">Percentil Talla Edad PC</span>
+      <input class="control" type="number" step="0.01" formControlName="percentilTallaEdadPC" placeholder="Campo calculado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label">Clasificación Talla/Edad PC</span>
+      <input class="control" type="text" formControlName="clasificacionTallaEdadPC" placeholder="Campo calculado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label">Percentil Imc Edad PC</span>
+      <input class="control" type="number" step="0.01" formControlName="percentilImcEdadPC" placeholder="Campo calculado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label">Clasificación IMC/Edad PC</span>
+      <input class="control" type="text" formControlName="clasificacionImcEdadPC" placeholder="Campo calculado" readonly>
+    </div>
+
+    <!-- SECCION 11: Clasificacion Sindrome Down -->
+    <h4 class="section-title">
+      <mat-icon>local_hospital</mat-icon>
+      Clasificación Síndrome Down
+    </h4>
+    <div class="field">
+      <span class="field-label">Percentil Peso Edad SD</span>
+      <input class="control" type="number" step="0.01" formControlName="percentilPesoEdadSD" placeholder="Campo calculado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label">Clasificación Peso/Edad SD</span>
+      <input class="control" type="text" formControlName="clasificacionPesoEdadSD" placeholder="Campo calculado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label">Percentil Talla Edad SD</span>
+      <input class="control" type="number" step="0.01" formControlName="percentilTallaEdadSD" placeholder="Campo calculado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label">Clasificación Talla/Edad SD</span>
+      <input class="control" type="text" formControlName="clasificacionTallaEdadSD" placeholder="Campo calculado" readonly>
+    </div>
+
+    <!-- SECCION 12: Clasificacion Prematuro -->
+    <h4 class="section-title">
+      <mat-icon>child_care</mat-icon>
+      Clasificación Prematuro
+    </h4>
+    <div class="field">
+      <span class="field-label">Percentil peso edad gest</span>
+      <input class="control" type="number" step="0.01" formControlName="percentilPesoEdadGest" placeholder="Campo calculado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label">Clasificación Peso/Edad Gest</span>
+      <input class="control" type="text" formControlName="clasificacionPesoEdadGest" placeholder="Campo calculado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label">Percentil longitud edad gest</span>
+      <input class="control" type="number" step="0.01" formControlName="percentilLongitudEdadGest" placeholder="Campo calculado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label">Clasificación Long/Edad Gest</span>
+      <input class="control" type="text" formControlName="clasificacionLongEdadGest" placeholder="Campo calculado" readonly>
+    </div>
+
+    <!-- SECCION 13: Clasificacion Acondroplasia -->
+    <h4 class="section-title">
+      <mat-icon>healing</mat-icon>
+      Clasificación Acondroplasia
+    </h4>
+    <div class="field">
+      <span class="field-label">Percentil peso edad AC</span>
+      <input class="control" type="number" step="0.01" formControlName="percentilPesoEdadAC" placeholder="Campo calculado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label">Clasificación Peso/Edad AC</span>
+      <input class="control" type="text" formControlName="clasificacionPesoEdadAC" placeholder="Campo calculado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label">Percentil talla edad AC</span>
+      <input class="control" type="number" step="0.01" formControlName="percentilTallaEdadAC" placeholder="Campo calculado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label">Clasificación Talla/Edad AC</span>
+      <input class="control" type="text" formControlName="clasificacionTallaEdadAC" placeholder="Campo calculado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label">Percentil imc edad AC</span>
+      <input class="control" type="number" step="0.01" formControlName="percentilImcEdadAC" placeholder="Campo calculado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label">Clasificación IMC/Edad AC</span>
+      <input class="control" type="text" formControlName="clasificacionImcEdadAC" placeholder="Campo calculado" readonly>
+    </div>
+
+    <!-- SECCION 14: Preguntas malnutricion -->
+    <h4 class="section-title">
+      <mat-icon>question_answer</mat-icon>
+      Preguntas malnutrición
+    </h4>
+    <div class="field">
+      <span class="field-label">Reciben atención?</span>
+      <mat-select class="control" formControlName="recibenAtencion" placeholder="Seleccione si o no">
+        <mat-option value="si">Sí</mat-option>
+        <mat-option value="no">No</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Recibe fórmula?</span>
+      <mat-select class="control" formControlName="recibeFormula" placeholder="Seleccione si o no" required>
+        <mat-option value="si">Sí</mat-option>
+        <mat-option value="no">No</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Motivo no recibe FTLC</span>
+      <mat-select class="control" formControlName="motivoNoRecibeFTLC" placeholder="Seleccione motivo" required>
+        <mat-option disabled selected value="">Seleccione motivo</mat-option>
+        <!-- Options to be populated -->
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Adherente</span>
+      <mat-select class="control" formControlName="adherente" placeholder="Seleccione si o no" required>
+        <mat-option value="si">Sí</mat-option>
+        <mat-option value="no">No</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Motivo no adherente</span>
+      <mat-select class="control" formControlName="motivoNoAdherente" placeholder="Seleccione motivo" required>
+        <mat-option disabled selected value="">Seleccione motivo</mat-option>
+        <!-- Options to be populated -->
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Esquema consumo</span>
+      <input class="control" type="text" formControlName="esquemaConsumo" placeholder="Ingrese esquema consumo" required>
+    </div>
+    <div class="field">
+      <span class="field-label req">Consumo otro supl</span>
+      <mat-select class="control" formControlName="consumoOtroSupl" placeholder="Seleccione suplemento" required>
+        <mat-option disabled selected value="">Seleccione suplemento</mat-option>
+        <!-- Options to be populated -->
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Supl compl</span>
+      <mat-select class="control" formControlName="suplCompl" placeholder="Seleccione suplemento" required>
+        <mat-option disabled selected value="">Seleccione suplemento</mat-option>
+        <!-- Options to be populated -->
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Leche materna</span>
+      <mat-select class="control" formControlName="lecheMaterna" placeholder="Seleccione si o no" required>
+        <mat-option value="si">Sí</mat-option>
+        <mat-option value="no">No</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Condición nutricional</span>
+      <mat-select class="control" formControlName="condicionNutricional" placeholder="Seleccione condición" required>
+        <mat-option disabled selected value="">Seleccione condición</mat-option>
+        <!-- Options to be populated -->
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Hospitalización</span>
+      <mat-select class="control" formControlName="hospitalizacion" placeholder="Seleccione si o no" required>
+        <mat-option value="si">Sí</mat-option>
+        <mat-option value="no">No</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Motivo consulta</span>
+      <mat-select class="control" formControlName="motivoConsulta" placeholder="Seleccione motivo" required>
+        <mat-option disabled selected value="">Seleccione motivo</mat-option>
+        <!-- Options to be populated -->
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Seguimiento periódico</span>
+      <mat-select class="control" formControlName="seguimientoPeriodico" placeholder="Seleccione si o no" required>
+        <mat-option value="si">Sí</mat-option>
+        <mat-option value="no">No</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Condiciones dnt</span>
+      <mat-select class="control" formControlName="condicionesDnt" placeholder="Seleccione condiciones" required>
+        <mat-option disabled selected value="">Seleccione condiciones</mat-option>
+        <!-- Options to be populated -->
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Activación ruta</span>
+      <mat-select class="control" formControlName="activacionRuta" placeholder="Seleccione si o no" required>
+        <mat-option value="si">Sí</mat-option>
+        <mat-option value="no">No</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Tipo ruta activación</span>
+      <mat-select class="control" formControlName="tipoRutaActivacion" placeholder="Seleccione tipo" required>
+        <mat-option disabled selected value="">Seleccione tipo</mat-option>
+        <!-- Options to be populated -->
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Tipo no rec atencion</span>
+      <mat-select class="control" formControlName="tipoNoRecAtencion" placeholder="Seleccione tipo" required>
+        <mat-option disabled selected value="">Seleccione tipo</mat-option>
+        <!-- Options to be populated -->
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Consume leche?</span>
+      <mat-select class="control" formControlName="consumeLeche" placeholder="Seleccione si o no" required>
+        <mat-option value="si">Sí</mat-option>
+        <mat-option value="no">No</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Consume leche con frecuencia?</span>
+      <mat-select class="control" formControlName="consumeLecheFrecuencia" placeholder="Seleccione frecuencia" required>
+        <mat-option disabled selected value="">Seleccione frecuencia</mat-option>
+        <!-- Options to be populated -->
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Consume carnes?</span>
+      <mat-select class="control" formControlName="consumeCarnes" placeholder="Seleccione si o no" required>
+        <mat-option value="si">Sí</mat-option>
+        <mat-option value="no">No</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Consume carnes con frecuencia?</span>
+      <mat-select class="control" formControlName="consumeCarnesFrecuencia" placeholder="Seleccione frecuencia" required>
+        <mat-option disabled selected value="">Seleccione frecuencia</mat-option>
+        <!-- Options to be populated -->
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Consume cereales?</span>
+      <mat-select class="control" formControlName="consumeCereales" placeholder="Seleccione si o no" required>
+        <mat-option value="si">Sí</mat-option>
+        <mat-option value="no">No</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Consume cereales con frecuencia?</span>
+      <mat-select class="control" formControlName="consumeCerealesFrecuencia" placeholder="Seleccione frecuencia" required>
+        <mat-option disabled selected value="">Seleccione frecuencia</mat-option>
+        <!-- Options to be populated -->
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Consume grasas?</span>
+      <mat-select class="control" formControlName="consumeGrasas" placeholder="Seleccione si o no" required>
+        <mat-option value="si">Sí</mat-option>
+        <mat-option value="no">No</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Consume grasas con frecuencia?</span>
+      <mat-select class="control" formControlName="consumeGrasasFrecuencia" placeholder="Seleccione frecuencia" required>
+        <mat-option disabled selected value="">Seleccione frecuencia</mat-option>
+        <!-- Options to be populated -->
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Consume azucares?</span>
+      <mat-select class="control" formControlName="consumeAzucares" placeholder="Seleccione si o no" required>
+        <mat-option value="si">Sí</mat-option>
+        <mat-option value="no">No</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Consume azucares con frecuencia?</span>
+      <mat-select class="control" formControlName="consumeAzucaresFrecuencia" placeholder="Seleccione frecuencia" required>
+        <mat-option disabled selected value="">Seleccione frecuencia</mat-option>
+        <!-- Options to be populated -->
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Consume frutas/verduras?</span>
+      <mat-select class="control" formControlName="consumeFrutasVerduras" placeholder="Seleccione si o no" required>
+        <mat-option value="si">Sí</mat-option>
+        <mat-option value="no">No</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Consume frutas/verduras con frecuencia?</span>
+      <mat-select class="control" formControlName="consumeFrutasVerdurasFrecuencia" placeholder="Seleccione frecuencia" required>
+        <mat-option disabled selected value="">Seleccione frecuencia</mat-option>
+        <!-- Options to be populated -->
+      </mat-select>
+    </div>
+
+    <!-- SECCION 15: Observaciones -->
+    <h4 class="section-title">
+      <mat-icon>notes</mat-icon>
+      Observaciones
+    </h4>
+    <div class="field full-width">
+      <span class="field-label">Observaciones</span>
+      <textarea class="control" formControlName="observaciones" placeholder="Ingrese observaciones" rows="4"></textarea>
+    </div>
+
+    <!-- SECCION 16: Datos del funcionario -->
+    <h4 class="section-title">
+      <mat-icon>badge</mat-icon>
+      Datos del funcionario
+    </h4>
+    <div class="field">
+      <span class="field-label req">Número documento funcionario</span>
+      <input class="control" type="text" formControlName="numeroDocumentoFuncionario" placeholder="Ingrese número documento" pattern="[0-9]*" required>
+    </div>
+    <div class="field">
+      <span class="field-label">Nombre completo funcionario</span>
+      <input class="control" type="text" formControlName="nombreCompletoFuncionario" placeholder="Campo precargado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label">Nombres apellidos</span>
+      <input class="control" type="text" formControlName="nombresApellidosFuncionario" placeholder="Campo precargado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label">Perfil del funcionario</span>
+      <input class="control" type="text" formControlName="perfilFuncionario" placeholder="Campo precargado" readonly>
+    </div>
+
+    <!-- SECCION 17: Consentimiento informado -->
+    <h4 class="section-title">
+      <mat-icon>assignment</mat-icon>
+      Consentimiento informado
+    </h4>
+    <div class="field full-width">
+      <span class="field-label autorizo">1. Para que en cumplimiento a lo determinado en la Ley 1581 de 2012 (uso de los datos personales), en el marco de sus procesos de atención, actúe como responsable del tratamiento de los datos personales de los cuales somos titulares, realice la recolección, uso y tratamiento de nuestros datos, ya sea de forma conjunta o separada, conforme a la política de tratamiento de datos personales de la Gobernación de Antioquia, disponible en https://sedeelectronica.antioquia.gov.co/publicaciones/203/politica-para-el-tratamiento-de-datos-personales/ *</span>
+      <mat-select class="control" formControlName="consentimientoDatosPersonales" placeholder="Seleccione si o no" required>
+        <mat-option value="si">Sí</mat-option>
+        <mat-option value="no">No</mat-option>
+      </mat-select>
+    </div>
+    <div class="field full-width">
+      <span class="field-label autorizo">2. Asimismo, autorizo a la administración departamental para captar, tomar, almacenar, editar, divulgar y publicar imágenes, audios o datos de nuestra familia, o de alguno de sus integrantes, (incluyendo menores y mayores de edad), con fines estadísticos, académicos o para la promoción de los derechos de los niños, niñas, adolescentes y familias. Esto se realizará conforme a la política de tratamiento de datos personales de la Gobernación de Antioquia, y dando cumplimiento a lo dispuesto en la Ley 1581 de 2012.*</span>
+      <mat-select class="control" formControlName="consentimientoImagenesAudios" placeholder="Seleccione si o no" required>
+        <mat-option value="si">Sí</mat-option>
+        <mat-option value="no">No</mat-option>
+      </mat-select>
+    </div>
+    <div class="field full-width">
+      <span class="field-label req">Firma</span>
+      <div class="file-upload-container">
+        <input class="file-input" type="file" id="firmaResponsable" formControlName="firmaResponsable" accept=".pdf" (change)="onFileSelected($event, 'firmaResponsable')">
+        <label class="file-upload-label" for="firmaResponsable" [class.active]="selectedFiles['firmaResponsable']">
+          <mat-icon class="upload-icon">upload_file</mat-icon>
+          <span class="upload-text">{{ selectedFiles['firmaResponsable'] || 'Seleccionar archivo PDF de firma' }}</span>
+        </label>
+      </div>
+    </div>
+
+  </form>
+
+  <div class="actions">
+    <button mat-button class="btn-cancel" (click)="onCancel()">Cancelar</button>
+    <button mat-raised-button class="btn-guardar" (click)="onSave()" [disabled]="!form.valid">Guardar</button>
+  </div>
+</div>

@@ -1,0 +1,152 @@
+<div class="search-section">
+  <div class="search-container">
+    <mat-icon class="search-icon">search</mat-icon>
+    <input
+      type="text"
+      placeholder="Buscar reportes..."
+      class="search-input"
+      [(ngModel)]="searchTerm"
+    >
+    <button
+      *ngIf="searchTerm"
+      class="clear-search"
+      (click)="searchTerm = ''"
+      mat-icon-button
+    >
+      <mat-icon>clear</mat-icon>
+    </button>
+  </div>
+  <p class="results-count" *ngIf="searchTerm">{{ resultsLabel }}</p>
+</div>
+<hr class="divider">
+
+<div class="reports-grid" *ngIf="filteredReports.length > 0">
+  <div class="report-card" *ngFor="let report of filteredReports; trackBy: trackByFn">
+    <div class="report-card__accent"></div>
+
+    <div class="report-card__body">
+      <!-- Header: icono + titulo -->
+      <div class="report-card__header">
+        <div class="report-card__icon">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
+            <path d="M14 2v4a2 2 0 0 0 2 2h4" />
+            <path d="M10 9H8" />
+            <path d="M16 13H8" />
+            <path d="M16 17H8" />
+          </svg>
+        </div>
+        <h3 class="report-card__title">{{ report.title }}</h3>
+      </div>
+
+      <!-- Descripcion -->
+      <p class="report-card__description">{{ report.description }}</p>
+
+      <!-- Query preview -->
+      <div class="report-card__query-block">
+        <div class="report-card__query-label">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <polyline points="16 18 22 12 16 6" />
+            <polyline points="8 6 2 12 8 18" />
+          </svg>
+          <span>Query</span>
+        </div>
+        <pre class="report-card__query-code"><code>{{ report.query }}</code></pre>
+      </div>
+
+      <!-- Acciones -->
+      <div class="report-card__actions">
+        <button
+          class="report-card__btn report-card__btn--view"
+          (click)="onView(report)"
+          title="Ver resultados del reporte"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" />
+            <circle cx="12" cy="12" r="3" />
+          </svg>
+          Visualizar
+        </button>
+
+        <button
+          class="report-card__btn report-card__btn--download"
+          (click)="onDownload(report)"
+          title="Descargar reporte como archivo"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="7 10 12 15 17 10" />
+            <line x1="12" y1="15" x2="12" y2="3" />
+          </svg>
+          Descargar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="empty-state" *ngIf="filteredReports.length === 0">
+  <div class="empty-state__icon">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="28"
+      height="28"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
+      <path d="M14 2v4a2 2 0 0 0 2 2h4" />
+      <path d="M8 18v-2" />
+      <path d="M12 18v-4" />
+      <path d="M16 18v-6" />
+    </svg>
+  </div>
+  <p class="empty-state__title">No se encontraron reportes</p>
+  <p class="empty-state__subtitle">
+    Intenta con un término de búsqueda diferente
+  </p>
+</div>

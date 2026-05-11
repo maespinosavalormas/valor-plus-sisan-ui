@@ -1,0 +1,333 @@
+<div class="pcd-emergencies-details-page">
+  <app-complements-details-header
+    [complement]="complement"
+    [showBackButton]="true"
+    [activeView]="currentView"
+    (backClicked)="onBack()"
+    (viewChanged)="onViewChange($event)"
+    (editClicked)="onEdit()">
+  </app-complements-details-header>
+
+  <div class="emergency-info-content" *ngIf="currentView === 'details'">
+    <!-- SECCION 1: Responsable de la entrega -->
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon">
+          <mat-icon>person</mat-icon>
+        </div>
+        <div class="section-title">
+          <h4>Responsable de la entrega</h4>
+        </div>
+      </div>
+      <div class="section-content">
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Región:</span>
+            <span class="info-value">{{ complement?.region || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Municipio:</span>
+            <span class="info-value">{{ complement?.municipio || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Nombres y apellidos de la persona que realiza la entrega:</span>
+            <span class="info-value">{{ complement?.nombresApellidosEntrega || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Tipo de documento de la persona que realiza la entrega:</span>
+            <span class="info-value">{{ complement?.tipoDocumentoEntrega || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Número de documento de la persona que realiza la entrega:</span>
+            <span class="info-value">{{ complement?.numeroDocumentoEntrega || 'N/A' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECCION 2: Tipo de población -->
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon">
+          <mat-icon>groups</mat-icon>
+        </div>
+        <div class="section-title">
+          <h4>Tipo de población</h4>
+        </div>
+      </div>
+      <div class="section-content">
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Seleccione el tipo de población participante:</span>
+            <span class="info-value">{{ complement?.tipoPoblacionParticipante || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Número de documento del participante (a):</span>
+            <span class="info-value">{{ complement?.numeroDocumentoParticipante || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Tipo de documento del participante (a):</span>
+            <span class="info-value">{{ complement?.tipoDocumentoParticipanteInfo || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Primer nombre del participante (a):</span>
+            <span class="info-value">{{ complement?.primerNombreParticipante || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Segundo nombre del participante (a):</span>
+            <span class="info-value">{{ complement?.segundoNombreParticipante || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Primer apellido del participante (a):</span>
+            <span class="info-value">{{ complement?.primerApellidoParticipante || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Segundo apellido del participante (a):</span>
+            <span class="info-value">{{ complement?.segundoApellidoParticipante || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Edad:</span>
+            <span class="info-value">{{ complement?.edadParticipante || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Género:</span>
+            <span class="info-value">{{ complement?.generoParticipante || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Región:</span>
+            <span class="info-value">{{ complement?.regionParticipante || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Municipio:</span>
+            <span class="info-value">{{ complement?.municipioParticipante || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Teléfono de contacto del beneficiario (a):</span>
+            <span class="info-value">{{ complement?.telefonoContactoBeneficiario || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Número telefónico actual:</span>
+            <span class="info-value">{{ complement?.numeroTelefonicoActual || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Dirección o ubicación:</span>
+            <span class="info-value">{{ complement?.direccionUbicacion || 'N/A' }}</span>
+          </div>
+
+          <!-- Participante 2 -->
+          <div class="info-item">
+            <span class="info-label">Número de documento del participante (a) 2:</span>
+            <span class="info-value">{{ complement?.numeroDocumentoParticipante2 || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Nombre completo del participante (a) 2:</span>
+            <span class="info-value">{{ getParticipantFullName(2) }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Género del participante (a) 2:</span>
+            <span class="info-value">{{ complement?.generoParticipante2 || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Municipio del participante (a) 2:</span>
+            <span class="info-value">{{ complement?.municipioParticipante2 || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Teléfono de contacto del beneficiario (a) 2:</span>
+            <span class="info-value">{{ complement?.telefonoContactoBeneficiario2 || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Número telefónico actual 2:</span>
+            <span class="info-value">{{ complement?.numeroTelefonicoActual2 || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Dirección o ubicación 2:</span>
+            <span class="info-value">{{ complement?.direccionUbicacion2 || 'N/A' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECCION 3: Entrega del complemento -->
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon">
+          <mat-icon>local_shipping</mat-icon>
+        </div>
+        <div class="section-title">
+          <h4>Entrega del complemento</h4>
+        </div>
+      </div>
+      <div class="section-content">
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Fecha de entrega:</span>
+            <span class="info-value">{{ complement?.fechaEntrega || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Período de entrega:</span>
+            <span class="info-value">{{ complement?.periodoEntrega || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Seleccione el municipio:</span>
+            <span class="info-value">{{ complement?.municipioEntrega || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Seleccione el lugar encuentro:</span>
+            <span class="info-value">{{ complement?.lugarEncuentro || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Seleccione el grupo:</span>
+            <span class="info-value">{{ complement?.grupo || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Quien recibe el complemento:</span>
+            <span class="info-value">{{ complement?.quienRecibeComplemento || 'N/A' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cuidadores -->
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon">
+          <mat-icon>family_restroom</mat-icon>
+        </div>
+        <div class="section-title">
+          <h4>Cuidadores</h4>
+        </div>
+      </div>
+      <div class="section-content">
+        <div class="info-grid">
+          <!-- Cuidador 1 -->
+          <div class="info-item">
+            <span class="info-label">Tipo de documento del cuidador (a) 1:</span>
+            <span class="info-value">{{ complement?.tipoDocumentoCuidador || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Número de documento del cuidador 1:</span>
+            <span class="info-value">{{ complement?.numeroDocumentoCuidador || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Nombre completo del cuidador (a) 1:</span>
+            <span class="info-value">{{ getCaregiverFullName(1) }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Número telefónico de contacto 1:</span>
+            <span class="info-value">{{ complement?.numeroTelefonicoContacto1 || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Número telefónico de contacto 2:</span>
+            <span class="info-value">{{ complement?.numeroTelefonicoContacto2 || 'N/A' }}</span>
+          </div>
+
+          <!-- Cuidador 2 -->
+          <div class="info-item">
+            <span class="info-label">Tipo de documento del cuidador (a) 2:</span>
+            <span class="info-value">{{ complement?.tipoDocumentoCuidador2 || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Número de documento del cuidador 2:</span>
+            <span class="info-value">{{ complement?.numeroDocumentoCuidador2 || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Nombre completo del cuidador (a) 2:</span>
+            <span class="info-value">{{ getCaregiverFullName(2) }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Número telefónico de contacto 1:</span>
+            <span class="info-value">{{ complement?.numeroTelefonicoContacto12 || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Número telefónico de contacto 2:</span>
+            <span class="info-value">{{ complement?.numeroTelefonicoContacto22 || 'N/A' }}</span>
+          </div>
+
+          <!-- Cuidador 3 -->
+          <div class="info-item">
+            <span class="info-label">Tipo de documento del cuidador (a) 3:</span>
+            <span class="info-value">{{ complement?.tipoDocumentoCuidador3 || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Número de documento del cuidador 3:</span>
+            <span class="info-value">{{ complement?.numeroDocumentoCuidador3 || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Nombre completo del cuidador (a) 3:</span>
+            <span class="info-value">{{ getCaregiverFullName(3) }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Número telefónico de contacto 1:</span>
+            <span class="info-value">{{ complement?.numeroTelefonicoContacto13 || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Número telefónico de contacto 2:</span>
+            <span class="info-value">{{ complement?.numeroTelefonicoContacto23 || 'N/A' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECCION 4: Consentimiento informado -->
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon">
+          <mat-icon>assignment</mat-icon>
+        </div>
+        <div class="section-title">
+          <h4>Consentimiento informado</h4>
+        </div>
+      </div>
+      <div class="section-content">
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Adjuntar autorización de la persona autorizada:</span>
+            <span class="info-value">{{ complement?.adjuntarAutorizacion || 'N/A' }}</span>
+          </div>
+          <div class="info-item full-width">
+            <span class="info-label">Ubicación Georeferenciación:</span>
+            <span class="info-value">{{ getCoordinates() }}</span>
+          </div>
+          <div class="info-item full-width">
+            <span class="info-label">1. Yo, actuando en representación y con la autorización expresa de todos los miembros de mi hogar, incluyendo a menores y mayores de edad, autorizo a la GOBERNACIÓN DE ANTIOQUIA para que en cumplimiento a lo determinado en la Ley 1581 de 2012 (uso de los datos personales), en el marco de sus procesos de atención, actúe como responsable del tratamiento de los datos personales de los cuales somos titulares, realice la recolección, uso y tratamiento de nuestros datos, ya sea de forma conjunta o separada, conforme a la política de tratamiento de datos personales de la Gobernación de Antioquia, disponible en https://sedeelectronica.antioquia.gov.co/publicaciones/203/política-para-el-tratamiento-de-datos-personales/:</span>
+            <span class="info-value">{{ complement?.consentimientoDatosPersonales || 'N/A' }}</span>
+          </div>
+          <div class="info-item full-width">
+            <span class="info-label">2. Asimismo, autorizo a la administración departamental para captar, tomar, almacenar, editar, divulgar y publicar imágenes, audios o datos de nuestra familia, o de alguno de sus integrantes, (incluyendo menores y mayores de edad), con fines estadísticos, académicos o para la promoción de los derechos de los niños, niñas, adolescentes y familias. Esto se realizará conforme a la política de tratamiento de datos personales de la Gobernación de Antioquia, y dando cumplimiento a lo dispuesto en la Ley 1581 de 2012.:</span>
+            <span class="info-value">{{ complement?.consentimientoImagenesAudios || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Fotografía documento de identidad participante (original):</span>
+            <span class="info-value">{{ complement?.fotografiaDocumentoIdentidadParticipante || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Fotografía documento de identidad cuidador o persona autorizada (original):</span>
+            <span class="info-value">{{ complement?.fotografiaDocumentoIdentidadCuidador || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Fotografía de persona que recibe:</span>
+            <span class="info-value">{{ complement?.fotografiaPersonaRecibe || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Seleccione el tipo de registro si firma la persona que recibe el paquete o si se toma la foto de la planilla física de la persona que ya recibió el paquete:</span>
+            <span class="info-value">{{ complement?.tipoRegistro || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Firma de persona que recibe el complemento alimentario:</span>
+            <span class="info-value">{{ complement?.firmaPersonaRecibe || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Fotografía de la planilla que soporta la firma de la entrega:</span>
+            <span class="info-value">{{ complement?.fotografiaPlanillaFirma || 'N/A' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <app-complements-traceability
+    *ngIf="currentView === 'traceability'"
+    [complement]="complement"
+    (back)="onBack()">
+  </app-complements-traceability>
+</div>

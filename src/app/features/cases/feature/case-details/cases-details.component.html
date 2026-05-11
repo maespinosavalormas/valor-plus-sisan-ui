@@ -1,0 +1,506 @@
+<div class="case-info-modal-overlay">
+  <!-- Header Component -->
+  <app-case-details-header
+    [selectedCaseInfo]="selectedCaseInfo"
+    [activeView]="currentView"
+    (backClicked)="onBackClick()"
+    (viewChanged)="onViewChange($event)">
+  </app-case-details-header>
+
+  <!-- Loading state -->
+  <div class="loading-container" *ngIf="isLoading">
+    <div class="spinner"></div>
+    <p>Cargando...</p>
+  </div>
+
+  <!-- Error state -->
+  <div class="error-container" *ngIf="errorMessage && !isLoading">
+    <mat-icon color="warn">error</mat-icon>
+    <span>{{ errorMessage }}</span>
+    <button mat-button (click)="loadCaseDetails()">Reintentar</button>
+  </div>
+
+  <div class="case-info-modal-container" *ngIf="!isLoading && !errorMessage" (click)="$event.stopPropagation()">
+    <div class="case-info-modal-content" *ngIf="currentView === 'details' && selectedCaseInfo">
+      <!-- Sección 1: Datos Básicos del Caso -->
+      <div class="info-section">
+        <div class="section-header">
+          <div class="section-icon">
+            <mat-icon>folder</mat-icon>
+          </div>
+          <div class="section-title">
+            <h4>Datos Básicos del Caso</h4>
+          </div>
+        </div>
+        <div class="section-content">
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="info-label">Código UPGD:</span>
+              <span class="info-value">{{ selectedCaseInfo.upgdCode }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Nombre UPGD:</span>
+              <span class="info-value">{{ selectedCaseInfo.upgdName }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Fecha Notificación:</span>
+              <span class="info-value">{{ selectedCaseInfo.notificationDate | date:'yyyy-MM-dd' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Estado:</span>
+              <span class="info-value">{{ masterName(selectedCaseInfo.state) }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Evento:</span>
+              <span class="info-value">{{ masterName(selectedCaseInfo.event) }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Categoría:</span>
+              <span class="info-value">{{ masterName(selectedCaseInfo.category) }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección 2: Identificación del Paciente -->
+      <div class="info-section" *ngIf="selectedCaseInfo.patientInformation">
+        <div class="section-header">
+          <div class="section-icon">
+            <mat-icon>person</mat-icon>
+          </div>
+          <div class="section-title">
+            <h4>Identificación del Paciente</h4>
+          </div>
+        </div>
+        <div class="section-content">
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="info-label">Tipo Identificación:</span>
+              <span class="info-value">{{ masterName(selectedCaseInfo.patientInformation.identificationTypeId) }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Número Identificación:</span>
+              <span class="info-value">{{ selectedCaseInfo.patientInformation.identificationNumber || '—' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Nombre Completo:</span>
+              <span class="info-value">{{ selectedCaseInfo.patientInformation.firstName || '' }} {{ selectedCaseInfo.patientInformation.middleName || '' }} {{ selectedCaseInfo.patientInformation.firstLastName || '' }} {{ selectedCaseInfo.patientInformation.secondLastName || '' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Fecha Nacimiento:</span>
+              <span class="info-value">{{ selectedCaseInfo.patientInformation.birthDate | date:'yyyy-MM-dd' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Edad:</span>
+              <span class="info-value">{{ selectedCaseInfo.patientInformation.age }} {{ masterName(selectedCaseInfo.patientInformation.ageUnitId) }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Teléfono:</span>
+              <span class="info-value">{{ selectedCaseInfo.patientInformation.phoneNumber || '—' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">País Nacionalidad:</span>
+              <span class="info-value">{{ masterName(selectedCaseInfo.patientInformation.nationalityCountryId) }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Sexo:</span>
+              <span class="info-value">{{ masterName(selectedCaseInfo.patientInformation.genderId) }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Identidad de Género:</span>
+              <span class="info-value">{{ masterName(selectedCaseInfo.patientInformation.genderIdentityId) }}{{ selectedCaseInfo.patientInformation.genderIdentityOther ? ' - ' + selectedCaseInfo.patientInformation.genderIdentityOther : '' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Orientación Sexual:</span>
+              <span class="info-value">{{ masterName(selectedCaseInfo.patientInformation.sexualOrientationId) }}{{ selectedCaseInfo.patientInformation.sexualOrientationOther ? ' - ' + selectedCaseInfo.patientInformation.sexualOrientationOther : '' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Ocupación:</span>
+              <span class="info-value">{{ masterName(selectedCaseInfo.patientInformation.occupationId) }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Régimen Salud:</span>
+              <span class="info-value">{{ masterName(selectedCaseInfo.patientInformation.healthInsuranceRegimeId) }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Administradora Plan Beneficios:</span>
+              <span class="info-value">{{ selectedCaseInfo.patientInformation.benefitsPlanAdministratorName || '—' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Etnia:</span>
+              <span class="info-value">{{ masterName(selectedCaseInfo.patientInformation.ethnicityId) }}{{ selectedCaseInfo.patientInformation.ethnicityOther ? ' - ' + selectedCaseInfo.patientInformation.ethnicityOther : '' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Estrato:</span>
+              <span class="info-value">{{ masterName(selectedCaseInfo.patientInformation.stratumId) }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección 3: Ubicación del Paciente -->
+      <div class="info-section" *ngIf="selectedCaseInfo.patientInformation">
+        <div class="section-header">
+          <div class="section-icon">
+            <mat-icon>location_on</mat-icon>
+          </div>
+          <div class="section-title">
+            <h4>Ubicación del Paciente</h4>
+          </div>
+        </div>
+        <div class="section-content">
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="info-label">País:</span>
+              <span class="info-value">{{ masterName(selectedCaseInfo.patientInformation.countryId) }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Departamento:</span>
+              <span class="info-value">{{ masterName(selectedCaseInfo.patientInformation.provinceId) }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Municipio:</span>
+              <span class="info-value">{{ masterName(selectedCaseInfo.patientInformation.cityId) }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Área:</span>
+              <span class="info-value">{{ masterName(selectedCaseInfo.patientInformation.areaId) }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Localidad:</span>
+              <span class="info-value">{{ selectedCaseInfo.patientInformation.locality || '—' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Barrio:</span>
+              <span class="info-value">{{ selectedCaseInfo.patientInformation.neighborhood || '—' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Centro Poblado:</span>
+              <span class="info-value">{{ selectedCaseInfo.patientInformation.populatedCenter || '—' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Área Rural:</span>
+              <span class="info-value">{{ selectedCaseInfo.patientInformation.ruralArea || '—' }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección 4: Grupos Poblacionales -->
+      <div class="info-section" *ngIf="selectedCaseInfo.patientInformation">
+        <div class="section-header">
+          <div class="section-icon">
+            <mat-icon>groups</mat-icon>
+          </div>
+          <div class="section-title">
+            <h4>Grupos Poblacionales</h4>
+          </div>
+        </div>
+        <div class="section-content">
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="info-label">Discapacidad:</span>
+              <span class="info-value">{{ masterName(selectedCaseInfo.patientInformation.populationGroupDisabilitiesId) }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Desplazado:</span>
+              <span class="info-value">{{ masterName(selectedCaseInfo.patientInformation.populationGroupDisplacedId) }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Migrante:</span>
+              <span class="info-value">{{ masterName(selectedCaseInfo.patientInformation.populationGroupMigrantsId) }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Private de la libertad:</span>
+              <span class="info-value">{{ masterName(selectedCaseInfo.patientInformation.populationGroupIncarceratedId) }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Gestante:</span>
+              <span class="info-value">{{ masterName(selectedCaseInfo.patientInformation.populationGroupPregnantId) }}{{ selectedCaseInfo.patientInformation.populationGroupPregnantWeek ? ' - ' + selectedCaseInfo.patientInformation.populationGroupPregnantWeek + ' semanas' : '' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Calle:</span>
+              <span class="info-value">{{ masterName(selectedCaseInfo.patientInformation.populationGroupHomelessId) }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">ICBF:</span>
+              <span class="info-value">{{ masterName(selectedCaseInfo.patientInformation.populationGroupIcbfId) }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Madres Comunitarias:</span>
+              <span class="info-value">{{ masterName(selectedCaseInfo.patientInformation.populationGroupCommunityMothersId) }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Desmovilizado:</span>
+              <span class="info-value">{{ masterName(selectedCaseInfo.patientInformation.populationGroupDemobilizedId) }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Centro Psiquiátrico:</span>
+              <span class="info-value">{{ masterName(selectedCaseInfo.patientInformation.populationGroupPsychiatricCentersId) }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Víctima Conflicto Armado:</span>
+              <span class="info-value">{{ masterName(selectedCaseInfo.patientInformation.populationGroupVictimsArmedId) }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Otro:</span>
+              <span class="info-value">{{ masterName(selectedCaseInfo.patientInformation.populationGroupOtherId) }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección 5: Datos de Notificación -->
+      <div class="info-section" *ngIf="selectedCaseInfo.notificationInformation">
+        <div class="section-header">
+          <div class="section-icon">
+            <mat-icon>notifications</mat-icon>
+          </div>
+          <div class="section-title">
+            <h4>Datos de Notificación</h4>
+          </div>
+        </div>
+        <div class="section-content">
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="info-label">Fuente de Notificación:</span>
+              <span class="info-value">{{ masterName(selectedCaseInfo.notificationInformation.notificationSourceId) }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">País Notificación:</span>
+              <span class="info-value">{{ masterName(selectedCaseInfo.notificationInformation.countryId) }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Departamento Notificación:</span>
+              <span class="info-value">{{ masterName(selectedCaseInfo.notificationInformation.provinceId) }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Municipio Notificación:</span>
+              <span class="info-value">{{ masterName(selectedCaseInfo.notificationInformation.cityId) }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Dirección:</span>
+              <span class="info-value">{{ selectedCaseInfo.notificationInformation.address || '—' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Fecha Consulta:</span>
+              <span class="info-value">{{ selectedCaseInfo.notificationInformation.consultationDate | date:'yyyy-MM-dd' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Fecha Inicio Síntomas:</span>
+              <span class="info-value">{{ selectedCaseInfo.notificationInformation.initialSymptomsDate | date:'yyyy-MM-dd' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Clasificación Inicial:</span>
+              <span class="info-value">{{ masterName(selectedCaseInfo.notificationInformation.initialClasificationId) }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Hospitalizado:</span>
+              <span class="info-value">{{ masterName(selectedCaseInfo.notificationInformation.hospitalizedId) }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Fecha Hospitalización:</span>
+              <span class="info-value">{{ selectedCaseInfo.notificationInformation.hospitalizedDate | date:'yyyy-MM-dd' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Condición Final:</span>
+              <span class="info-value">{{ masterName(selectedCaseInfo.notificationInformation.finalConditionId) }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Fecha Defunción:</span>
+              <span class="info-value">{{ selectedCaseInfo.notificationInformation.deathDate | date:'yyyy-MM-dd' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">No. Certificado Defunción:</span>
+              <span class="info-value">{{ selectedCaseInfo.notificationInformation.deathCertificateNumber || '—' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Causa Muerte (CIE-10):</span>
+              <span class="info-value">{{ masterName(selectedCaseInfo.notificationInformation.deathCauseId) }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Nombre Profesional:</span>
+              <span class="info-value">{{ selectedCaseInfo.notificationInformation.professionalName || '—' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Teléfono Profesional:</span>
+              <span class="info-value">{{ selectedCaseInfo.notificationInformation.professionalPhoneNumber || '—' }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección 6: Cuidador Responsable -->
+      <div class="info-section" *ngIf="selectedCaseInfo.responsibleCaregiver">
+        <div class="section-header">
+          <div class="section-icon">
+            <mat-icon>family_restroom</mat-icon>
+          </div>
+          <div class="section-title">
+            <h4>Cuidador Responsable</h4>
+          </div>
+        </div>
+        <div class="section-content">
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="info-label">Nombre Completo:</span>
+              <span class="info-value">{{ selectedCaseInfo.responsibleCaregiver.firstName || '' }} {{ selectedCaseInfo.responsibleCaregiver.middleName || '' }} {{ selectedCaseInfo.responsibleCaregiver.firstLastName || '' }} {{ selectedCaseInfo.responsibleCaregiver.secondLastName || '' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Tipo Documento:</span>
+              <span class="info-value">{{ masterName(selectedCaseInfo.responsibleCaregiver.documentTypeId) }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Número Documento:</span>
+              <span class="info-value">{{ selectedCaseInfo.responsibleCaregiver.documentNumber || '—' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Nivel Educativo:</span>
+              <span class="info-value">{{ masterName(selectedCaseInfo.responsibleCaregiver.educationalLevelId) }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Número Hijos:</span>
+              <span class="info-value">{{ selectedCaseInfo.responsibleCaregiver.childrenNumber }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección 7: Factores de Identificación -->
+      <div class="info-section" *ngIf="selectedCaseInfo.identificationFactor">
+        <div class="section-header">
+          <div class="section-icon">
+            <mat-icon>restaurant</mat-icon>
+          </div>
+          <div class="section-title">
+            <h4>Factores de Identificación</h4>
+          </div>
+        </div>
+        <div class="section-content">
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="info-label">Peso Nacimiento:</span>
+              <span class="info-value">{{ selectedCaseInfo.identificationFactor.birthWeight }}g</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Talla Nacimiento:</span>
+              <span class="info-value">{{ selectedCaseInfo.identificationFactor.birthLength }}cm</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Edad Gestacional al Nacer:</span>
+              <span class="info-value">{{ selectedCaseInfo.identificationFactor.gestationalAgeAtBirth }} semanas</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Duración Lactancia:</span>
+              <span class="info-value">{{ selectedCaseInfo.identificationFactor.breastfeedingDuration }} meses</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Inicio Alimentación Complementaria:</span>
+              <span class="info-value">{{ selectedCaseInfo.identificationFactor.complementaryFeedingStartAge }} meses</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Peso Actual:</span>
+              <span class="info-value">{{ selectedCaseInfo.identificationFactor.currentWeight }}kg</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Talla Actual:</span>
+              <span class="info-value">{{ selectedCaseInfo.identificationFactor.currentHeight }}cm</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Perímetro Braquial:</span>
+              <span class="info-value">{{ selectedCaseInfo.identificationFactor.midUpperArmCircumference !== null ? selectedCaseInfo.identificationFactor.midUpperArmCircumference + 'cm' : '—' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Inscrito Crecimiento:</span>
+              <span class="info-value">{{ masterName(selectedCaseInfo.identificationFactor.enrolledInGrowthMonitoringId) }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Estado Vacunación:</span>
+              <span class="info-value">{{ masterName(selectedCaseInfo.identificationFactor.immunizationStatusId) }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Referido por Carné Vacunación:</span>
+              <span class="info-value">{{ masterName(selectedCaseInfo.identificationFactor.referredByVaccinationCardId) }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Test de Apetito:</span>
+              <span class="info-value">{{ masterName(selectedCaseInfo.identificationFactor.appetiteTestResultId) }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección 8: Signos Clínicos -->
+      <div class="info-section" *ngIf="selectedCaseInfo.clinicalSign">
+        <div class="section-header">
+          <div class="section-icon">
+            <mat-icon>monitor_heart</mat-icon>
+          </div>
+          <div class="section-title">
+            <h4>Signos Clínicos</h4>
+          </div>
+        </div>
+        <div class="section-content">
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="info-label">Edema:</span>
+              <span class="info-value">{{ masterName(selectedCaseInfo.clinicalSign.edemaPresentId) }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Desgaste Visible:</span>
+              <span class="info-value">{{ masterName(selectedCaseInfo.clinicalSign.visibleWastingId) }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Piel Seca o Áspera:</span>
+              <span class="info-value">{{ masterName(selectedCaseInfo.clinicalSign.dryOrRoughSkinId) }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Cambios Pigmentación Piel:</span>
+              <span class="info-value">{{ masterName(selectedCaseInfo.clinicalSign.skinPigmentationChangesId) }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Cambios en el Cabello:</span>
+              <span class="info-value">{{ masterName(selectedCaseInfo.clinicalSign.hairChangesId) }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Signos Anemia Clínica:</span>
+              <span class="info-value">{{ masterName(selectedCaseInfo.clinicalSign.clinicalAnemiaSignsId) }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección 9: Ruta de Atención -->
+      <div class="info-section" *ngIf="selectedCaseInfo.careRoute">
+        <div class="section-header">
+          <div class="section-icon">
+            <mat-icon>route</mat-icon>
+          </div>
+          <div class="section-title">
+            <h4>Ruta de Atención</h4>
+          </div>
+        </div>
+        <div class="section-content">
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="info-label">Ruta de Atención Activada:</span>
+              <span class="info-value">{{ masterName(selectedCaseInfo.careRoute.carePathwayActivatedId) }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Tipo de Cuidado Proporcionado:</span>
+              <span class="info-value">{{ masterName(selectedCaseInfo.careRoute.typeOfCareProvidedId) }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Diagnóstico Médico (CIE-10):</span>
+              <span class="info-value">{{ masterName(selectedCaseInfo.careRoute.medicalDiagnosisId) }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+  
+  <app-case-nutritional-monitoring *ngIf="currentView === 'nutritional'" [embedded]="true" (close)="onViewChange('details')"></app-case-nutritional-monitoring>
+  <app-case-tasks *ngIf="currentView === 'tasks'" [embedded]="true" (close)="onViewChange('details')"></app-case-tasks>
+  <app-case-traceability *ngIf="currentView === 'trazability'" [embedded]="true" (close)="onViewChange('details')"></app-case-traceability>
+        
+</div>

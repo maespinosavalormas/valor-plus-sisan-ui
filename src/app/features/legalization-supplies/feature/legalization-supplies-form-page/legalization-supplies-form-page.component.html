@@ -1,0 +1,265 @@
+<div class="form-container">
+  <div class="form-header">
+    <div class="form-title">
+      <span>{{ title }}</span>
+    </div>
+    <button mat-icon-button class="close-button" (click)="onCancel()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <form [formGroup]="form" class="form-grid">
+    <!-- SECCION 1: Información General -->
+    <h4 class="section-title">
+      <mat-icon>info</mat-icon>
+      Información General
+    </h4>
+    <div class="field">
+      <span class="field-label req">Código de la unidad productiva (código registrado en la focalización):</span>
+      <input class="control" formControlName="codigoUnidadProductiva" placeholder="Ingrese código" required>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Nombre completo del beneficiario:</span>
+      <input class="control" formControlName="nombreBeneficiario" placeholder="Campo informativo" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label req">Tipo de unidad productiva:</span>
+      <mat-select class="control" formControlName="tipoUnidadProductiva" placeholder="Seleccione tipo" required>
+        <mat-option *ngFor="let tipo of tiposUnidadProductiva" [value]="tipo">{{ tipo }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">No se encuentra caracterizado:</span>
+      <input class="control" formControlName="noCaracterizado" placeholder="Campo informativo" readonly>
+    </div>
+
+    <!-- SECCION 2: Datos Representante Unidad Productiva -->
+    <h4 class="section-title">
+      <mat-icon>person</mat-icon>
+      Datos Representante Unidad Productiva
+    </h4>
+    <div class="field readonly-field">
+      <span class="field-label">Nombre del responsable:</span>
+      <input class="control" formControlName="nombreResponsable" placeholder="Campo informativo" readonly>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Tipo de documento del responsable:</span>
+      <mat-select class="control" formControlName="tipoDocumentoResponsable" placeholder="Campo informativo" readonly>
+        <mat-option *ngFor="let tipo of tiposDocumento" [value]="tipo">{{ tipo }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Número de documento representante:</span>
+      <input class="control" type="text" formControlName="numeroDocumentoResponsable" placeholder="Campo informativo" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label req">Teléfono de contacto:</span>
+      <input class="control" type="text" formControlName="telefonoContacto" placeholder="Ingrese teléfono" required>
+    </div>
+    <div class="field">
+      <span class="field-label req">Convenio:</span>
+      <input class="control" formControlName="convenio" placeholder="Ingrese convenio" required>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Región:</span>
+      <mat-select class="control" formControlName="region" placeholder="Campo informativo" readonly>
+        <mat-option *ngFor="let region of regions" [value]="region">{{ region }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Municipio:</span>
+      <mat-select class="control" formControlName="municipio" placeholder="Campo informativo" readonly>
+        <mat-option *ngFor="let municipio of municipios" [value]="municipio">{{ municipio }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Zona:</span>
+      <mat-select class="control" formControlName="zona" placeholder="Campo informativo" readonly>
+        <mat-option *ngFor="let zona of zonas" [value]="zona">{{ zona }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Tipo Barrio o Vereda:</span>
+      <mat-select class="control" formControlName="tipoBarrioVereda" placeholder="Campo informativo" readonly>
+        <mat-option *ngFor="let tipo of tiposBarrioVereda" [value]="tipo">{{ tipo }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Nombre del barrio:</span>
+      <input class="control" formControlName="nombreBarrio" placeholder="Campo informativo" readonly>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Vereda:</span>
+      <mat-select class="control" formControlName="vereda" placeholder="Campo informativo" readonly>
+        <mat-option *ngFor="let vereda of veredas" [value]="vereda">{{ vereda }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Dirección o ubicación:</span>
+      <input class="control" formControlName="direccionUbicacion" placeholder="Ingrese dirección" required>
+    </div>
+
+    <!-- SECCION 3: Información del funcionario -->
+    <h4 class="section-title">
+      <mat-icon>badge</mat-icon>
+      Información del funcionario
+    </h4>
+    <div class="field">
+      <span class="field-label req">Número de documento del funcionario:</span>
+      <input class="control" type="text" formControlName="numeroDocumentoFuncionario" placeholder="Ingrese número documento" required>
+    </div>
+    <div class="field">
+      <span class="field-label req">Nombres y apellidos del funcionario que realiza la entrega:</span>
+      <input class="control" formControlName="nombresApellidosFuncionario" placeholder="Ingrese nombres y apellidos" required>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Teléfono del funcionario:</span>
+      <input class="control" type="text" formControlName="telefonoFuncionario" placeholder="Campo informativo" readonly>
+    </div>
+
+    <!-- SECCION 4: Información de la entrega -->
+    <h4 class="section-title">
+      <mat-icon>local_shipping</mat-icon>
+      Información de la entrega
+    </h4>
+    <div class="field">
+      <span class="field-label req">Tipo de sistema bajo condiciones protegidas:</span>
+      <mat-select class="control" formControlName="tipoSistemaCondicionesProtegidas" placeholder="Seleccione tipo" required>
+        <mat-option *ngFor="let tipo of tipoSistemaCondicionesProtegidas" [value]="tipo">{{ tipo }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Fecha de la entrega:</span>
+      <input class="control" type="date" formControlName="fechaEntrega" required>
+    </div>
+
+    <!-- SECCION 5: Detalles de la entrega -->
+    <h4 class="section-title">
+      <mat-icon>inventory</mat-icon>
+      Detalles de la entrega
+    </h4>
+    <div formArrayName="entregasRealizadas" class="field full-width">
+      <div *ngFor="let entrega of getEntregasRealizadas().controls; let i = index" [formGroupName]="i" class="field full-width repeat-container">
+        <div class="section-title">Entrega {{ i + 1 }}</div>
+        <div class="repeat-fields-grid">
+        <div class="field">
+          <span class="field-label req">Seleccione el tipo de entrega:</span>
+          <mat-select class="control" formControlName="tipoEntrega" placeholder="Seleccione tipo entrega" required>
+            <mat-option *ngFor="let tipo of tiposEntrega" [value]="tipo">{{ tipo }}</mat-option>
+          </mat-select>
+        </div>
+        <div class="field readonly-field">
+          <span class="field-label">Tipo de entrega fijo:</span>
+          <input class="control" formControlName="tipoEntregaFijo" placeholder="Campo calculado" readonly>
+        </div>
+        <div class="field readonly-field">
+          <span class="field-label">Entrega Seleccionada:</span>
+          <input class="control" formControlName="entregaSeleccionada" placeholder="Campo calculado" readonly>
+        </div>
+        <div class="field full-width">
+          <span class="field-label">Una vez seleccionado el tipo de entrega, no lo modifique. Si lo cambió por error, debe regresarlo exactamente al valor seleccionado inicialmente. Si fue seleccionado por error desde el inicio, elimine el registro y créelo nuevamente. Si requiere un tipo de entrega adicional, agréguelo en la parte inferior.</span>
+        </div>
+        <div formArrayName="detalleArticulos" class="field full-width">
+          <div *ngFor="let articulo of getDetalleArticulos(i).controls; let j = index" [formGroupName]="j" class="field full-width repeat-container">
+            <div class="section-title">Artículo {{ j + 1 }}</div>
+            <div class="repeat-fields-grid">
+            <div class="field">
+              <span class="field-label req">Seleccione el artículo:</span>
+              <mat-select class="control" formControlName="articuloSeleccionado" placeholder="Seleccione artículo" required>
+                <mat-option *ngFor="let articulo of articulos" [value]="articulo">{{ articulo }}</mat-option>
+              </mat-select>
+            </div>
+            <div class="field">
+              <span class="field-label req">Medidas:</span>
+              <input class="control" formControlName="medidas" placeholder="Ingrese medidas" required>
+            </div>
+            <div class="field">
+              <span class="field-label req">Unidad de medida:</span>
+              <mat-select class="control" formControlName="unidadMedida" placeholder="Seleccione unidad" required>
+                <mat-option *ngFor="let unidad of unidadesMedida" [value]="unidad">{{ unidad }}</mat-option>
+              </mat-select>
+            </div>
+            <div class="field">
+              <span class="field-label req">Cantidad Contratada:</span>
+              <input class="control" formControlName="cantidadContratada" placeholder="Ingrese cantidad" required>
+            </div>
+            <div class="field">
+              <span class="field-label req">Cantidad Entregada:</span>
+              <input class="control" type="number" formControlName="cantidadEntregada" placeholder="Ingrese cantidad" required>
+            </div>
+            </div>
+            <button mat-button type="button" (click)="removeArticulo(i, j)">Remover Artículo</button>
+          </div>
+          <button mat-button type="button" (click)="addArticulo(i)" class="repeat-container">Agregar Artículo</button>
+        </div>
+        </div>
+        <button mat-button type="button" (click)="removeEntrega(i)">Remover Entrega</button>
+      </div>
+      <button mat-button type="button" (click)="addEntrega()" class="repeat-container">Agregar Entrega</button>
+    </div>
+
+    <!-- SECCION 6: Soporte -->
+    <h4 class="section-title">
+      <mat-icon>attach_file</mat-icon>
+      Soporte
+    </h4>
+    <div class="field full-width">
+      <span class="field-label">Evidencia Fotográfica:</span>
+      <div class="file-upload-container">
+        <input class="file-input" type="file" id="evidenciaFotografica" formControlName="evidenciaFotografica" accept=".pdf" (change)="onFileSelected($event, 'evidenciaFotografica')">
+        <label class="file-upload-label" for="evidenciaFotografica" [class.active]="selectedFiles['evidenciaFotografica']">
+          <mat-icon class="upload-icon">upload_file</mat-icon>
+          <span class="upload-text">{{ selectedFiles['evidenciaFotografica'] || 'Seleccionar archivo PDF de evidencia' }}</span>
+        </label>
+      </div>
+    </div>
+    <div class="field">
+      <span class="field-label req">¿Se utiliza acta física para la realización de la entrega?:</span>
+      <mat-select class="control" formControlName="utilizaActaFisica" placeholder="Seleccione" required>
+        <mat-option value="si">Sí</mat-option>
+        <mat-option value="no">No</mat-option>
+      </mat-select>
+    </div>
+    <div class="field full-width" *ngIf="form.get('utilizaActaFisica')?.value === 'si'">
+      <span class="field-label req">Acta física escaneada:</span>
+      <div class="file-upload-container">
+        <input class="file-input" type="file" id="actaFisicaEscaneada" formControlName="actaFisicaEscaneada" accept=".pdf,.doc,.docx" (change)="onFileSelected($event, 'actaFisicaEscaneada')">
+        <label class="file-upload-label" for="actaFisicaEscaneada" [class.active]="selectedFiles['actaFisicaEscaneada']">
+          <mat-icon class="upload-icon">upload_file</mat-icon>
+          <span class="upload-text">{{ selectedFiles['actaFisicaEscaneada'] || 'Seleccionar archivo de acta' }}</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- SECCION 7: Firmas -->
+    <h4 class="section-title">
+      <mat-icon>draw</mat-icon>
+      Firmas
+    </h4>
+    <div class="field full-width">
+      <span class="field-label req">Firma del representante de la Unidad productiva:</span>
+      <div class="file-upload-container">
+        <input class="file-input" type="file" id="firmaRepresentante" formControlName="firmaRepresentante" accept=".pdf" (change)="onFileSelected($event, 'firmaRepresentante')">
+        <label class="file-upload-label" for="firmaRepresentante" [class.active]="selectedFiles['firmaRepresentante']">
+          <mat-icon class="upload-icon">upload_file</mat-icon>
+          <span class="upload-text">{{ selectedFiles['firmaRepresentante'] || 'Seleccionar archivo PDF de firma' }}</span>
+        </label>
+      </div>
+    </div>
+    <div class="field full-width">
+      <span class="field-label req">Firma del Funcionario Municipio:</span>
+      <div class="file-upload-container">
+        <input class="file-input" type="file" id="firmaFuncionarioMunicipio" formControlName="firmaFuncionarioMunicipio" accept=".pdf" (change)="onFileSelected($event, 'firmaFuncionarioMunicipio')">
+        <label class="file-upload-label" for="firmaFuncionarioMunicipio" [class.active]="selectedFiles['firmaFuncionarioMunicipio']">
+          <mat-icon class="upload-icon">upload_file</mat-icon>
+          <span class="upload-text">{{ selectedFiles['firmaFuncionarioMunicipio'] || 'Seleccionar archivo PDF de firma' }}</span>
+        </label>
+      </div>
+    </div>
+  </form>
+
+  <div class="actions">
+    <button mat-button class="btn-cancel" (click)="onCancel()">Cancelar</button>
+    <button mat-raised-button class="btn-guardar" (click)="onSave()" [disabled]="!form.valid">Guardar</button>
+  </div>
+</div>

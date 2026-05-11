@@ -1,0 +1,55 @@
+<!-- Header del caso -->
+<div class="case-header">
+  <div class="page-header">
+    <button 
+      mat-icon-button 
+      class="back-button" 
+      (click)="onBack()"
+    >
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+
+    <div class="title-section">
+      <h1 class="page-title">{{ getCaseName() }}</h1>
+      <span [ngClass]="getStatusClass()" class="status-badge">
+        {{ getStatusLabel() }}
+      </span>
+    </div>
+
+    <div class="case-id">
+      <span class="id-value">{{ selectedCaseInfo?.upgdCode }}</span>
+    </div>
+  </div>
+
+  <!-- Toggle de vista -->
+  <div class="view-toggle" *ngIf="selectedCaseInfo">
+    <button mat-button 
+            class="toggle-btn"
+            [class.active]="isDetailsView()"
+            (click)="onViewChange('details')">
+      <mat-icon>description</mat-icon>
+      Detalles del Caso
+    </button>
+    <button mat-button 
+            class="toggle-btn"
+            [class.active]="isNutritionalView()"
+            (click)="onViewChange('nutritional')">
+      <mat-icon>monitor_weight</mat-icon>
+      Monitoreo Nutricional
+    </button>
+    <button mat-button 
+            class="toggle-btn"
+            [class.active]="isTasksView()"
+            (click)="onViewChange('tasks')">
+      <mat-icon>comment</mat-icon>
+      Seguimiento
+    </button>
+    <button mat-button 
+            class="toggle-btn"
+            [class.active]="isTrazabilityView()"
+            (click)="onViewChange('trazability')">
+      <mat-icon>history</mat-icon>
+      Trazabilidad
+    </button>
+  </div>
+</div>

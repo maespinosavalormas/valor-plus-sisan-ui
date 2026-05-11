@@ -1,0 +1,102 @@
+<!-- Wrapper para la lista - ocupa todo el espacio restante -->
+<div class="programs-list-wrapper">
+  <!-- Sección de búsqueda -->
+  <div class="search-section">
+    <div class="search-container">
+      <mat-icon class="search-icon">search</mat-icon>
+      <input 
+        type="text" 
+        placeholder="Buscar programas por nombre, descripción..." 
+        class="search-input"
+        [(ngModel)]="searchTerm"
+        (input)="filterPrograms()"
+      >
+      <button 
+        *ngIf="searchTerm" 
+        class="clear-search" 
+        (click)="clearSearch()"
+        mat-icon-button
+      >
+        <mat-icon>clear</mat-icon>
+      </button>
+    </div>
+    
+    <div class="filter-container">
+      <mat-select 
+        class="status-filter" 
+        [(ngModel)]="selectedStatus"
+        (selectionChange)="filterPrograms()"
+        placeholder="Todos los estados">
+        <mat-option value="">Todos los estados</mat-option>
+        <mat-option value="ACTIVE">Activo</mat-option>
+        <mat-option value="COMPLETED">Finalizado</mat-option>
+        <mat-option value="CANCELLED">Cancelado</mat-option>
+      </mat-select>
+    </div>
+  </div>
+
+  <!-- Contenedor del grid - este es el que debe tener scroll -->
+  <div class="programs-grid-container">
+    <div class="programs-grid">
+      <div class="program-card" *ngFor="let program of filteredPrograms" (click)="viewProgramDetails(program)">
+        <div class="program-header">
+          <div class="program-info">
+            <div class="program-details">
+              <h3 class="program-name">{{ program.name }}</h3>
+              <p class="program-applications">Aplicaciones: {{ program.applications || 0 }}</p>
+            </div>
+          </div>
+          <span [ngClass]="getStatusClass(program.status)" class="status-badge">
+            {{ getStatusLabel(program.status) }}
+          </span>
+        </div>
+        
+        <div class="program-content">
+          <div class="program-description">
+            <p>{{ program.description }}</p>
+          </div>
+          
+          <div class="program-responsables" *ngIf="program.responsables && program.responsables.length > 0">
+            <span class="responsables-label">Responsables:</span>
+            <span class="responsables-list">
+              <span 
+                *ngFor="let responsable of program.responsables; let last = last" 
+                class="responsable-item"
+              >
+                {{ responsable }}<span *ngIf="!last">, </span>
+              </span>
+            </span>
+          </div>
+          
+          <div class="program-progress">
+            <div class="progress-item">
+              <div class="progress-header">
+                <span class="progress-label">Tasa de Efectividad</span>
+                <span class="progress-value">{{ program.effectivenessRate || 75 }}%</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill effectiveness-progress" [style.width.%]="program.effectivenessRate || 75"></div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="program-dates">
+            <div class="date-item">
+              <span>Inicio: {{ program.startDate || 'N/A' }}</span>
+            </div>
+            <div class="date-item">
+              <span>Fin: {{ program.endDate || 'N/A' }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- No programs state -->
+    <div class="no-programs" *ngIf="filteredPrograms.length === 0">
+      <mat-icon>assignment</mat-icon>
+      <h3>No hay programas</h3>
+      <p>No se encontraron programas que coincidan con los filtros aplicados.</p>
+    </div>
+  </div>
+</div>

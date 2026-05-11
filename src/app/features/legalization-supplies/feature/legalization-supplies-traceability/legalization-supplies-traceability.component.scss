@@ -1,0 +1,239 @@
+// Component container
+.pcd-emergencies-traceability-container {
+  background: var(--white);
+  overflow-y: auto;
+  max-height: calc(90vh - 200px);
+  margin-bottom: 20px;
+  padding: 0 16px;
+}
+// Trazabilidad - Sección de búsqueda y filtros
+.search-section {
+  padding: 10px 0 0;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.search-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: var(--background-pages);
+  border: 1px solid var(--gray-primary);
+  border-radius: 6px;
+  padding: 0 8px;
+  transition: all 0.2s ease;
+  flex: 1;
+  min-width: 260px;
+  height: 36px;
+
+  &:focus-within {
+    border: 1.5px solid var(--blue-primary);
+  }
+
+  .search-icon {
+    color: var(--strong-gray-primary);
+    font-size: 18px;
+    margin-right: 8px;
+  }
+
+  .search-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 14px;
+    color: var(--black);
+
+    &::placeholder {
+      color: var(--strong-gray-primary);
+    }
+  }
+
+  .clear-search {
+    color: var(--strong-gray-primary);
+    font-size: 18px;
+    margin-left: 8px;
+    cursor: pointer;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: var(--blue-primary);
+    }
+  }
+}
+
+.filter-container {
+  .tipo-filter {
+    padding: 8px 12px;
+    border: 1px solid var(--gray-primary);
+    border-radius: 6px;
+    background: var(--background-pages);
+    color: var(--black);
+    font-size: 14px;
+    min-width: 140px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:focus {
+      outline: none;
+      border: 1.5px solid var(--blue-primary);
+    }
+  }
+}
+
+.clear-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  padding: 8px 12px;
+  height: 36px;
+}
+
+// Results Summary
+.results-summary {
+  padding: 8px 0;
+  margin-bottom: 16px;
+
+  .summary-text {
+    color: var(--strong-gray-primary);
+    font-size: 13px;
+    font-style: italic;
+  }
+}
+
+// Lista de actividad
+.activity-list {
+  .activity-item {
+    background: var(--background-pages);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 12px;
+    border: 1px solid var(--gray-primary);
+
+    .activity-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+
+      .activity-accion {
+        flex: 1;
+
+        .accion-label {
+          font-weight: 500;
+          color: var(--black);
+          font-size: 14px;
+        }
+
+        .accion-value {
+          color: var(--strong-blue-primary);
+          font-weight: 600;
+          font-size: 14px;
+          margin-left: 8px;
+        }
+      }
+
+      .activity-tipo {
+        .tipo-badge {
+          display: inline-block;
+          padding: 4px 8px;
+          border-radius: 12px;
+          font-size: 11px;
+          font-weight: 500;
+          text-transform: uppercase;
+
+          &.creacion {
+            background-color: var(--blue-primary);
+            color: var(--white);
+          }
+
+          &.actualizacion {
+            background-color: var(--blue-secondary);
+            color: var(--white);
+          }
+
+          &.contacto {
+            background-color: #17a2b8;
+            color: var(--white);
+          }
+
+          &.seguimiento {
+            background-color: #ffc107;
+            color: var(--black);
+          }
+
+          &.autorizacion {
+            background-color: #6f42c1;
+            color: var(--white);
+          }
+        }
+      }
+    }
+
+    .activity-fecha,
+    .activity-usuario,
+    .activity-descripcion {
+      margin-bottom: 8px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      span {
+        font-size: 13px;
+      }
+
+      .fecha-label,
+      .usuario-label,
+      .descripcion-label {
+        font-weight: 500;
+        color: var(--black);
+        margin-right: 8px;
+      }
+
+      .fecha-value,
+      .usuario-value,
+      .descripcion-value {
+        color: var(--strong-gray-primary);
+      }
+    }
+  }
+
+  .no-activity {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 40px 20px;
+    color: var(--strong-gray-primary);
+    font-style: italic;
+
+    mat-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .search-section {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+
+    .search-container {
+      min-width: auto;
+    }
+  }
+
+  .activity-item .activity-header {
+    flex-direction: column;
+    gap: 8px;
+  }
+}

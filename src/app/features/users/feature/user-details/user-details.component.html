@@ -1,0 +1,108 @@
+<div class="user-details-page">
+  <!-- Header Component -->
+  <app-user-details-header
+    [user]="user"
+    [showBackButton]="true"
+    [activeView]="currentView"
+    (backClicked)="onBack()"
+    (viewChanged)="onViewChange($event)"
+    (editClicked)="onEdit()">
+  </app-user-details-header>
+
+  <!-- Información General del Usuario -->
+  <div class="user-info-content" *ngIf="currentView === 'details'">
+    <!-- Sección 1: Datos Básicos -->
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon">
+          <mat-icon>person</mat-icon>
+        </div>
+        <div class="section-title">
+          <h4>Datos Básicos</h4>
+        </div>
+      </div>
+      <div class="section-content">
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">ID de Usuario:</span>
+            <span class="info-value">{{ user?.id || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Nombre Completo:</span>
+            <span class="info-value">{{ user?.firstName }} {{ user?.lastName }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Correo Electrónico:</span>
+            <span class="info-value">{{ user?.email }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Teléfono:</span>
+            <span class="info-value">{{ user?.phone || 'No registrado' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Departamento:</span>
+            <span class="info-value">{{ user?.department || 'No especificado' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Posición:</span>
+            <span class="info-value">{{ user?.position || 'No especificada' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Estado:</span>
+            <span class="info-value">{{ user?.isActive ? 'Activo' : 'Inactivo' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Roles Asignados:</span>
+            <span class="info-value">
+              <span *ngFor="let role of user?.roles || []; let last = last">
+                {{ role.name }}<span *ngIf="!last">, </span>
+              </span>
+              <span *ngIf="!user?.roles || user?.roles?.length === 0">
+                Sin roles asignados
+              </span>
+            </span>
+          </div>
+          <div class="info-item" *ngIf="user?.createdAt">
+            <span class="info-label">Fecha de Creación:</span>
+            <span class="info-value">{{ user!.createdAt }}</span>
+          </div>
+          <div class="info-item" *ngIf="user?.updatedAt">
+            <span class="info-label">Última Actualización:</span>
+            <span class="info-value">{{ user!.updatedAt }}</span>
+          </div>
+          <div class="info-item" *ngIf="user?.userInfo?.birthdate">
+            <span class="info-label">Fecha de Nacimiento:</span>
+            <span class="info-value">{{ user?.userInfo?.birthdate }}</span>
+          </div>
+          <div class="info-item" *ngIf="user?.userInfo?.identificationTypeId">
+            <span class="info-label">Tipo de ID:</span>
+            <span class="info-value">{{ user?.userInfo?.identificationTypeId }}</span>
+          </div>
+          <div class="info-item" *ngIf="user?.userInfo?.identificationNumber">
+            <span class="info-label">Número de ID:</span>
+            <span class="info-value">{{ user?.userInfo?.identificationNumber }}</span>
+          </div>
+          <div class="info-item" *ngIf="user?.userInfo?.address">
+            <span class="info-label">Dirección:</span>
+            <span class="info-value">{{ user?.userInfo?.address }}</span>
+          </div>
+          <div class="info-item" *ngIf="user?.userInfo?.cityId">
+            <span class="info-label">Ciudad:</span>
+            <span class="info-value">{{ user?.userInfo?.cityId }}</span>
+          </div>
+          <div class="info-item" *ngIf="user?.userInfo?.provinceId">
+            <span class="info-label">Provincia:</span>
+            <span class="info-value">{{ user?.userInfo?.provinceId }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- User Traceability Component (se muestra cuando se selecciona la tab de trazabilidad) -->
+  <app-user-traceability 
+    *ngIf="currentView === 'traceability'"
+    [user]="user"
+    (back)="onBack()">
+  </app-user-traceability>
+</div>
