@@ -54,15 +54,42 @@ export class CaseService {
   getCaseById(id: number): Observable<CaseFull> {
     return this.http.get<CaseFullResponse>(`${this.baseUrl}/cases/${id}`).pipe(
       map(response => {
-        console.log('DEBUG - Raw API response:', JSON.stringify(response, null, 2));
-        console.log('DEBUG - patientInformation fields:', Object.keys(response.case.patientInformation || {}));
-        console.log('DEBUG - identificationTypeId value:', response.case.patientInformation?.identificationTypeId);
-        console.log('DEBUG - genderId value:', response.case.patientInformation?.genderId);
-        console.log('DEBUG - nationalityCountryId value:', response.case.patientInformation?.nationalityCountryId);
         return response.case;
       }),
       catchError(error => {
         console.error(`Error loading case with id ${id}:`, error);
+        throw error;
+      })
+    );
+  }
+
+  /**
+   * Asigna usuarios a un caso
+   * POST /api/v1/cases/:caseId/assignments
+   * @param caseId ID del caso (número)
+   * @param userIds Array de IDs de usuarios a asignar
+   * @returns Observable con la respuesta de asignación
+   */
+  assignUsersToCase(caseId: number, userIds: string[]): Observable<CaseAssignmentResponse> {
+    const url = `${this.baseUrl}/cases/${caseId}/assignments`;
+    const body = { userIds };
+    
+    return this.http.post<CaseAssignmentResponse>(url, body).pipe(
+      catchError(error => {
+        console.error('Error en CaseService.assignUsersToCase():', error);
+        console.error('Status:', error.status);
+        console.error('URL:', url);
+        console.error('Body:', body);
+        
+        if (error.status === 400) {
+          console.error('Error 400: Bad Request - Posibles causas:');
+          console.error('1. Backend no está corriendo en localhost:3000');
+          console.error('2. Endpoint incorrecto (debería ser /api/v1/cases/:caseId/assignments)');
+          console.error('3. Token inválido o expirado');
+          console.error('4. Permisos insuficientes');
+          console.error('5. caseId o userIds inválidos');
+        }
+        
         throw error;
       })
     );
@@ -90,6 +117,15 @@ export interface MasterRecord {
   name: string;
 }
 
+export interface CaseAssignee {
+  userId: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  roles: string[];
+  assignedAt: string;
+}
+
 export interface CaseData {
   id: number;
   upgdCode: string;
@@ -99,6 +135,7 @@ export interface CaseData {
   event: MasterRecord;
   city: MasterRecord;
   category: MasterRecord;
+  assignees: CaseAssignee[];
 }
 
 export interface CaseBasic {
@@ -244,4 +281,15 @@ export interface CareRoute {
 
 interface CaseFullResponse {
   case: CaseFull;
+}
+
+// ── Interfaces para asignación de usuarios a casos ──
+
+export interface CaseAssignmentRequest {
+  userIds: string[];
+}
+
+export interface CaseAssignmentResponse {
+  caseId: number;
+  assignedUserIds: string[];
 }

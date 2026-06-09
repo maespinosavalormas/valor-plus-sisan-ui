@@ -4,42 +4,41 @@
       <mat-icon>medical_services</mat-icon>
       <span>Administrar Casos de Desnutrición</span>
     </div>
-    <div style="display: flex; align-items: center; gap: 10px;">
-        <div class="load-info-menu">
-          <button mat-flat-button class="btn-load-info" [matMenuTriggerFor]="loadInfoMenu">
-            <span class="btn-text">Cargar Información</span>
-            <mat-icon class="btn-icon">arrow_drop_down</mat-icon>
+    <div style="display: flex; align-items: center; gap: 10px">
+      <div class="load-info-menu">
+        <button mat-flat-button class="btn-load-info" [matMenuTriggerFor]="loadInfoMenu">
+          <span class="btn-text">Cargar Información</span>
+          <mat-icon class="btn-icon">arrow_drop_down</mat-icon>
+        </button>
+        <mat-menu #loadInfoMenu="matMenu" class="load-info-dropdown">
+          <button mat-menu-item (click)="loadIcbfCase()">
+            <mat-icon>child_care</mat-icon>
+            <span>Cargar Informacion de ICBF</span>
           </button>
-          <mat-menu #loadInfoMenu="matMenu" class="load-info-dropdown">
-            <button mat-menu-item (click)="loadIcbfCase()">
-              <mat-icon>child_care</mat-icon>
-              <span>Cargar Informacion de ICBF</span>
-            </button>
-            <button mat-menu-item (click)="loadArrullosCase()">
-              <mat-icon>family_restroom</mat-icon>
-              <span>Cargar Informacion de Arrullos</span>
-            </button>
-            <button mat-menu-item (click)="loadComfamaCase()">
-              <mat-icon>business</mat-icon>
-              <span>Cargar Informacion de Comfama</span>
-            </button>
-            <button mat-menu-item (click)="loadComfenalcoCase()">
-              <mat-icon>apartment</mat-icon>
-              <span>Cargar Informacion de Comfenalco</span>
-            </button>
-          </mat-menu>
-        </div>
-      
-        <button mat-flat-button class="btn-import-case" (click)="openCsvUploadModal()">
+          <button mat-menu-item (click)="loadArrullosCase()">
+            <mat-icon>family_restroom</mat-icon>
+            <span>Cargar Informacion de Arrullos</span>
+          </button>
+          <button mat-menu-item (click)="loadComfamaCase()">
+            <mat-icon>business</mat-icon>
+            <span>Cargar Informacion de Comfama</span>
+          </button>
+          <button mat-menu-item (click)="loadComfenalcoCase()">
+            <mat-icon>apartment</mat-icon>
+            <span>Cargar Informacion de Comfenalco</span>
+          </button>
+        </mat-menu>
+      </div>
+
+      <button mat-flat-button class="btn-import-case" (click)="openCsvUploadModal()">
         <span class="btn-text">Cargar Caso</span>
         <mat-icon class="btn-icon">add</mat-icon>
-        </button>
+      </button>
 
-
-        <button mat-flat-button class="btn-new-case" (click)="openCaseForm()">
+      <button mat-flat-button class="btn-new-case" (click)="openCaseForm()">
         <span class="btn-text">Nuevo Caso</span>
         <mat-icon class="btn-icon">add</mat-icon>
-        </button>
+      </button>
     </div>
   </div>
 
@@ -54,13 +53,27 @@
       </div>
       <div class="modal-content">
         <div class="file-upload-container">
-          <input type="file" accept=".csv" (change)="onCsvFileSelected($event)" id="csvFileInput">
+          <input
+            type="file"
+            accept=".xlsx,.xls"
+            (change)="onCsvFileSelected($event)"
+            id="csvFileInput"
+          />
           <label for="csvFileInput" class="file-upload-label">
             <mat-icon>upload_file</mat-icon>
-            <span>Seleccionar archivo CSV</span>
+            <span>Seleccionar archivo Excel</span>
           </label>
         </div>
         <p *ngIf="selectedCsvFile">{{ selectedCsvFile.name }}</p>
+        <div class="sheet-name-input">
+          <label for="sheetName">Nombre de la hoja:</label>
+          <input
+            type="text"
+            id="sheetName"
+            [(ngModel)]="sheetName"
+            placeholder="Consolidado 2026"
+          />
+        </div>
       </div>
       <div class="modal-footer">
         <button mat-flat-button class="btn-guardar" (click)="uploadCsvFile()">
@@ -82,7 +95,12 @@
       </div>
       <div class="modal-content">
         <div class="file-upload-container">
-          <input type="file" accept=".csv" (change)="onIcbfFileSelected($event)" id="icbfFileInput">
+          <input
+            type="file"
+            accept=".csv"
+            (change)="onIcbfFileSelected($event)"
+            id="icbfFileInput"
+          />
           <label for="icbfFileInput" class="file-upload-label">
             <mat-icon>upload_file</mat-icon>
             <span>Seleccionar archivo CSV</span>
@@ -110,7 +128,12 @@
       </div>
       <div class="modal-content">
         <div class="file-upload-container">
-          <input type="file" accept=".csv" (change)="onArrullosFileSelected($event)" id="arrullosFileInput">
+          <input
+            type="file"
+            accept=".csv"
+            (change)="onArrullosFileSelected($event)"
+            id="arrullosFileInput"
+          />
           <label for="arrullosFileInput" class="file-upload-label">
             <mat-icon>upload_file</mat-icon>
             <span>Seleccionar archivo CSV</span>
@@ -138,7 +161,12 @@
       </div>
       <div class="modal-content">
         <div class="file-upload-container">
-          <input type="file" accept=".csv" (change)="onComfamaFileSelected($event)" id="comfamaFileInput">
+          <input
+            type="file"
+            accept=".csv"
+            (change)="onComfamaFileSelected($event)"
+            id="comfamaFileInput"
+          />
           <label for="comfamaFileInput" class="file-upload-label">
             <mat-icon>upload_file</mat-icon>
             <span>Seleccionar archivo CSV</span>
@@ -166,7 +194,12 @@
       </div>
       <div class="modal-content">
         <div class="file-upload-container">
-          <input type="file" accept=".csv" (change)="onComfenalcoFileSelected($event)" id="comfenalcoFileInput">
+          <input
+            type="file"
+            accept=".csv"
+            (change)="onComfenalcoFileSelected($event)"
+            id="comfenalcoFileInput"
+          />
           <label for="comfenalcoFileInput" class="file-upload-label">
             <mat-icon>upload_file</mat-icon>
             <span>Seleccionar archivo CSV</span>

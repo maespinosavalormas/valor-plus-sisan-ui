@@ -194,7 +194,6 @@ export class SidebarComponent implements OnInit {
   private loadUserData(): void {
     // 1. Primero cargar datos del localStorage (instantáneo - no espera)
     const cachedUser = this.authService.getUser();
-    console.log('Datos del localStorage:', cachedUser);
     if (cachedUser) {
       this.updateUserInfo(cachedUser);
     }
@@ -202,21 +201,15 @@ export class SidebarComponent implements OnInit {
     // 2. Luego obtener datos frescos del backend
     this.usersService.getMyProfile().subscribe({
       next: (profile) => {
-        console.log('Datos del API:', profile);
         this.updateUserInfo(profile);
       },
       error: (error) => {
-        console.log('Error cargando perfil desde API:', error);
         // Si falla la API, ya tenemos los datos del localStorage cargados
       }
     });
   }
 
   private updateUserInfo(user: AuthUser | CompleteUser): void {
-    // Debug: Log the complete user object
-    console.log('Complete user object received:', user);
-    console.log('User properties:', Object.keys(user));
-    
     // Extract first name and last name with proper formatting
     let firstName = (user.firstName || '').trim();
     let lastName = (user.lastName || '').trim();
@@ -224,9 +217,6 @@ export class SidebarComponent implements OnInit {
     // Capitalize first letter of each name
     firstName = firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
     lastName = lastName.charAt(0).toUpperCase() + lastName.slice(1).toLowerCase();
-    
-    console.log('Extracted firstName:', firstName);
-    console.log('Extracted lastName:', lastName);
     
     // Set user name (first name + last name)
     if (firstName && lastName) {
@@ -254,16 +244,7 @@ export class SidebarComponent implements OnInit {
       const emailName = user.email.split('@')[0];
       this.userName = emailName;
       this.userInitials = emailName.substring(0, 2).toUpperCase();
-      console.log('Using email-based name:', emailName);
     }
-    
-    console.log('User info updated:', {
-      name: this.userName,
-      email: this.userEmail,
-      initials: this.userInitials,
-      originalFirstName: firstName,
-      originalLastName: lastName
-    });
     
     // Forzar detección de cambios para actualizar la UI inmediatamente
     this.cdr.detectChanges();
@@ -425,7 +406,6 @@ export class SidebarComponent implements OnInit {
     event.stopPropagation();
     
     if (action === 'accept') {
-      console.log('Solicitud aceptada:', notification);
       // Aquí puedes hacer una llamada al backend para aceptar la solicitud
       // this.notificationService.acceptRequest(notification.id).subscribe(...)
       
@@ -436,7 +416,6 @@ export class SidebarComponent implements OnInit {
       // this.snackBar.open('Solicitud aceptada', 'Cerrar', { duration: 3000 });
       
     } else if (action === 'decline') {
-      console.log('Solicitud rechazada:', notification);
       // Aquí puedes hacer una llamada al backend para rechazar la solicitud
       // this.notificationService.declineRequest(notification.id).subscribe(...)
       
@@ -447,7 +426,6 @@ export class SidebarComponent implements OnInit {
   }
 
   openSettings(): void {
-    console.log('Abriendo configuración de notificaciones');
     // Navegar a la página de configuración de notificaciones
     this.router.navigate(['/settings/notifications']);
   }
@@ -460,7 +438,6 @@ export class SidebarComponent implements OnInit {
   // Método auxiliar para descargar archivos adjuntos
   downloadAttachment(event: Event, attachment: { name: string; size: string }): void {
     event.stopPropagation();
-    console.log('Descargando archivo:', attachment.name);
     // Aquí implementarías la lógica de descarga
     // this.fileService.download(attachment.id).subscribe(...)
   }

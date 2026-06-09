@@ -87,7 +87,6 @@ export class DatosDeLaMadreComponent implements OnDestroy {
 
     @Inject(MAT_DIALOG_DATA) public data: DatosDeLaMadreData,
   ) {
-    console.log('DatosDeLaMadreComponent - Constructor iniciado con data:', this.data);
 
     this.isEdit = data?.isEdit || false;
 
@@ -123,15 +122,6 @@ export class DatosDeLaMadreComponent implements OnDestroy {
 
     this.isLastStep = this.currentStep === this.totalSteps;
 
-    console.log(
-      'DatosDeLaMadreComponent - currentStep:',
-      this.currentStep,
-      'totalSteps:',
-      this.totalSteps,
-      'isLastStep:',
-      this.isLastStep,
-    );
-
     // Suscribirse a cambios en los campos
 
     this.setupFormSubscription();
@@ -144,8 +134,6 @@ export class DatosDeLaMadreComponent implements OnDestroy {
 
     if (this.data?.data) {
       this.form.patchValue(this.data.data);
-
-      console.log('Datos restaurados del paso 4:', this.data.data);
 
       this.restoreMatSelectValues();
     }
@@ -188,10 +176,6 @@ export class DatosDeLaMadreComponent implements OnDestroy {
 
     this.formSubscription = this.form.valueChanges.subscribe(() => {
       // Debug: mostrar estado del formulario
-
-      console.log('Formulario válido:', this.form.valid);
-
-      console.log('Valores:', this.form.value);
     });
   }
 
@@ -207,69 +191,12 @@ export class DatosDeLaMadreComponent implements OnDestroy {
     if (this.form.valid) {
       const transformedData = this.transformFormData();
 
-      console.log('Datos transformados del paso 4:', transformedData);
-
-      console.log('Tipos de datos:');
-
-      console.log('  firstName:', typeof transformedData.firstName, '=', transformedData.firstName);
-
-      console.log(
-        '  middleName:',
-        typeof transformedData.middleName,
-        '=',
-        transformedData.middleName,
-      );
-
-      console.log(
-        '  firstLastName:',
-        typeof transformedData.firstLastName,
-        '=',
-        transformedData.firstLastName,
-      );
-
-      console.log(
-        '  secondLastName:',
-        typeof transformedData.secondLastName,
-        '=',
-        transformedData.secondLastName,
-      );
-
-      console.log(
-        '  documentTypeCode:',
-        typeof transformedData.documentTypeCode,
-        '=',
-        transformedData.documentTypeCode,
-      );
-
-      console.log(
-        '  documentNumber:',
-        typeof transformedData.documentNumber,
-        '=',
-        transformedData.documentNumber,
-      );
-
-      console.log(
-        '  educationalLevelCode:',
-        typeof transformedData.educationalLevelCode,
-        '=',
-        transformedData.educationalLevelCode,
-      );
-
-      console.log(
-        '  childrenNumber:',
-        typeof transformedData.childrenNumber,
-        '=',
-        transformedData.childrenNumber,
-      );
-
       this.dialogRef.close({
         action: 'next',
 
         stepData: transformedData,
       });
     } else {
-      console.log('Formulario inválido:', this.form.errors);
-
       this.form.markAllAsTouched();
     }
   }
@@ -334,8 +261,6 @@ export class DatosDeLaMadreComponent implements OnDestroy {
 
   goBack(): void {
     const transformedData = this.transformFormData();
-
-    console.log('Datos transformados al volver atrás:', transformedData);
 
     // Devuelve un objeto especial que indica que debe volver al paso anterior
 

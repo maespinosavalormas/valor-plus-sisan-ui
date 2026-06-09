@@ -98,9 +98,6 @@ export class CasesDetailsComponent implements OnInit {
 
     this.caseService.getCaseById(caseIdNum).subscribe({
       next: (caseData) => {
-        console.log('DEBUG - Case data assigned:', caseData);
-        console.log('DEBUG - patientInformation:', caseData.patientInformation);
-        console.log('DEBUG - identificationTypeId:', caseData.patientInformation?.identificationTypeId);
         this.selectedCaseInfo = caseData;
         this.isLoading = false;
         this.cdr.markForCheck();
