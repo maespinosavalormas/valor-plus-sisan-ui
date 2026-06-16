@@ -18,6 +18,7 @@ import { Router, NavigationEnd } from '@angular/router';
 import { ConfirmDialogService, ConfirmDialogData } from '../confirm-dialog/confirm-dialog';
 import { MasterDataService } from '../case-form/services/master-data.service';
 import { CaseService, CasePage, CaseBasic } from '../../data-access/services/case.service';
+import { Observable } from 'rxjs';
 import { Subscription } from 'rxjs';
 import { UsersService } from '../../../users/data-access/services/users-service';
 import { User } from '../../../../common/models/user.model';
@@ -235,6 +236,10 @@ export class CasesListComponent implements AfterViewInit, OnDestroy {
 
   dataSource = new MatTableDataSource<Case>();
 
+  totalElements = 0;
+
+  currentPage = 0;
+
   pageSize = 20;
 
   pageSizeOptions: number[] = [20, 50, 100];
@@ -302,6 +307,9 @@ export class CasesListComponent implements AfterViewInit, OnDestroy {
 
   private routerSubscription: Subscription | null = null;
   private createdCaseSubscription: Subscription | null = null;
+  private userRoles: string[] = [];
+  private readonly ALLOWED_ROLES = ['PRESTADOR_SALUD', 'MUNICIPIO', 'CAJA_COMPENSACION', 'PROFESIONAL'];
+  private readonly PROFESSIONAL_ASSIGNER_ROLES = ['MUNICIPIO', 'PRESTADOR_SALUD', 'CAJA_COMPENSACION'];
 
   constructor(
     private caseFormService: CaseFormService,
@@ -327,12 +335,13 @@ export class CasesListComponent implements AfterViewInit, OnDestroy {
   cases: Case[] = [];
 
   ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
+    // No conectamos el paginator al dataSource porque usamos paginación del servidor
+    // El paginator se controla manualmente con totalElements, currentPage y pageSize
   }
 
   ngOnInit(): void {
-    // Cargar casos desde el backend
-    this.loadCases();
+    // Cargar perfil del usuario para verificar roles antes de cargar casos
+    this.loadUserProfile();
 
     this.events$ = this.masterDataService.getEvents();
 
@@ -409,48 +418,92 @@ export class CasesListComponent implements AfterViewInit, OnDestroy {
   }
 
   filterCases(): void {
-    let filtered = [...this.cases];
+    // Mapear filtros del componente a CaseFilters del servicio
+    const serverFilters = this.mapFiltersToServerFormat();
 
-    // Filter by search term
+    // Resetear a página 0 cuando se aplican filtros
+    this.currentPage = 0;
 
+    // Cargar casos con filtros del servidor
+    this.loadCases(this.currentPage, this.pageSize, serverFilters);
+  }
+
+  /**
+   * Mapea los filtros del componente al formato CaseFilters del servicio
+   */
+  private mapFiltersToServerFormat(): any {
+    const filters: any = {};
+
+    // Mapear búsqueda por término
     if (this.searchTerm) {
-      const searchLower = this.searchTerm.toLowerCase();
-
-      filtered = filtered.filter(
-        (caseItem) =>
-          caseItem.upgdCode.toLowerCase().includes(searchLower) ||
-          caseItem.eventId.toLowerCase().includes(searchLower) ||
-          caseItem.upgdnName.toLowerCase().includes(searchLower) ||
-          (caseItem.fechaNotificacion && caseItem.fechaNotificacion.includes(searchLower)) ||
-          (caseItem.categoria && caseItem.categoria.toLowerCase().includes(searchLower)),
-      );
+      filters.upgdCode = this.searchTerm;
     }
 
-    // Filter by active filters
+    // Mapear filtro de evento
+    if (this.activeFilters.eventId) {
+      filters.eventCode = this.activeFilters.eventId;
+    }
 
+    // Mapear filtro de categoría
     if (this.activeFilters.categoria) {
-      filtered = filtered.filter((caseItem) => caseItem.categoria === this.activeFilters.categoria);
+      filters.categoryEventCode = this.activeFilters.categoria;
     }
 
+    // Mapear filtro de estado (como array)
     if (this.activeFilters.estado) {
-      filtered = filtered.filter((caseItem) => caseItem.estado === this.activeFilters.estado);
+      filters.states = [this.activeFilters.estado];
     }
 
+    // Mapear filtro de municipio
     if (this.activeFilters.municipio) {
-      const municipioLower = this.activeFilters.municipio.toLowerCase();
-
-      filtered = filtered.filter((caseItem) =>
-        caseItem.municipio.toLowerCase().includes(municipioLower),
-      );
+      filters.cityCode = this.activeFilters.municipio;
     }
 
+    // Mapear filtro de fecha de notificación
     if (this.activeFilters.fechaNotificacion) {
-      filtered = filtered.filter(
-        (caseItem) => caseItem.fechaNotificacion === this.activeFilters.fechaNotificacion,
-      );
+      filters.notificationDateStart = this.activeFilters.fechaNotificacion;
+      filters.notificationDateEnd = this.activeFilters.fechaNotificacion;
     }
 
-    this.dataSource.data = filtered;
+    return filters;
+  }
+
+  /**
+   * Carga el perfil del usuario para obtener sus roles
+   */
+  private loadUserProfile(): void {
+    this.usersService.getMyProfile().subscribe({
+      next: (user) => {
+        // Extraer los nombres de los roles del usuario
+        if (user.roles && user.roles.length > 0) {
+          this.userRoles = user.roles.map(role => role.name);
+        } else {
+          this.userRoles = [];
+        }
+        // Cargar casos después de obtener los roles del usuario
+        this.loadCases();
+      },
+      error: (error) => {
+        console.error('Error al cargar perfil del usuario:', error);
+        this.userRoles = [];
+        // Cargar casos incluso si falla la carga del perfil (usará endpoint por defecto)
+        this.loadCases();
+      },
+    });
+  }
+
+  /**
+   * Verifica si el usuario tiene alguno de los roles permitidos
+   */
+  private hasAllowedRole(): boolean {
+    return this.userRoles.some(role => this.ALLOWED_ROLES.includes(role));
+  }
+
+  /**
+   * Verifica si el usuario puede asignar profesionales (roles MUNICIPIO, PRESTADOR_SALUD, CAJA_COMPENSACION)
+   */
+  private canAssignProfessionals(): boolean {
+    return this.userRoles.some(role => this.PROFESSIONAL_ASSIGNER_ROLES.includes(role));
   }
 
   /**
@@ -458,29 +511,55 @@ export class CasesListComponent implements AfterViewInit, OnDestroy {
 
 
    * Carga los casos desde el backend usando CaseService
+   * @param page Número de página (0-indexed para paginator, se convierte a 1-indexed para backend)
+   * @param size Tamaño de página
+   * @param filters Filtros opcionales para la consulta
 
 
 
    */
 
-  private loadCases(): void {
-    this.caseService
-      .getCasesPage({
-        page: 1,
+  private loadCases(page: number = 0, size: number = 20, filters?: any): void {
+    // Convertir de 0-indexed (paginator) a 1-indexed (backend)
+    const backendPage = page + 1;
 
-        size: 20,
-      })
-      .subscribe({
-        next: (response) => {
-          // Transformar CaseBasic a la estructura de Case usada en la tabla
+    // Decidir qué endpoint usar según los roles del usuario
+    const caseObservable = this.hasAllowedRole()
+      ? this.caseService.getMyCases({
+          page: backendPage,
+          size: size,
+          ...filters,
+        })
+      : this.caseService.getCasesPage({
+          page: backendPage,
+          size: size,
+          ...filters,
+        });
 
-          const transformedCases = response.content.map((caseBasic: CaseBasic) =>
-            this.transformCaseBasicToCase(caseBasic),
-          );
+    caseObservable.subscribe({
+      next: (response) => {
+        // Guardar el total de elementos del backend
+        this.totalElements = response.totalElements;
+        // Convertir de 1-indexed (backend) a 0-indexed (paginator)
+        this.currentPage = response.number - 1;
+        this.pageSize = response.size;
 
-          this.cases = transformedCases;
+        // Transformar CaseBasic a la estructura de Case usada en la tabla
 
-          this.dataSource.data = this.cases;
+        const transformedCases = response.content.map((caseBasic: CaseBasic) =>
+          this.transformCaseBasicToCase(caseBasic),
+        );
+
+        this.cases = transformedCases;
+
+        this.dataSource.data = this.cases;
+
+        // Actualizar explícitamente el length del paginator
+        if (this.paginator) {
+          this.paginator.length = this.totalElements;
+            this.paginator.pageIndex = this.currentPage;
+            this.paginator.pageSize = this.pageSize;
+          }
 
           // Forzar detección de cambios
           this.cdr.detectChanges();
@@ -494,6 +573,7 @@ export class CasesListComponent implements AfterViewInit, OnDestroy {
           this.cases = [];
 
           this.dataSource.data = this.cases;
+          this.totalElements = 0;
 
           // Forzar detección de cambios
           this.cdr.detectChanges();
@@ -546,7 +626,6 @@ export class CasesListComponent implements AfterViewInit, OnDestroy {
 
   clearSearch(): void {
     this.searchTerm = '';
-
     this.filterCases();
   }
 
@@ -581,10 +660,27 @@ export class CasesListComponent implements AfterViewInit, OnDestroy {
   }
 
   /**
-   * Carga usuarios asignables (con roles MUNICIPIO, PRESTADOR_SALUD, CAJA_COMPENSACION)
+   * Carga usuarios disponibles para asignar a un caso específico
+   * - Si el usuario tiene roles MUNICIPIO, PRESTADOR_SALUD, CAJA_COMPENSACION: carga profesionales (GET /api/v1/cases/:caseId/available-professionals)
+   * - De lo contrario: carga responsables (GET /api/v1/cases/:caseId/available-responsibles)
    */
   private loadUsersByRoles(): void {
-    this.usersService.getAssignableUsers().subscribe({
+    const caseIdNumber = parseInt(this.selectedCaseId, 10);
+
+    if (isNaN(caseIdNumber)) {
+      console.error('Error: caseId no es un número válido:', this.selectedCaseId);
+      this.users = [];
+      this.filteredUsers = [];
+      this.cdr.detectChanges();
+      return;
+    }
+
+    // Decidir qué endpoint usar según los roles del usuario
+    const usersObservable = this.canAssignProfessionals()
+      ? this.caseService.getAvailableProfessionals(caseIdNumber)
+      : this.caseService.getAvailableResponsibles(caseIdNumber);
+
+    usersObservable.subscribe({
       next: (users) => {
         this.users = users;
         this.filteredUsers = [...this.users];
@@ -592,7 +688,7 @@ export class CasesListComponent implements AfterViewInit, OnDestroy {
         this.cdr.detectChanges();
       },
       error: (error) => {
-        console.error('Error al cargar usuarios asignables:', error);
+        console.error('Error al cargar usuarios disponibles para el caso:', error);
         // En caso de error, dejar el array vacío
         this.users = [];
         this.filteredUsers = [];
@@ -676,14 +772,21 @@ export class CasesListComponent implements AfterViewInit, OnDestroy {
     const selectedUsersList = this.users.filter(user => user.id && this.selectedUserIds.includes(user.id));
     const usersNames = selectedUsersList.map(u => u.fullName || `${u.firstName} ${u.lastName}`).join(', ');
 
-    // Crear mensaje de confirmación
+    // Determinar si estamos asignando profesionales o responsables según los roles del usuario
+    const isAssigningProfessionals = this.canAssignProfessionals();
+
+    // Crear mensaje de confirmación según el tipo de asignación
     const message =
       this.selectedUserIds.length === 1
-        ? `¿Está seguro que desea asignar el responsable "${usersNames}" al caso ${caseCode}?`
-        : `¿Está seguro que desea asignar los siguientes responsables al caso ${caseCode}: ${usersNames}?`;
+        ? isAssigningProfessionals
+          ? `¿Está seguro que desea asignar el profesional "${usersNames}" al caso ${caseCode}?`
+          : `¿Está seguro que desea asignar el responsable "${usersNames}" al caso ${caseCode}?`
+        : isAssigningProfessionals
+          ? `¿Está seguro que desea asignar los siguientes profesionales al caso ${caseCode}: ${usersNames}?`
+          : `¿Está seguro que desea asignar los siguientes responsables al caso ${caseCode}: ${usersNames}?`;
 
     const confirmData: ConfirmDialogData = {
-      title: 'Confirmar Asignación de Responsables',
+      title: isAssigningProfessionals ? 'Confirmar Asignación de Profesionales' : 'Confirmar Asignación de Responsables',
       message: message,
       confirmText: 'Asignar',
       cancelText: 'Cancelar',
@@ -700,9 +803,13 @@ export class CasesListComponent implements AfterViewInit, OnDestroy {
           return;
         }
 
-        // Llamar al servicio para asignar usuarios
-        this.caseService.assignUsersToCase(caseIdNumber, this.selectedUserIds).subscribe({
-          next: (response) => {
+        // Decidir qué servicio usar según los roles del usuario
+        const assignmentObservable: Observable<any> = isAssigningProfessionals
+          ? this.caseService.assignProfessionalToCase(caseIdNumber, this.selectedUserIds[0])
+          : this.caseService.assignUsersToCase(caseIdNumber, this.selectedUserIds);
+
+        assignmentObservable.subscribe({
+          next: (response: any) => {
             // Actualizar la UI con los nombres de los usuarios asignados
             const caseIndex = this.cases.findIndex((c) => c.id === this.selectedCaseId);
             if (caseIndex !== -1) {
@@ -718,10 +825,27 @@ export class CasesListComponent implements AfterViewInit, OnDestroy {
             }
 
             this.closeUserModal();
+
+            // Mostrar modal de confirmación exitosa
+            const successData: ConfirmDialogData = {
+              title: 'Asignación Completada',
+              message: this.selectedUserIds.length === 1
+                ? `El responsable "${usersNames}" ha sido asignado exitosamente al caso ${caseCode}.`
+                : `Los responsables han sido asignados exitosamente al caso ${caseCode}.`,
+              confirmText: 'Aceptar',
+              type: 'success',
+            };
+            this.confirmDialogService.customConfirm(successData).subscribe();
           },
-          error: (error) => {
+          error: (error: any) => {
             console.error('Error al asignar usuarios al caso:', error);
-            alert('Error al asignar usuarios. Por favor intente nuevamente.');
+            const errorData: ConfirmDialogData = {
+              title: 'Error en Asignación',
+              message: 'Error al asignar usuarios. Por favor intente nuevamente.',
+              confirmText: 'Aceptar',
+              type: 'error',
+            };
+            this.confirmDialogService.customConfirm(errorData).subscribe();
           }
         });
       }
@@ -895,5 +1019,18 @@ export class CasesListComponent implements AfterViewInit, OnDestroy {
       this.createdCaseSubscription.unsubscribe();
       this.createdCaseSubscription = null;
     }
+  }
+
+  /**
+   * Maneja el cambio de página en el paginator
+   * @param event Evento del paginator con pageIndex y pageSize
+   */
+  onPageChange(event: any): void {
+    this.currentPage = event.pageIndex;
+    this.pageSize = event.pageSize;
+
+    // Incluir filtros actuales al cambiar de página
+    const serverFilters = this.mapFiltersToServerFormat();
+    this.loadCases(this.currentPage, this.pageSize, serverFilters);
   }
 }

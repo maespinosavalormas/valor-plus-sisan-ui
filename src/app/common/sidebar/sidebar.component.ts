@@ -13,25 +13,21 @@ import { AuthService, User as AuthUser } from '../../core/services/auth.service'
 import { UsersService } from '../../features/users/data-access/services/users-service';
 import { User as CompleteUser } from '../models/user.model';
 import { LogoutButtonComponent } from '../../shared/components/logout-button/logout-button.component';
+import { NotificationsService } from '../services/notifications.service';
+import { Notification, NotificationStatus } from '../models/notification.model';
 
-interface Notification {
-  id: number;
-  type: 'case_assignment' | 'case_update' | 'upgrade_request' | 'file_upload' | 'mention' | 'comment';
-  initials?: string;
-  icon?: string;
-  avatarColor: string;
-  message: string;
-  time: string;
-  category: string;
-  read: boolean;
-  filter: 'all' | 'following' | 'archive';
-  attachment?: {
-    name: string;
-    size: string;
-  };
-  preview?: string;
-  actions?: boolean;
-}
+// Campos eliminados de la interfaz Notification local:
+// - type: 'case_assignment' | 'case_update' | 'upgrade_request' | 'file_upload' | 'mention' | 'comment'
+// - initials?: string
+// - icon?: string
+// - avatarColor: string
+// - time: string
+// - category: string
+// - filter: 'all' | 'following' | 'archive'
+// - attachment?: { name: string; size: string; }
+// - preview?: string
+// - actions?: boolean
+// Ahora usamos la interfaz del backend: { id, caseId, message, isRead, createdAt }
 
 @Component({
   selector: 'app-sidebar',
@@ -66,113 +62,17 @@ export class SidebarComponent implements OnInit {
   productiveUnitsPanelTop: number = 200;
 
   
-  activeFilter: 'all' | 'following' | 'archive' = 'all';
+  activeFilter: NotificationStatus = 'all';
   
-  notifications: Notification[] = [
-    {
-      id: 1,
-      type: 'case_assignment',
-      initials: 'MD',
-      avatarColor: '#10b981',
-      message: '<strong>María Díaz</strong> te asignó el caso <strong>Desnutrición Aguda - Paciente #2453</strong>',
-      time: 'Hace 2h',
-      category: 'Caso Crítico',
-      read: false,
-      filter: 'all'
-    },
-    {
-      id: 2,
-      type: 'mention',
-      initials: 'JR',
-      avatarColor: '#f59e0b',
-      message: '<strong>Juan Rodríguez</strong> te mencionó en <strong>Seguimiento Nutricional</strong>',
-      time: 'Hace 4h',
-      category: 'Lista de Seguimiento',
-      read: false,
-      filter: 'following'
-    },
-    {
-      id: 3,
-      type: 'upgrade_request',
-      initials: 'SM',
-      avatarColor: '#ef4444',
-      message: '<strong>Sandra Martínez</strong> solicita actualizar el estado del caso',
-      time: 'Hace 12h',
-      category: 'Solicitud Urgente',
-      read: false,
-      filter: 'all',
-      actions: true
-    },
-    {
-      id: 4,
-      type: 'file_upload',
-      initials: 'AS',
-      avatarColor: '#6366f1',
-      message: '<strong>Alberto Sánchez</strong> subió un archivo',
-      time: 'Hace 1d',
-      category: 'Resultados de Laboratorio',
-      read: true,
-      filter: 'all',
-      attachment: {
-        name: 'resultados_lab_pac2453.pdf',
-        size: '2.3mb'
-      }
-    },
-    {
-      id: 5,
-      type: 'case_update',
-      icon: 'celebration',
-      avatarColor: '#8b5cf6',
-      message: '<strong>Caso Actualizado:</strong> Paciente #2451 muestra mejora significativa',
-      time: 'Hace 4h',
-      category: 'Actualización Positiva',
-      read: false,
-      filter: 'following',
-      preview: 'El paciente ha ganado 500g en la última semana. Los niveles de hemoglobina han mejorado.'
-    },
-    {
-      id: 6,
-      type: 'comment',
-      initials: 'RT',
-      avatarColor: '#14b8a6',
-      message: '<strong>Rosa Torres</strong> comentó en <strong>Informe Nutricional Mensual</strong>',
-      time: 'Hace 4h',
-      category: 'Comentario',
-      read: false,
-      filter: 'following',
-      preview: 'Necesitamos añadir los datos de micronutrientes al informe principal antes del viernes.'
-    },
-    {
-      id: 7,
-      type: 'upgrade_request',
-      initials: 'DM',
-      avatarColor: '#ec4899',
-      message: '<strong>Diego Mendoza</strong> solicita revisión de protocolo',
-      time: 'Hace 12h',
-      category: 'Revisión Médica',
-      read: false,
-      filter: 'all',
-      actions: true
-    },
-    {
-      id: 8,
-      type: 'case_assignment',
-      icon: 'local_hospital',
-      avatarColor: '#f43f5e',
-      message: '<strong>Nuevo Caso Urgente:</strong> Desnutrición severa detectada en comunidad rural',
-      time: 'Hace 30min',
-      category: 'Caso Crítico',
-      read: false,
-      filter: 'all'
-    }
-  ];
+  notifications: Notification[] = [];
 
   constructor(
     private router: Router, 
     private sidebarService: SidebarService, 
     private authService: AuthService,
     private usersService: UsersService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private notificationsService: NotificationsService
   ) {}
 
   ngOnInit() {
@@ -183,6 +83,9 @@ export class SidebarComponent implements OnInit {
     
     // Load user data
     this.loadUserData();
+    
+    // Load notifications
+    this.loadNotifications();
     
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
@@ -205,6 +108,18 @@ export class SidebarComponent implements OnInit {
       },
       error: (error) => {
         // Si falla la API, ya tenemos los datos del localStorage cargados
+      }
+    });
+  }
+
+  private loadNotifications(): void {
+    this.notificationsService.getNotifications(this.activeFilter).subscribe({
+      next: (response) => {
+        this.notifications = response.content;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Error loading notifications:', error);
       }
     });
   }
@@ -342,64 +257,66 @@ export class SidebarComponent implements OnInit {
   }
 
   // Métodos para filtros
-  setFilter(filter: 'all' | 'following' | 'archive'): void {
+  setFilter(filter: NotificationStatus): void {
     this.activeFilter = filter;
+    this.loadNotifications();
   }
 
-  getFilterCount(filter: 'all' | 'following' | 'archive'): number {
+  getFilterCount(filter: NotificationStatus): number {
     if (filter === 'all') {
-      return this.notifications.filter(n => !n.read).length;
+      return this.notifications.filter(n => !n.isRead).length;
     }
-    if (filter === 'following') {
-      return this.notifications.filter(n => n.filter === 'following' && !n.read).length;
+    if (filter === 'read') {
+      return this.notifications.filter(n => n.isRead).length;
     }
-    if (filter === 'archive') {
-      return this.notifications.filter(n => n.filter === 'archive').length;
+    if (filter === 'unread') {
+      return this.notifications.filter(n => !n.isRead).length;
     }
     return 0;
   }
 
   getFilteredNotifications(): Notification[] {
     if (this.activeFilter === 'all') {
-      return this.notifications.filter(n => n.filter === 'all' || n.filter === 'following');
+      return this.notifications;
     }
-    return this.notifications.filter(n => n.filter === this.activeFilter);
+    if (this.activeFilter === 'read') {
+      return this.notifications.filter(n => n.isRead);
+    }
+    if (this.activeFilter === 'unread') {
+      return this.notifications.filter(n => !n.isRead);
+    }
+    return this.notifications;
   }
 
   // Métodos para notificaciones
   markAllAsRead(): void {
     this.notifications.forEach(n => {
-      if (this.activeFilter === 'all' || n.filter === this.activeFilter) {
-        n.read = true;
+      if (this.activeFilter === 'all' || !n.isRead) {
+        n.isRead = true;
       }
     });
   }
 
   handleNotificationClick(notification: Notification): void {
-    notification.read = true;
-    
-    // Navegar según el tipo de notificación
-    switch (notification.type) {
-      case 'case_assignment':
-      case 'case_update':
-        this.router.navigate(['/cases', notification.id]);
-        break;
-      case 'file_upload':
-        this.router.navigate(['/cases', notification.id, 'files']);
-        break;
-      case 'mention':
-      case 'comment':
-        this.router.navigate(['/cases', notification.id, 'comments']);
-        break;
-      case 'upgrade_request':
-        // Mantener el menú abierto si hay acciones
-        if (!notification.actions) {
-          this.router.navigate(['/cases', notification.id]);
-        }
-        break;
-      default:
-        console.log('Notificación clickeada:', notification);
+    // Si ya está leída, solo navegar al caso
+    if (notification.isRead) {
+      this.router.navigate(['/cases', notification.caseId]);
+      return;
     }
+
+    // Marcar como leída en el backend
+    this.notificationsService.markAsRead(notification.id).subscribe({
+      next: () => {
+        notification.isRead = true;
+        // Navegar al caso asociado
+        this.router.navigate(['/cases', notification.caseId]);
+      },
+      error: (error) => {
+        console.error('Error marking notification as read:', error);
+        // Aún navegar al caso aunque falle el marcado como leída
+        this.router.navigate(['/cases', notification.caseId]);
+      }
+    });
   }
 
   handleAction(event: Event, notification: Notification, action: 'accept' | 'decline'): void {
@@ -407,21 +324,18 @@ export class SidebarComponent implements OnInit {
     
     if (action === 'accept') {
       // Aquí puedes hacer una llamada al backend para aceptar la solicitud
-      // this.notificationService.acceptRequest(notification.id).subscribe(...)
+      // this.notificationsService.acceptRequest(notification.id).subscribe(...)
       
-      notification.read = true;
-      notification.actions = false; // Ocultar los botones después de aceptar
+      notification.isRead = true;
       
       // Opcionalmente mostrar un mensaje de éxito
       // this.snackBar.open('Solicitud aceptada', 'Cerrar', { duration: 3000 });
       
     } else if (action === 'decline') {
       // Aquí puedes hacer una llamada al backend para rechazar la solicitud
-      // this.notificationService.declineRequest(notification.id).subscribe(...)
+      // this.notificationsService.declineRequest(notification.id).subscribe(...)
       
-      notification.read = true;
-      notification.actions = false; // Ocultar los botones después de rechazar
-    
+      notification.isRead = true;
     }
   }
 
@@ -440,5 +354,6 @@ export class SidebarComponent implements OnInit {
     event.stopPropagation();
     // Aquí implementarías la lógica de descarga
     // this.fileService.download(attachment.id).subscribe(...)
+    console.log('Descarga de archivos no implementada en el backend actual');
   }
 }

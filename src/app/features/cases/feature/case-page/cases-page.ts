@@ -11,6 +11,7 @@ import { MasterDataService } from '../../ui/case-form/services/master-data.servi
 import { CaseFormDataService } from '../../ui/case-form/services/form-data.service';
 import { CaseBatchService } from '../../data-access/services/case-batch.service';
 import { Subscription } from 'rxjs';
+import { ConfirmDialogService, ConfirmDialogData } from '../../ui/confirm-dialog/confirm-dialog';
 
 @Component({
   selector: 'app-cases-page',
@@ -60,6 +61,7 @@ export class CasesPageComponent implements OnDestroy {
     private masterDataService: MasterDataService,
     private formDataService: CaseFormDataService,
     private caseBatchService: CaseBatchService,
+    private confirmDialogService: ConfirmDialogService,
   ) {
     this.editingSubscription = this.caseFormService.getEditingCase().subscribe((caseData) => {
       if (caseData) {
@@ -503,14 +505,27 @@ export class CasesPageComponent implements OnDestroy {
       this.caseBatchService.uploadBatchCases(this.selectedCsvFile, this.sheetName).subscribe({
         next: (response) => {
           console.log('Carga masiva exitosa:', response);
-          alert(
-            `Carga completada: ${response.summary.imported} casos importados, ${response.summary.failed} fallidos`,
-          );
-          this.closeCsvUploadModal();
+          const confirmData: ConfirmDialogData = {
+            title: 'Carga Masiva Completada',
+            message: `Carga completada: ${response.summary.imported} casos importados, ${response.summary.failed} fallidos`,
+            confirmText: 'Aceptar',
+            type: 'success',
+          };
+          this.confirmDialogService.customConfirm(confirmData).subscribe(() => {
+            this.closeCsvUploadModal();
+            // Notificar que se crearon casos para recargar la lista
+            this.caseFormService.saveCreatedCase({ batchUpload: true, summary: response.summary });
+          });
         },
         error: (error) => {
           console.error('Error en carga masiva:', error);
-          alert('Error al cargar el archivo Excel. Por favor verifique el formato y los datos.');
+          const confirmData: ConfirmDialogData = {
+            title: 'Error en Carga Masiva',
+            message: 'Error al cargar el archivo Excel. Por favor verifique el formato y los datos.',
+            confirmText: 'Aceptar',
+            type: 'error',
+          };
+          this.confirmDialogService.customConfirm(confirmData).subscribe();
         },
       });
     }
@@ -595,28 +610,60 @@ export class CasesPageComponent implements OnDestroy {
   uploadIcbfFile() {
     if (this.selectedIcbfFile) {
       console.log('Uploading ICBF CSV:', this.selectedIcbfFile);
-      this.closeIcbfUploadModal();
+      const confirmData: ConfirmDialogData = {
+        title: 'Funcionalidad No Implementada',
+        message: 'La carga de archivos ICBF aún no está implementada. Por favor contacte al administrador.',
+        confirmText: 'Aceptar',
+        type: 'warning',
+      };
+      this.confirmDialogService.customConfirm(confirmData).subscribe(() => {
+        this.closeIcbfUploadModal();
+      });
     }
   }
 
   uploadArrullosFile() {
     if (this.selectedArrullosFile) {
       console.log('Uploading Arrullos CSV:', this.selectedArrullosFile);
-      this.closeArrullosUploadModal();
+      const confirmData: ConfirmDialogData = {
+        title: 'Funcionalidad No Implementada',
+        message: 'La carga de archivos Arrullos aún no está implementada. Por favor contacte al administrador.',
+        confirmText: 'Aceptar',
+        type: 'warning',
+      };
+      this.confirmDialogService.customConfirm(confirmData).subscribe(() => {
+        this.closeArrullosUploadModal();
+      });
     }
   }
 
   uploadComfamaFile() {
     if (this.selectedComfamaFile) {
       console.log('Uploading Comfama CSV:', this.selectedComfamaFile);
-      this.closeComfamaUploadModal();
+      const confirmData: ConfirmDialogData = {
+        title: 'Funcionalidad No Implementada',
+        message: 'La carga de archivos Comfama aún no está implementada. Por favor contacte al administrador.',
+        confirmText: 'Aceptar',
+        type: 'warning',
+      };
+      this.confirmDialogService.customConfirm(confirmData).subscribe(() => {
+        this.closeComfamaUploadModal();
+      });
     }
   }
 
   uploadComfenalcoFile() {
     if (this.selectedComfenalcoFile) {
       console.log('Uploading Comfenalco CSV:', this.selectedComfenalcoFile);
-      this.closeComfenalcoUploadModal();
+      const confirmData: ConfirmDialogData = {
+        title: 'Funcionalidad No Implementada',
+        message: 'La carga de archivos Comfenalco aún no está implementada. Por favor contacte al administrador.',
+        confirmText: 'Aceptar',
+        type: 'warning',
+      };
+      this.confirmDialogService.customConfirm(confirmData).subscribe(() => {
+        this.closeComfenalcoUploadModal();
+      });
     }
   }
 

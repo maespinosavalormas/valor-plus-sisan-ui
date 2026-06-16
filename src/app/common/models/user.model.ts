@@ -35,6 +35,7 @@ export interface User {
   lastLogin?: string | null;
 
   fullName?: string;
+  thirdPartyId?: string | null;
   userInfo?: UserInfo;
   roleIds?: string[];
   roles?: Role[]; // Para la respuesta
