@@ -18,7 +18,10 @@ import { Router, NavigationEnd } from '@angular/router';
 import { ConfirmDialogService, ConfirmDialogData } from '../confirm-dialog/confirm-dialog';
 import { MasterDataService } from '../case-form/services/master-data.service';
 import { CaseService, CasePage, CaseBasic } from '../../data-access/services/case.service';
+import { Observable } from 'rxjs';
 import { Subscription } from 'rxjs';
+import { UsersService } from '../../../users/data-access/services/users-service';
+import { User } from '../../../../common/models/user.model';
 
 export interface Case {
   id: string;
@@ -30,7 +33,7 @@ export interface Case {
   notificationDate: Date;
   categoria?: string;
   estado?: string;
-  assignedTo?: string[];
+  assignedTo: string[];
   fechaNotificacion?: string;
   // Todos los campos del formulario (77 campos)
 
@@ -233,6 +236,10 @@ export class CasesListComponent implements AfterViewInit, OnDestroy {
 
   dataSource = new MatTableDataSource<Case>();
 
+  totalElements = 0;
+
+  currentPage = 0;
+
   pageSize = 20;
 
   pageSizeOptions: number[] = [20, 50, 100];
@@ -247,7 +254,7 @@ export class CasesListComponent implements AfterViewInit, OnDestroy {
 
   selectedUser: string = '';
 
-  selectedUsers: string[] = [];
+  selectedUserIds: string[] = [];
 
   // Case info modal properties
 
@@ -291,37 +298,18 @@ export class CasesListComponent implements AfterViewInit, OnDestroy {
 
   public eventFilterCtrl: FormControl = new FormControl();
 
-  // Sample prestadores de salud y municipios data
+  // Users data for assignment modal
+  users: User[] = [];
 
-  users = [
-    { id: '1', name: 'Hospital San Juan de Dios', type: 'hospital', email: 'sanjuan@hospital.com' },
-
-    { id: '2', name: 'Clínica Las Américas', type: 'clinica', email: 'americas@clinica.com' },
-
-    { id: '3', name: 'Municipio de Medellín', type: 'municipio', email: 'medellin@municipio.gov' },
-
-    { id: '4', name: 'Hospital Pablo Tobón Uribe', type: 'hospital', email: 'tobon@hospital.com' },
-
-    { id: '5', name: 'Municipio de Envigado', type: 'municipio', email: 'envigado@municipio.gov' },
-
-    { id: '6', name: 'Clínica del Country', type: 'clinica', email: 'country@clinica.com' },
-
-    { id: '7', name: 'Municipio de Bello', type: 'municipio', email: 'bello@municipio.gov' },
-
-    {
-      id: '8',
-      name: 'Hospital General de Medellín',
-      type: 'hospital',
-      email: 'general@hospital.com',
-    },
-  ];
-
-  filteredUsers = [...this.users];
+  filteredUsers: User[] = [];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   private routerSubscription: Subscription | null = null;
   private createdCaseSubscription: Subscription | null = null;
+  private userRoles: string[] = [];
+  private readonly ALLOWED_ROLES = ['PRESTADOR_SALUD', 'MUNICIPIO', 'CAJA_COMPENSACION', 'PROFESIONAL'];
+  private readonly PROFESSIONAL_ASSIGNER_ROLES = ['MUNICIPIO', 'PRESTADOR_SALUD', 'CAJA_COMPENSACION'];
 
   constructor(
     private caseFormService: CaseFormService,
@@ -331,6 +319,7 @@ export class CasesListComponent implements AfterViewInit, OnDestroy {
     private masterDataService: MasterDataService,
     private caseService: CaseService,
     private cdr: ChangeDetectorRef,
+    private usersService: UsersService,
   ) {
     // Initialize with empty data, will be set in ngOnInit
   }
@@ -343,121 +332,16 @@ export class CasesListComponent implements AfterViewInit, OnDestroy {
 
   public filteredEvents: any[] = [];
 
-  cases: Case[] = [
-    {
-      id: '1',
-      upgdCode: '00001',
-      eventId: '1',
-      upgdnName: 'Hospital San Juan de Dios',
-      municipio: 'Medellín',
-      notificationDate: new Date('2024-01-15'),
-      fechaNotificacion: '2024-01-15',
-      categoria: 'Riesgo desnutricion',
-      estado: 'ACTIVO',
-
-      identificationTypeId: 'CC',
-      identificationNumber: '80123456',
-      firstName: 'MARÍA',
-      middleName: 'EUGENIA',
-      firstLastName: 'GONZÁLEZ',
-      secondLastName: 'PÉREZ',
-      phoneNumber: '3001234567',
-
-      birthDate: new Date('1990-05-15'),
-      age: 33,
-      ageUnitId: '1',
-      nationalityCountryId: 45,
-      genderId: 'F',
-      genderIdentityId: '2',
-      genderIdentityOther: '',
-
-      sexualOrientationId: '1',
-      sexualOrientationOther: '',
-      countryId: 45,
-      provinceId: 5,
-      cityId: 501,
-      areaId: '1',
-      locality: 'LAURELES',
-
-      neighborhood: 'BOSTON',
-      populatedCenter: 'MEDELLÍN',
-      ruralArea: 'SANTA ELENA',
-      occupationId: 1,
-      healthInsuranceRegimeId: '1',
-
-      benefitsPlanAdministratorName: 'SURA',
-      ethnicityId: '1',
-      ethnicityOther: '',
-      stratumId: '3',
-      populationGroupId: '1',
-
-      populationGroupPregnant: '',
-      notificationSourceId: '1',
-      notificationCountryId: 45,
-      notificationProvinceId: 5,
-      notificationCityId: 501,
-
-      address: 'CALLE 45 #23-67',
-      consultationDate: new Date('2024-01-12'),
-      initialSymptomsDate: new Date('2024-01-10'),
-
-      initialClasificationId: '2',
-      hospitalized: true,
-      hospitalizedDate: new Date('2024-01-12'),
-      finalConditionId: '1',
-
-      deathDate: null as any,
-      deathCertificateNumber: '',
-      deathCauseId: null,
-      professionalName: 'DR. CARLOS RODRÍGUEZ',
-
-      professionalPhoneNumber: '3001234567',
-      motherFirstName: 'ANA',
-      motherMiddleName: 'LUCIA',
-      motherFirstLastName: 'PÉREZ',
-
-      motherSecondLastName: 'GARCÍA',
-      documentTypeId: 'CC',
-      documentNumber: '50789123',
-      educationalLevelId: 'BÁSICA PRIMARIA',
-
-      childrenNumber: 2,
-      birthWeight: 3000,
-      birthLength: 50,
-      gestationalAgeAtBirth: 38,
-      breastfeedingDuration: 6,
-
-      complementaryFeedingStartAge: 6,
-      enrolledInGrowthMonitoringId: true,
-      immunizationStatusId: '1',
-
-      referredByVaccinationCard: true,
-      currentWeight: 65.5,
-      currentHeight: 165.2,
-      midUpperArmCircumference: 25.3,
-
-      appetiteTestResultId: '1',
-      edemaPresent: true,
-      visibleWasting: false,
-      dryOrRoughSkin: false,
-
-      skinPigmentationChanges: true,
-      hairChanges: false,
-      clinicalAnemiaSigns: false,
-
-      carePathwayActivated: true,
-      typeOfCareProvidedId: 'HOSPITALARIA',
-      medicalDiagnosisId: 150,
-    },
-  ];
+  cases: Case[] = [];
 
   ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
+    // No conectamos el paginator al dataSource porque usamos paginación del servidor
+    // El paginator se controla manualmente con totalElements, currentPage y pageSize
   }
 
   ngOnInit(): void {
-    // Cargar casos desde el backend
-    this.loadCases();
+    // Cargar perfil del usuario para verificar roles antes de cargar casos
+    this.loadUserProfile();
 
     this.events$ = this.masterDataService.getEvents();
 
@@ -496,7 +380,6 @@ export class CasesListComponent implements AfterViewInit, OnDestroy {
     // Suscribirse a casos creados para recargar la lista automáticamente
     this.createdCaseSubscription = this.caseFormService.getCreatedCase().subscribe((caseData) => {
       if (caseData) {
-        console.log('Nuevo caso creado detectado, recargando lista...');
         this.loadCases();
         // Limpiar el caso creado para evitar recargas múltiples
         this.caseFormService.clearCreatedCase();
@@ -527,60 +410,100 @@ export class CasesListComponent implements AfterViewInit, OnDestroy {
 
     if (caseToEdit) {
       this.caseFormService.editCase(caseToEdit);
-
-      console.log('Iniciando edición del caso con datos completos:', caseToEdit);
     }
   }
 
   deleteCase(caseId: string): void {
-    console.log('Delete case:', caseId);
-
     // TODO: Implement delete functionality
   }
 
   filterCases(): void {
-    let filtered = [...this.cases];
+    // Mapear filtros del componente a CaseFilters del servicio
+    const serverFilters = this.mapFiltersToServerFormat();
 
-    // Filter by search term
+    // Resetear a página 0 cuando se aplican filtros
+    this.currentPage = 0;
 
+    // Cargar casos con filtros del servidor
+    this.loadCases(this.currentPage, this.pageSize, serverFilters);
+  }
+
+  /**
+   * Mapea los filtros del componente al formato CaseFilters del servicio
+   */
+  private mapFiltersToServerFormat(): any {
+    const filters: any = {};
+
+    // Mapear búsqueda por término
     if (this.searchTerm) {
-      const searchLower = this.searchTerm.toLowerCase();
-
-      filtered = filtered.filter(
-        (caseItem) =>
-          caseItem.upgdCode.toLowerCase().includes(searchLower) ||
-          caseItem.eventId.toLowerCase().includes(searchLower) ||
-          caseItem.upgdnName.toLowerCase().includes(searchLower) ||
-          (caseItem.fechaNotificacion && caseItem.fechaNotificacion.includes(searchLower)) ||
-          (caseItem.categoria && caseItem.categoria.toLowerCase().includes(searchLower)),
-      );
+      filters.upgdCode = this.searchTerm;
     }
 
-    // Filter by active filters
+    // Mapear filtro de evento
+    if (this.activeFilters.eventId) {
+      filters.eventCode = this.activeFilters.eventId;
+    }
 
+    // Mapear filtro de categoría
     if (this.activeFilters.categoria) {
-      filtered = filtered.filter((caseItem) => caseItem.categoria === this.activeFilters.categoria);
+      filters.categoryEventCode = this.activeFilters.categoria;
     }
 
+    // Mapear filtro de estado (como array)
     if (this.activeFilters.estado) {
-      filtered = filtered.filter((caseItem) => caseItem.estado === this.activeFilters.estado);
+      filters.states = [this.activeFilters.estado];
     }
 
+    // Mapear filtro de municipio
     if (this.activeFilters.municipio) {
-      const municipioLower = this.activeFilters.municipio.toLowerCase();
-
-      filtered = filtered.filter((caseItem) =>
-        caseItem.municipio.toLowerCase().includes(municipioLower),
-      );
+      filters.cityCode = this.activeFilters.municipio;
     }
 
+    // Mapear filtro de fecha de notificación
     if (this.activeFilters.fechaNotificacion) {
-      filtered = filtered.filter(
-        (caseItem) => caseItem.fechaNotificacion === this.activeFilters.fechaNotificacion,
-      );
+      filters.notificationDateStart = this.activeFilters.fechaNotificacion;
+      filters.notificationDateEnd = this.activeFilters.fechaNotificacion;
     }
 
-    this.dataSource.data = filtered;
+    return filters;
+  }
+
+  /**
+   * Carga el perfil del usuario para obtener sus roles
+   */
+  private loadUserProfile(): void {
+    this.usersService.getMyProfile().subscribe({
+      next: (user) => {
+        // Extraer los nombres de los roles del usuario
+        if (user.roles && user.roles.length > 0) {
+          this.userRoles = user.roles.map(role => role.name);
+        } else {
+          this.userRoles = [];
+        }
+        // Cargar casos después de obtener los roles del usuario
+        this.loadCases();
+      },
+      error: (error) => {
+        console.error('Error al cargar perfil del usuario:', error);
+        this.userRoles = [];
+        // Cargar casos incluso si falla la carga del perfil (usará endpoint por defecto)
+        this.loadCases();
+      },
+    });
+  }
+
+  /**
+   * Verifica si el usuario tiene alguno de los roles permitidos
+   */
+  private hasAllowedRole(): boolean {
+    return this.userRoles.some(role => this.ALLOWED_ROLES.includes(role));
+  }
+
+  /**
+   * Verifica si el usuario puede asignar profesionales (roles MUNICIPIO, PRESTADOR_SALUD, CAJA_COMPENSACION)
+   */
+  private canAssignProfessionals(): boolean {
+    return this.userRoles.some(role => this.PROFESSIONAL_ASSIGNER_ROLES.includes(role));
   }
 
   /**
@@ -588,31 +511,55 @@ export class CasesListComponent implements AfterViewInit, OnDestroy {
 
 
    * Carga los casos desde el backend usando CaseService
+   * @param page Número de página (0-indexed para paginator, se convierte a 1-indexed para backend)
+   * @param size Tamaño de página
+   * @param filters Filtros opcionales para la consulta
 
 
 
    */
 
-  private loadCases(): void {
-    this.caseService
-      .getCasesPage({
-        page: 1,
+  private loadCases(page: number = 0, size: number = 20, filters?: any): void {
+    // Convertir de 0-indexed (paginator) a 1-indexed (backend)
+    const backendPage = page + 1;
 
-        size: 20,
-      })
-      .subscribe({
-        next: (response) => {
-          console.log('Casos cargados desde el backend:', response);
+    // Decidir qué endpoint usar según los roles del usuario
+    const caseObservable = this.hasAllowedRole()
+      ? this.caseService.getMyCases({
+          page: backendPage,
+          size: size,
+          ...filters,
+        })
+      : this.caseService.getCasesPage({
+          page: backendPage,
+          size: size,
+          ...filters,
+        });
 
-          // Transformar CaseBasic a la estructura de Case usada en la tabla
+    caseObservable.subscribe({
+      next: (response) => {
+        // Guardar el total de elementos del backend
+        this.totalElements = response.totalElements;
+        // Convertir de 1-indexed (backend) a 0-indexed (paginator)
+        this.currentPage = response.number - 1;
+        this.pageSize = response.size;
 
-          const transformedCases = response.content.map((caseBasic: CaseBasic) =>
-            this.transformCaseBasicToCase(caseBasic),
-          );
+        // Transformar CaseBasic a la estructura de Case usada en la tabla
 
-          this.cases = transformedCases;
+        const transformedCases = response.content.map((caseBasic: CaseBasic) =>
+          this.transformCaseBasicToCase(caseBasic),
+        );
 
-          this.dataSource.data = this.cases;
+        this.cases = transformedCases;
+
+        this.dataSource.data = this.cases;
+
+        // Actualizar explícitamente el length del paginator
+        if (this.paginator) {
+          this.paginator.length = this.totalElements;
+            this.paginator.pageIndex = this.currentPage;
+            this.paginator.pageSize = this.pageSize;
+          }
 
           // Forzar detección de cambios
           this.cdr.detectChanges();
@@ -626,6 +573,7 @@ export class CasesListComponent implements AfterViewInit, OnDestroy {
           this.cases = [];
 
           this.dataSource.data = this.cases;
+          this.totalElements = 0;
 
           // Forzar detección de cambios
           this.cdr.detectChanges();
@@ -645,6 +593,11 @@ export class CasesListComponent implements AfterViewInit, OnDestroy {
 
   private transformCaseBasicToCase(caseBasic: CaseBasic): Case {
     const c = caseBasic.case;
+
+    // Extraer nombres de usuarios asignados del array assignees
+    const assignedNames = c.assignees && c.assignees.length > 0
+      ? c.assignees.map(assignee => `${assignee.firstName} ${assignee.lastName}`)
+      : [];
 
     return {
       id: String(c.id),
@@ -667,13 +620,12 @@ export class CasesListComponent implements AfterViewInit, OnDestroy {
 
       estado: c.state?.name || '',
 
-      assignedTo: '', // Campo opcional, se puede agregar lógica si es necesario
+      assignedTo: assignedNames,
     } as unknown as Case;
   }
 
   clearSearch(): void {
     this.searchTerm = '';
-
     this.filterCases();
   }
 
@@ -690,8 +642,6 @@ export class CasesListComponent implements AfterViewInit, OnDestroy {
       if (dataSourceIndex !== -1) {
         this.dataSource.data[dataSourceIndex].estado = newStatus;
       }
-
-      console.log(`Case ${caseItem.id} status changed to: ${newStatus}`);
     }
   }
 
@@ -702,13 +652,50 @@ export class CasesListComponent implements AfterViewInit, OnDestroy {
 
     this.userSearchTerm = '';
 
-    this.filteredUsers = [...this.users];
+    // Initialize selected user IDs from current case assignments
+    this.selectedUserIds = [];
 
-    // Initialize selected users from current case assignments
+    // Load users by roles from backend
+    this.loadUsersByRoles();
+  }
 
-    const caseItem = this.cases.find((c) => c.id === caseId);
+  /**
+   * Carga usuarios disponibles para asignar a un caso específico
+   * - Si el usuario tiene roles MUNICIPIO, PRESTADOR_SALUD, CAJA_COMPENSACION: carga profesionales (GET /api/v1/cases/:caseId/available-professionals)
+   * - De lo contrario: carga responsables (GET /api/v1/cases/:caseId/available-responsibles)
+   */
+  private loadUsersByRoles(): void {
+    const caseIdNumber = parseInt(this.selectedCaseId, 10);
 
-    this.selectedUsers = caseItem?.assignedTo ? [...caseItem.assignedTo] : [];
+    if (isNaN(caseIdNumber)) {
+      console.error('Error: caseId no es un número válido:', this.selectedCaseId);
+      this.users = [];
+      this.filteredUsers = [];
+      this.cdr.detectChanges();
+      return;
+    }
+
+    // Decidir qué endpoint usar según los roles del usuario
+    const usersObservable = this.canAssignProfessionals()
+      ? this.caseService.getAvailableProfessionals(caseIdNumber)
+      : this.caseService.getAvailableResponsibles(caseIdNumber);
+
+    usersObservable.subscribe({
+      next: (users) => {
+        this.users = users;
+        this.filteredUsers = [...this.users];
+        // Forzar detección de cambios para actualizar la vista inmediatamente
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Error al cargar usuarios disponibles para el caso:', error);
+        // En caso de error, dejar el array vacío
+        this.users = [];
+        this.filteredUsers = [];
+        // Forzar detección de cambios incluso en caso de error
+        this.cdr.detectChanges();
+      },
+    });
   }
 
   closeUserModal(): void {
@@ -718,7 +705,7 @@ export class CasesListComponent implements AfterViewInit, OnDestroy {
 
     this.userSearchTerm = '';
 
-    this.selectedUsers = [];
+    this.selectedUserIds = [];
   }
 
   filterUsers(): void {
@@ -727,30 +714,45 @@ export class CasesListComponent implements AfterViewInit, OnDestroy {
 
       this.filteredUsers = this.users.filter(
         (user) =>
-          user.name.toLowerCase().includes(searchLower) ||
-          user.email.toLowerCase().includes(searchLower),
+          (user.fullName && user.fullName.toLowerCase().includes(searchLower)) ||
+          (user.email && user.email.toLowerCase().includes(searchLower)) ||
+          (user.roles && user.roles.some((role) => role.name.toLowerCase().includes(searchLower))),
       );
     } else {
       this.filteredUsers = [...this.users];
     }
   }
 
-  toggleUserSelection(user: any): void {
-    const userIndex = this.selectedUsers.indexOf(user.name);
+  toggleUserSelection(user: User): void {
+    if (!user.id) return;
+    
+    const userId = user.id;
+    const userIndex = this.selectedUserIds.indexOf(userId);
 
     if (userIndex > -1) {
       // User already selected, remove them
-
-      this.selectedUsers.splice(userIndex, 1);
+      this.selectedUserIds.splice(userIndex, 1);
     } else {
       // User not selected, add them
-
-      this.selectedUsers.push(user.name);
+      this.selectedUserIds.push(userId);
     }
   }
 
-  isUserSelected(user: any): boolean {
-    return this.selectedUsers.includes(user.name);
+  isUserSelected(user: User): boolean {
+    if (!user.id) return false;
+    return this.selectedUserIds.includes(user.id);
+  }
+
+  /**
+   * Formatea los roles de un usuario como un string separado por comas
+   * @param user Usuario del cual obtener los roles
+   * @returns String con los nombres de los roles separados por comas
+   */
+  getUserRolesString(user: User): string {
+    if (!user.roles || user.roles.length === 0) {
+      return '';
+    }
+    return user.roles.map((role) => role.name).join(', ');
   }
 
   toggleFiltersDropdown(): void {
@@ -758,60 +760,94 @@ export class CasesListComponent implements AfterViewInit, OnDestroy {
   }
 
   saveUserSelections(): void {
-    if (this.selectedUsers.length === 0) {
+    if (this.selectedUserIds.length === 0) {
       return;
     }
 
     // Obtener información del caso
-
     const caseItem = this.cases.find((c) => c.id === this.selectedCaseId);
-
     const caseCode = caseItem?.upgdCode || this.selectedCaseId;
 
-    // Crear mensaje de confirmación
+    // Obtener nombres de usuarios seleccionados para el mensaje de confirmación
+    const selectedUsersList = this.users.filter(user => user.id && this.selectedUserIds.includes(user.id));
+    const usersNames = selectedUsersList.map(u => u.fullName || `${u.firstName} ${u.lastName}`).join(', ');
 
-    const usersList = this.selectedUsers.join(', ');
+    // Determinar si estamos asignando profesionales o responsables según los roles del usuario
+    const isAssigningProfessionals = this.canAssignProfessionals();
 
+    // Crear mensaje de confirmación según el tipo de asignación
     const message =
-      this.selectedUsers.length === 1
-        ? `¿Está seguro que desea asignar el responsable "${usersList}" al caso ${caseCode}?`
-        : `¿Está seguro que desea asignar los siguientes responsables al caso ${caseCode}: ${usersList}?`;
+      this.selectedUserIds.length === 1
+        ? isAssigningProfessionals
+          ? `¿Está seguro que desea asignar el profesional "${usersNames}" al caso ${caseCode}?`
+          : `¿Está seguro que desea asignar el responsable "${usersNames}" al caso ${caseCode}?`
+        : isAssigningProfessionals
+          ? `¿Está seguro que desea asignar los siguientes profesionales al caso ${caseCode}: ${usersNames}?`
+          : `¿Está seguro que desea asignar los siguientes responsables al caso ${caseCode}: ${usersNames}?`;
 
     const confirmData: ConfirmDialogData = {
-      title: 'Confirmar Asignación de Responsables',
-
+      title: isAssigningProfessionals ? 'Confirmar Asignación de Profesionales' : 'Confirmar Asignación de Responsables',
       message: message,
-
       confirmText: 'Asignar',
-
       cancelText: 'Cancelar',
-
       type: 'success',
     };
 
     this.confirmDialogService.customConfirm(confirmData).subscribe((result) => {
       if (result && result.confirmed) {
-        // Usuario confirmó, asignar los usuarios al caso
+        // Convertir caseId de string a número
+        const caseIdNumber = parseInt(this.selectedCaseId, 10);
 
-        const caseIndex = this.cases.findIndex((c) => c.id === this.selectedCaseId);
-
-        if (caseIndex !== -1) {
-          this.cases[caseIndex].assignedTo = [...this.selectedUsers];
-
-          // Update data source as well
-
-          const dataSourceIndex = this.dataSource.data.findIndex(
-            (c) => c.id === this.selectedCaseId,
-          );
-
-          if (dataSourceIndex !== -1) {
-            this.dataSource.data[dataSourceIndex].assignedTo = [...this.selectedUsers];
-          }
-
-          console.log(`Case ${this.selectedCaseId} assigned to:`, this.selectedUsers);
+        if (isNaN(caseIdNumber)) {
+          console.error('Error: caseId no es un número válido:', this.selectedCaseId);
+          return;
         }
 
-        this.closeUserModal();
+        // Decidir qué servicio usar según los roles del usuario
+        const assignmentObservable: Observable<any> = isAssigningProfessionals
+          ? this.caseService.assignProfessionalToCase(caseIdNumber, this.selectedUserIds[0])
+          : this.caseService.assignUsersToCase(caseIdNumber, this.selectedUserIds);
+
+        assignmentObservable.subscribe({
+          next: (response: any) => {
+            // Actualizar la UI con los nombres de los usuarios asignados
+            const caseIndex = this.cases.findIndex((c) => c.id === this.selectedCaseId);
+            if (caseIndex !== -1) {
+              this.cases[caseIndex].assignedTo = [...usersNames.split(', ')];
+
+              // Update data source as well
+              const dataSourceIndex = this.dataSource.data.findIndex(
+                (c) => c.id === this.selectedCaseId,
+              );
+              if (dataSourceIndex !== -1) {
+                this.dataSource.data[dataSourceIndex].assignedTo = [...usersNames.split(', ')];
+              }
+            }
+
+            this.closeUserModal();
+
+            // Mostrar modal de confirmación exitosa
+            const successData: ConfirmDialogData = {
+              title: 'Asignación Completada',
+              message: this.selectedUserIds.length === 1
+                ? `El responsable "${usersNames}" ha sido asignado exitosamente al caso ${caseCode}.`
+                : `Los responsables han sido asignados exitosamente al caso ${caseCode}.`,
+              confirmText: 'Aceptar',
+              type: 'success',
+            };
+            this.confirmDialogService.customConfirm(successData).subscribe();
+          },
+          error: (error: any) => {
+            console.error('Error al asignar usuarios al caso:', error);
+            const errorData: ConfirmDialogData = {
+              title: 'Error en Asignación',
+              message: 'Error al asignar usuarios. Por favor intente nuevamente.',
+              confirmText: 'Aceptar',
+              type: 'error',
+            };
+            this.confirmDialogService.customConfirm(errorData).subscribe();
+          }
+        });
       }
     });
   }
@@ -829,8 +865,6 @@ export class CasesListComponent implements AfterViewInit, OnDestroy {
       if (dataSourceIndex !== -1) {
         this.dataSource.data[dataSourceIndex].assignedTo = [...userNames];
       }
-
-      console.log(`Case ${caseId} assigned to:`, userNames);
     }
   }
 
@@ -853,8 +887,6 @@ export class CasesListComponent implements AfterViewInit, OnDestroy {
       this.selectedCaseInfo = caseToShow;
 
       this.showCaseInfoModal = true;
-
-      console.log(`Viewing case information for case ID: ${caseId}`);
     }
   }
 
@@ -987,5 +1019,18 @@ export class CasesListComponent implements AfterViewInit, OnDestroy {
       this.createdCaseSubscription.unsubscribe();
       this.createdCaseSubscription = null;
     }
+  }
+
+  /**
+   * Maneja el cambio de página en el paginator
+   * @param event Evento del paginator con pageIndex y pageSize
+   */
+  onPageChange(event: any): void {
+    this.currentPage = event.pageIndex;
+    this.pageSize = event.pageSize;
+
+    // Incluir filtros actuales al cambiar de página
+    const serverFilters = this.mapFiltersToServerFormat();
+    this.loadCases(this.currentPage, this.pageSize, serverFilters);
   }
 }

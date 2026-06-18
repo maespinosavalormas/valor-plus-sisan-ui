@@ -35,15 +35,15 @@ export class UsersService {
   getUsers(): Observable<User[]> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
-      'Accept': 'application/json'
+      Accept: 'application/json',
     });
-    
+
     return this.http.get<User[]>(this.apiUrl, { headers }).pipe(
-      catchError(error => {
+      catchError((error) => {
         console.error('Error en UsersService.getUsers():', error);
         console.error('Status:', error.status);
         console.error('URL:', this.apiUrl);
-        
+
         if (error.status === 400) {
           console.error('Error 400: Bad Request - Posibles causas:');
           console.error('1. Backend no está corriendo en localhost:3000');
@@ -51,9 +51,9 @@ export class UsersService {
           console.error('3. Token inválido o expirado');
           console.error('4. Permisos insuficientes');
         }
-        
+
         return throwError(error);
-      })
+      }),
     );
   }
 
@@ -69,7 +69,7 @@ export class UsersService {
 
   // Crear un nuevo usuario
   createUser(
-    userData: Omit<User, 'id' | 'isActive' | 'createdAt' | 'updatedAt' | 'lastLogin' | 'fullName'>
+    userData: Omit<User, 'id' | 'isActive' | 'createdAt' | 'updatedAt' | 'lastLogin' | 'fullName'>,
   ): Observable<User> {
     // Asegurarse de que roleIds esté definido como array
     const userToCreate = {
@@ -84,12 +84,13 @@ export class UsersService {
     id: string,
     userData: Partial<
       Omit<User, 'id' | 'isActive' | 'createdAt' | 'updatedAt' | 'lastLogin' | 'fullName' | 'roles'>
-    > & ProfileFormData
+    > &
+      ProfileFormData,
   ): Observable<User> {
     // Mapear campos del formulario de perfil a la estructura del modelo User
     const profileData = userData as ProfileFormData;
     const baseUserData = userData as Partial<User>;
-    
+
     const mappedUserData: Partial<User> = {
       ...baseUserData,
       // Mapear nombres y apellidos del formulario de perfil
@@ -106,7 +107,9 @@ export class UsersService {
         ...baseUserData.userInfo,
         provinceId: profileData.department,
         cityId: profileData.municipality || '',
-        identificationTypeId: profileData.identificationTypeId ? parseInt(profileData.identificationTypeId) : 0,
+        identificationTypeId: profileData.identificationTypeId
+          ? parseInt(profileData.identificationTypeId)
+          : 0,
         identificationNumber: profileData.identificationNumber || '',
         phone: profileData.phone || '',
         address: profileData.address || '',
@@ -134,5 +137,37 @@ export class UsersService {
     const url = `${this.apiUrl}/${id}`;
     console.log('[users-service] activateUser PUT:', url, { isActive: true });
     return this.http.put<User>(url, { isActive: true });
+  }
+
+  /**
+   * Obtener usuarios asignables (con roles MUNICIPIO, PRESTADOR_SALUD, CAJA_COMPENSACION)
+   * GET /api/v1/users/assignable
+   * @returns Observable con la lista de usuarios asignables
+   */
+  getAssignableUsers(): Observable<User[]> {
+    const url = `${this.apiUrl}/assignable`;
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    });
+
+    return this.http.get<User[]>(url, { headers }).pipe(
+      catchError((error) => {
+        console.error('Error en UsersService.getAssignableUsers():', error);
+        console.error('Status:', error.status);
+        console.error('URL:', url);
+
+        if (error.status === 400) {
+          console.error('Error 400: Bad Request - Posibles causas:');
+          console.error('1. Backend no está corriendo en localhost:3000');
+          console.error('2. Endpoint incorrecto (debería ser /api/v1/users/assignable)');
+          console.error('3. Token inválido o expirado');
+          console.error('4. Permisos insuficientes');
+        }
+
+        return throwError(error);
+      }),
+    );
   }
 }

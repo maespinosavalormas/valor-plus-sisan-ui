@@ -148,7 +148,12 @@
         <td mat-cell *matCellDef="let case">
           <div class="upgd-code-container">
             <div class="upgd-icon-wrapper">
-              <button mat-flat-button class="btn-add" (click)="addNewCase()" title="Agregar nuevo caso">
+              <button
+                mat-flat-button
+                class="btn-add"
+                (click)="addNewCase()"
+                title="Agregar nuevo caso"
+              >
                 <mat-icon>add</mat-icon>
               </button>
             </div>
@@ -252,9 +257,11 @@
   <!-- Pagination controls -->
 
   <mat-paginator
-    [length]="dataSource.data.length"
+    [length]="totalElements"
     [pageSize]="pageSize"
     [pageSizeOptions]="pageSizeOptions"
+    [pageIndex]="currentPage"
+    (page)="onPageChange($event)"
     showFirstLastButtons
     aria-label="Select page of cases"
   >
@@ -307,9 +314,11 @@
           </div>
 
           <div class="user-info">
-            <div class="user-name">{{ user.name }}</div>
+            <div class="user-name">{{ user.fullName || user.firstName + ' ' + user.lastName }}</div>
 
-            <div class="user-type">{{ user.type }}</div>
+            <div class="user-type">
+              {{ getUserRolesString(user) }}
+            </div>
           </div>
         </div>
 

@@ -494,6 +494,14 @@
               <span class="info-label">Diagnóstico Médico (CIE-10):</span>
               <span class="info-value">{{ masterName(selectedCaseInfo.careRoute.medicalDiagnosisId) }}</span>
             </div>
+            <div class="info-item">
+              <span class="info-label">Entidad Asignada:</span>
+              <span class="info-value">{{ getAssignedEntityName() }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Profesional Asignado:</span>
+              <span class="info-value">{{ getAssignedProfessionalName() }}</span>
+            </div>
           </div>
         </div>
       </div>

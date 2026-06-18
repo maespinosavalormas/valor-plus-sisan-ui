@@ -176,10 +176,6 @@ export class DatosInformacionGeneralComponent implements OnDestroy {
       const transformedData = this.transformDataForRestore(this.data.data);
 
       this.form.patchValue(transformedData);
-
-      console.log('Datos restaurados:', this.data.data);
-
-      console.log('Datos transformados para restaurar:', transformedData);
     }
 
     // Esperar a que los eventos se carguen y luego verificar si hay que seleccionar uno
@@ -191,35 +187,18 @@ export class DatosInformacionGeneralComponent implements OnDestroy {
         const eventExists = events.find((event: any) => event.code === eventCodeToSelect);
 
         if (eventExists) {
-          console.log('Evento encontrado:', eventExists);
 
           this.form.patchValue({ eventCode: eventCodeToSelect });
 
           this.eventCtrl.setValue(eventExists);
-        } else {
-          console.log('Evento no encontrado con código:', eventCodeToSelect);
-
-          console.log('Eventos disponibles:', events);
         }
       }
     });
   }
 
   saveForm(): void {
-    console.log('=== DEPURACIÓN SAVE FORM ===');
-
-    console.log('Formulario válido:', this.form.valid);
-
-    console.log('Valores del formulario:', this.form.value);
-
-    console.log('Controles del formulario:', Object.keys(this.form.controls));
-
     if (this.form.valid) {
       const transformedData = this.transformFormData();
-
-      console.log('Datos transformados que se enviarán:', transformedData);
-
-      console.log('Tipo de notificationDate:', typeof transformedData.notificationDate);
 
       this.dialogRef.close({
         action: 'next',
@@ -227,19 +206,9 @@ export class DatosInformacionGeneralComponent implements OnDestroy {
         stepData: transformedData,
       });
     } else {
-      console.log('Formulario inválido. Errores:', this.form.errors);
 
       Object.keys(this.form.controls).forEach((key) => {
         const control = this.form.get(key);
-
-        console.log(
-          `Campo ${key}:`,
-          control?.value,
-          'válido:',
-          control?.valid,
-          'errores:',
-          control?.errors,
-        );
       });
     }
   }
@@ -358,9 +327,6 @@ export class DatosInformacionGeneralComponent implements OnDestroy {
 
   private setupFormSubscription(): void {
     this.formSubscription = this.form.valueChanges.subscribe((changes) => {
-      console.log('Formulario válido:', this.form.valid);
-
-      console.log('Valores:', changes);
     });
   }
 

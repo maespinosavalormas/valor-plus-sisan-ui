@@ -1,3 +1,23 @@
+export interface Role {
+  id: string;
+  name: string;
+  description?: string;
+  isDefault?: boolean;
+  permissions?: string[];
+}
+
+export interface UserInfo {
+  birthdate: string;
+  phone: string;
+  address: string;
+  cityId: string;
+  provinceId: string;
+  postalCode?: string;
+  identificationTypeId?: number;
+  identificationNumber?: string;
+  avatar?: string;
+}
+
 export interface User {
   id?: string;
 
@@ -15,16 +35,8 @@ export interface User {
   lastLogin?: string | null;
 
   fullName?: string;
-  userInfo: {
-    birthdate: string;
-    phone: string;
-    address: string;
-    cityId: string;
-    provinceId: string;
-    identificationTypeId: number;
-    identificationNumber: string;
-    avatar?: string;
-  };
-  roleIds?: string[]; 
-  roles?: Array<{ id: string; name: string }>; // Para la respuesta
+  thirdPartyId?: string | null;
+  userInfo?: UserInfo;
+  roleIds?: string[];
+  roles?: Role[]; // Para la respuesta
 }

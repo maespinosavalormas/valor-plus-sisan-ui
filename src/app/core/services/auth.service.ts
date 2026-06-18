@@ -92,7 +92,6 @@ export class AuthService {
     const logoutRequest = this.http.post<void>(`${this.apiUrl}/logout`, {}).pipe(
       timeout(5000), // Timeout de 5 segundos
       catchError((error) => {
-        console.log('AuthService: Backend logout failed, proceeding with client cleanup', error);
         // Graceful degradation: si el backend falla, continuamos con la limpieza
         return of(void 0);
       })
@@ -153,7 +152,6 @@ export class AuthService {
 
       // Verificar expiración del JWT
       if (this.isTokenExpired(token)) {
-        console.log('AuthService: Token expired, clearing data');
         this.clearAuthData();
         return false;
       }
@@ -265,7 +263,6 @@ export class AuthService {
    * Guarda un token mock y datos de usuario en localStorage
    */
   loginMock(email: string, password: string): Observable<LoginResponse> {
-    console.log('AuthService: Using mock login for:', email);
 
     // Crear un payload JWT mock con expiración en 24 horas
     const now = Math.floor(Date.now() / 1000);
@@ -299,7 +296,6 @@ export class AuthService {
       tap((response) => {
         this.saveAuthData(response);
         this.isAuthenticatedSubject.next(true);
-        console.log('AuthService: Mock login successful, token expires at:', new Date(exp * 1000));
       })
     );
   }

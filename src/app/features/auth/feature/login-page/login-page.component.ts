@@ -82,25 +82,19 @@ export class LoginPageComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.animate = true;
     this.rotateImages();
-    console.log('Inicio - currentIndex:', this.currentIndex);
   }
 
   rotateImages(): void {
-    console.log('rotateImages iniciado');
     this.intervalId = setInterval(() => {
-      console.log('Interval ejecutado, currentIndex:', this.currentIndex, 'animate:', this.animate);
       this.animate = false;
       this.cdr.detectChanges(); // Forzar detección
       
       setTimeout(() => {
         this.currentIndex = (this.currentIndex + 1) % this.images.length;
-        console.log('Nuevo currentIndex:', this.currentIndex, 'imagenes totales:', this.images.length);
         this.animate = true;
         this.cdr.detectChanges(); // Forzar detección
-        console.log('animate establecido en true, detectChanges llamado');
       }, 30);
     }, 3000);
-    console.log('Intervalo configurado con ID:', this.intervalId);
   }
 
   ngOnDestroy(): void {
@@ -111,7 +105,6 @@ export class LoginPageComponent implements OnInit, OnDestroy {
 
   onSubmit(): void {
     if (this.loginForm.invalid) {
-      console.log('Formulario inválido:', this.loginForm.errors);
       this.showAlert('warning', 'Datos Inválidos', 'Por favor, completa todos los campos correctamente.');
       return;
     }
@@ -123,36 +116,22 @@ export class LoginPageComponent implements OnInit, OnDestroy {
 
     this.authService.login(email, password).subscribe({
       next: (response) => {
-        console.log('LoginPage: Login response received:', response);
-        console.log('LoginPage: Response keys:', Object.keys(response));
-        console.log('LoginPage: access_token exists:', 'access_token' in response);
-        console.log('LoginPage: token exists:', 'token' in response);
         // Verificar localStorage después de un pequeño delay
         setTimeout(() => {
           const token = localStorage.getItem('token');
-          console.log('LoginPage: Token in localStorage after login:', token ? 'exists' : 'null');
         }, 100);
-        console.log('Login exitoso:', response);
         // Redirigir al home (ruta correcta)
         this.router.navigate(['/home']);
       },
       error: (error) => {
         console.error('Error en login:', error);
-        console.log('Error status:', error.status);
-        console.log('Error status type:', typeof error.status);
-        console.log('Error name:', error.name);
-        console.log('Error message:', error.message);
-        console.log('Error completo:', JSON.stringify(error, null, 2));
         this.loading = false;
 
         // Lógica corregida: 401 y 400 son credenciales incorrectas, todo lo demás es error de conexión
         const isCredentialsError = error.status === 401 || error.status === 400;
-        
-        console.log('¿Es error de credenciales?', isCredentialsError);
 
         if (isCredentialsError) {
           // Credenciales incorrectas (401 y 400)
-          console.log('Mostrando alerta de credenciales incorrectas');
           this.showAlert('error', 'Credenciales Incorrectas', 'El correo o la contraseña son incorrectos. Verifica tus datos e intenta nuevamente.');
           
           // También mostrar error en los inputs
@@ -163,7 +142,6 @@ export class LoginPageComponent implements OnInit, OnDestroy {
           this.loginForm.get('password')?.markAsTouched();
         } else {
           // Cualquier otro error (0, 500, etc.) = error de conexión
-          console.log('Mostrando alerta de error de conexión, status:', error.status);
           this.showAlert('warning', 'Error de Conexión', 'No se puede conectar con el servidor. Verifica tu conexión a internet o intenta más tarde.');
           
           // Limpiar errores de servidor para errores de conexión
@@ -176,25 +154,20 @@ export class LoginPageComponent implements OnInit, OnDestroy {
         
         requestAnimationFrame(() => {
           this.cdr.detectChanges();
-          console.log('LoginPage: detectChanges post-showAlert en requestAnimationFrame');
         });
       },
       complete: () => {
-        console.log('Login observable completado');
         this.loading = false;
       }
     });
   }
 
   showAlert(type: 'error' | 'warning' | 'info' | 'success', title: string, message: string): void {
-    console.log('LoginPage: showAlert called', { type, title, message });
     
     this.alertType = type;
     this.alertTitle = title;
     this.alertMessage = message;
     this.alertVisible = true;
-    
-    console.log('LoginPage: after setting alertVisible:', this.alertVisible);
     
     // Forzar actualización inmediata con múltiples métodos
     this.cdr.markForCheck(); // Marcar para detección
@@ -203,20 +176,17 @@ export class LoginPageComponent implements OnInit, OnDestroy {
     // Usar requestAnimationFrame para asegurar actualización en el siguiente frame
     requestAnimationFrame(() => {
       this.cdr.detectChanges();
-      console.log('LoginPage: detectChanges en requestAnimationFrame');
     });
     
     // Doble seguridad con setTimeout
     setTimeout(() => {
       this.cdr.detectChanges();
-      console.log('LoginPage: detectChanges en setTimeout');
     }, 0);
     
     // Auto cerrar después de 5 segundos
     setTimeout(() => {
       this.alertVisible = false;
       this.cdr.detectChanges();
-      console.log('LoginPage: auto-close alert');
     }, 5000);
   }
 
@@ -226,7 +196,6 @@ export class LoginPageComponent implements OnInit, OnDestroy {
 
   onMockLogin(): void {
     if (this.loginForm.invalid) {
-      console.log('Formulario inválido para mock login:', this.loginForm.errors);
       this.showAlert('warning', 'Datos Inválidos', 'Por favor, completa todos los campos correctamente.');
       return;
     }
@@ -235,12 +204,9 @@ export class LoginPageComponent implements OnInit, OnDestroy {
     this.error = '';
 
     const { email, password } = this.loginForm.value;
-    
-    console.log('Usando login simulado con:', { email, password: '***' });
 
     this.authService.loginMock(email, password).subscribe({
       next: (response) => {
-        console.log('Login simulado exitoso:', response);
         // Redirigir al home (ruta correcta)
         this.router.navigate(['/home']);
       },
@@ -251,7 +217,6 @@ export class LoginPageComponent implements OnInit, OnDestroy {
         this.cdr.detectChanges();
       },
       complete: () => {
-        console.log('Login simulado observable completado');
         this.loading = false;
       }
     });
