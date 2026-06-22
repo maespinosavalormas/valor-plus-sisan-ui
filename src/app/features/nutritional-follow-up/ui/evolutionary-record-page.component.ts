@@ -30,6 +30,7 @@ import {
 import { FollowUpWallComponent } from './follow-up-wall.component';
 import { FollowUpComposerComponent } from './follow-up-composer.component';
 import { StatusPanelComponent } from './status-panel.component';
+import { EvolutionaryHeaderComponent } from './evolutionary-header.component';
 
 /**
  * Página principal: Expediente Evolutivo
@@ -47,6 +48,7 @@ import { StatusPanelComponent } from './status-panel.component';
     FollowUpWallComponent,
     FollowUpComposerComponent,
     StatusPanelComponent,
+    EvolutionaryHeaderComponent,
   ],
   template: `
     <div class="evolutionary-record-page">
@@ -58,27 +60,12 @@ import { StatusPanelComponent } from './status-panel.component';
 
       <!-- Contenido -->
       <div *ngIf="!(loading$ | async)" class="page-content">
-        <!-- Header: Días en programa + Sparkline (CA-04, CA-10) -->
-        <mat-card class="header-card">
-          <div class="header-content">
-            <div class="dias-container">
-              <span class="dias-numero">{{ diasEnPrograma$ | async }}</span>
-              <span class="dias-label">días en programa</span>
-            </div>
-            <div class="sparkline-container" *ngIf="sparklineData$ | async as data">
-              <h4>Evolución ΔZ-score</h4>
-              <div class="sparkline">
-                <svg viewBox="0 0 300 60" preserveAspectRatio="none">
-                  <polyline
-                    fill="none"
-                    stroke="#1976d2"
-                    stroke-width="2"
-                    [attr.points]="generateSparklinePoints(data)"/>
-                </svg>
-              </div>
-            </div>
-          </div>
-        </mat-card>
+      <!-- Header: Días en programa + Sparkline (CA-04, CA-10) -->
+      <app-evolutionary-header
+        [diasEnPrograma]="diasEnPrograma$ | async"
+        [sparklineData]="sparklineData$ | async"
+        [estadoActual]="estadoActual$ | async">
+      </app-evolutionary-header>
 
         <!-- Composer (deshabilitado si read_only) -->
         <app-follow-up-composer
@@ -121,50 +108,6 @@ import { StatusPanelComponent } from './status-panel.component';
       justify-content: center;
       height: 400px;
       gap: 16px;
-    }
-    .header-card {
-      margin-bottom: 16px;
-    }
-    .header-content {
-      display: flex;
-      align-items: center;
-      gap: 32px;
-    }
-    .dias-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-width: 120px;
-    }
-    .dias-numero {
-      font-size: 48px;
-      font-weight: 600;
-      color: #1976d2;
-      line-height: 1;
-    }
-    .dias-label {
-      font-size: 14px;
-      color: rgba(0, 0, 0, 0.6);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-    .sparkline-container {
-      flex: 1;
-    }
-    .sparkline-container h4 {
-      margin: 0 0 8px 0;
-      font-size: 14px;
-      color: rgba(0, 0, 0, 0.6);
-    }
-    .sparkline {
-      height: 60px;
-      background: #f5f5f5;
-      border-radius: 4px;
-      padding: 8px;
-    }
-    .sparkline svg {
-      width: 100%;
-      height: 100%;
     }
   `],
 })
@@ -230,24 +173,6 @@ export class EvolutionaryRecordPageComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-  }
-
-  // Generar puntos SVG para sparkline (CA-10)
-  generateSparklinePoints(data: { deltaZ: number }[]): string {
-    if (!data || data.length === 0) return '';
-    const width = 300;
-    const height = 60;
-    const minDelta = Math.min(...data.map((d) => d.deltaZ), -2);
-    const maxDelta = Math.max(...data.map((d) => d.deltaZ), 2);
-    const range = maxDelta - minDelta || 1;
-    const stepX = width / (data.length - 1 || 1);
-    return data
-      .map((d, i) => {
-        const x = i * stepX;
-        const y = height - ((d.deltaZ - minDelta) / range) * height;
-        return `${x},${y}`;
-      })
-      .join(' ');
   }
 
   onEnviarNota(contenido: string): void {
