@@ -5,7 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
 import { CaseFull } from '../../data-access/services/case.service';
 
-export type CaseViewType = 'details' | 'nutritional' | 'trazability' | 'tasks';
+export type CaseViewType = 'details' | 'nutritional' | 'trazability' | 'tasks' | 'tamizajes';
 
 @Component({
   selector: 'app-case-details-header',
@@ -80,5 +80,9 @@ export class CaseDetailsHeaderComponent {
 
   isTasksView(): boolean {
     return this.activeView === 'tasks';
+  }
+
+  isTamizajesView(): boolean {
+    return this.activeView === 'tamizajes';
   }
 }

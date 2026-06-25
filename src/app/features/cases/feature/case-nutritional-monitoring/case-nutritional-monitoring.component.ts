@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -88,7 +88,8 @@ export class CaseNutritionalMonitoringComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private cdr: ChangeDetectorRef
   ) {
     this.nutritionalForm = this.fb.group({
       fecha: ['', Validators.required],
@@ -185,8 +186,13 @@ export class CaseNutritionalMonitoringComponent implements OnInit {
         
         // Calcular IMC
         newMonitoring.imc = this.calculateIMC(newMonitoring.peso, newMonitoring.talla);
-        
+
         this.nutritionalData.push(newMonitoring);
+        // Refrescar la lista visible y forzar CD: este callback es async y el
+        // componente se embebe dentro de un padre OnPush (cases-details), que
+        // de lo contrario saltaría este subárbol y no mostraría el nuevo registro.
+        this.applyFilters();
+        this.cdr.markForCheck();
       }
     });
   }
@@ -285,6 +291,7 @@ export class CaseNutritionalMonitoringComponent implements OnInit {
       };
       
       this.nutritionalData.push(newMonitoring);
+      this.applyFilters();
       this.nutritionalForm.reset();
       this.showAddForm = false;
     }
