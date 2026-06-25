@@ -1,0 +1,52 @@
+:host {
+  display: block;
+}
+
+.chart-widget {
+  position: relative;
+  width: 100%;
+  background: var(--background-pages);
+  border: 1px solid var(--gray-primary);
+  border-radius: 8px;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.chart-widget-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: var(--white);
+  border-bottom: 1px solid var(--gray-secondary);
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    color: var(--blue-primary);
+  }
+}
+
+.chart-widget-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--strong-blue-primary);
+}
+
+.chart-widget-body {
+  position: relative;
+  height: 300px;
+  padding: 12px 14px 16px;
+}
+
+.chart-legend {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .chart-widget-body {
+    height: 240px;
+    padding: 8px 10px 12px;
+  }
+}

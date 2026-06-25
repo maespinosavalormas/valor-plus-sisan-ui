@@ -30,6 +30,10 @@ export const routes: Routes = [
         loadChildren: () => import('./features/cases/cases.module').then((m) => m.CasesModule),
       },
       {
+        path: 'casos',
+        loadChildren: () => import('./tamizajes/tamizajes.module').then((m) => m.TamizajesModule),
+      },
+      {
         path: 'programs',
         loadChildren: () => import('./features/programs/programs.module').then((m) => m.ProgramsModule),
       },

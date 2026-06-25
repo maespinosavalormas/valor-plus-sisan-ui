@@ -1,0 +1,118 @@
+@if (vm$ | async; as vm) {
+  <div class="expediente-page" data-testid="expediente-page">
+    @if (vm.loading) {
+      <div class="expediente-loading" data-testid="expediente-loading">
+        <mat-spinner diameter="40"></mat-spinner>
+        <span>Cargando expediente…</span>
+      </div>
+    } @else if (vm.notFound) {
+      <div class="expediente-not-found" data-testid="expediente-not-found">
+        <mat-icon>search_off</mat-icon>
+        <h2>Caso no encontrado</h2>
+        <p>No se encontró el expediente solicitado (EE-08).</p>
+      </div>
+    } @else {
+      @if (!embedded) {
+        <div class="expediente-header-shell">
+          <div class="page-header" data-testid="expediente-header">
+            <button mat-icon-button type="button" class="back-button" (click)="onBack()" aria-label="Volver">
+              <mat-icon>arrow_back</mat-icon>
+            </button>
+            <div class="title-section">
+              @if (vm.menor; as menor) {
+                <h1 class="page-title" data-testid="expediente-menor-nombre">{{ menor.nombre }}</h1>
+                <p class="page-subtitle" data-testid="expediente-menor-edad">
+                  Edad: {{ menor.edadActualMeses }} meses · Sexo: {{ menor.sexo }} · Estado: {{ menor.estadoCaso }}
+                </p>
+              }
+            </div>
+            @if (vm.menor; as menor) {
+              @if (vm.sugerenciaRecuperacion || menor.estadoCaso === 'RECUPERADO') {
+                <span class="badge-recuperacion" data-testid="expediente-badge-recuperacion">
+                  Recuperación nutricional
+                </span>
+              }
+            }
+          </div>
+        </div>
+      } @else if (vm.menor; as menor) {
+        <div class="expediente-embedded-summary" data-testid="expediente-header">
+          <p class="page-subtitle" data-testid="expediente-menor-edad">
+            Edad: {{ menor.edadActualMeses }} meses · Sexo: {{ menor.sexo }} · Estado: {{ menor.estadoCaso }}
+          </p>
+          @if (vm.sugerenciaRecuperacion || menor.estadoCaso === 'RECUPERADO') {
+            <span class="badge-recuperacion" data-testid="expediente-badge-recuperacion">
+              Recuperación nutricional
+            </span>
+          }
+        </div>
+      }
+
+      <div class="details-content">
+        @if (lastError) {
+          <div class="expediente-error" data-testid="expediente-error" role="alert">
+            <mat-icon>error_outline</mat-icon>
+            <span>{{ lastError }}</span>
+          </div>
+        }
+
+        <section class="info-section expediente-chart">
+          <div class="section-header">
+            <div class="section-icon">
+              <mat-icon>show_chart</mat-icon>
+            </div>
+            <div class="section-title">
+              <h4>Curva de crecimiento (Z P/T)</h4>
+            </div>
+          </div>
+          <div class="section-content">
+            <app-crecimiento-chart [serie]="vm.serie"></app-crecimiento-chart>
+          </div>
+        </section>
+
+        <section class="info-section expediente-historial">
+          <div class="section-header">
+            <div class="section-icon">
+              <mat-icon>history</mat-icon>
+            </div>
+            <div class="section-title">
+              <h4>Historial de tamizajes</h4>
+            </div>
+          </div>
+          <div class="section-content section-content--flush">
+            <app-historial-table [tamizajes]="vm.tamizajes" (edit)="onEditTamizaje($event)"></app-historial-table>
+          </div>
+        </section>
+
+        <section class="info-section expediente-form">
+          <div class="section-header">
+            <div class="section-icon">
+              <mat-icon>straighten</mat-icon>
+            </div>
+            <div class="section-title">
+              <h4>{{ editingTamizaje ? 'Editar tamizaje' : 'Nuevo tamizaje' }}</h4>
+            </div>
+          </div>
+          <div class="section-content">
+            @if (vm.casoRecuperado && !editingTamizaje) {
+              <p class="caso-recuperado-msg">
+                <mat-icon>info</mat-icon>
+                El caso está en estado RECUPERADO. No se pueden registrar nuevos tamizajes (CA-11).
+              </p>
+            } @else {
+              <app-tamizaje-form
+                [menor]="vm.menor"
+                [editingTamizaje]="editingTamizaje"
+                [saving]="formSaving"
+                [disabled]="vm.casoRecuperado && !editingTamizaje"
+                [casoId]="casoId"
+                [bivConfirmRequired]="bivConfirmRequired"
+                (submitForm)="onSubmitForm($event)"
+              ></app-tamizaje-form>
+            }
+          </div>
+        </section>
+      </div>
+    }
+  </div>
+}

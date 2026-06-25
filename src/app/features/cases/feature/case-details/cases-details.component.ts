@@ -9,11 +9,12 @@ import { CaseNutritionalMonitoringComponent } from '../case-nutritional-monitori
 import { CaseDetailsHeaderComponent, CaseViewType } from '../../ui/case-details-header/case-details-header.component';
 import { CaseTasksComponent } from '../case-tasks/case-tasks.component';
 import { CaseService, CaseFull, ResolvedMasterRecord, CaseResponsible, CaseProfessional } from '../../data-access/services/case.service';
+import { ExpedienteComponent } from '../../../../tamizajes/expediente/expediente.component';
 
 @Component({
   selector: 'app-cases-details',
   standalone: true,
-  imports: [CommonModule, MatIconModule, MatButtonModule, MatDialogModule, CaseTraceabilityComponent, CaseNutritionalMonitoringComponent, CaseDetailsHeaderComponent, CaseTasksComponent],
+  imports: [CommonModule, MatIconModule, MatButtonModule, MatDialogModule, CaseTraceabilityComponent, CaseNutritionalMonitoringComponent, CaseDetailsHeaderComponent, CaseTasksComponent, ExpedienteComponent],
   templateUrl: './cases-details.component.html',
   styleUrls: ['./cases-details.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -35,6 +36,10 @@ export class CasesDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.caseId = this.route.snapshot.paramMap.get('id');
+    const tab = this.route.snapshot.queryParamMap.get('tab');
+    if (tab === 'tamizajes') {
+      this.currentView = 'tamizajes';
+    }
     this.loadCaseDetails();
   }
 

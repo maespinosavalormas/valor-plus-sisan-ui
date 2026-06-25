@@ -22,7 +22,7 @@
   </div>
 
   <!-- Toggle de vista -->
-  <div class="view-toggle" *ngIf="selectedCaseInfo">
+  <div class="view-toggle">
     <button mat-button 
             class="toggle-btn"
             [class.active]="isDetailsView()"
@@ -50,6 +50,14 @@
             (click)="onViewChange('trazability')">
       <mat-icon>history</mat-icon>
       Trazabilidad
+    </button>
+    <button mat-button
+            class="toggle-btn"
+            data-testid="tab-tamizajes"
+            [class.active]="isTamizajesView()"
+            (click)="onViewChange('tamizajes')">
+      <mat-icon>straighten</mat-icon>
+      Tamizajes Antropométricos
     </button>
   </div>
 </div>

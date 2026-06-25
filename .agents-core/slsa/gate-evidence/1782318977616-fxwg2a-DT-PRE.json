@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "gate": "DT-PRE",
+  "gate_run_id": "1782318977616-fxwg2a",
+  "verdict": "PASS",
+  "commit_hash": "2ff2a1be2e637f6546b7b1cecf6934bf13b84a2e",
+  "change_slug": "sisan-tamizajes-antropometricos",
+  "sealed_at": "2026-06-24T16:36:17.616Z",
+  "payload": {
+    "change": "sisan-tamizajes-antropometricos",
+    "blockedReasons": []
+  },
+  "payload_hash": "e468871e9fe3b56125e968a17905a8d65d57cbd3b7353187acd45f271554dacf",
+  "signature": {
+    "algorithm": "ed25519",
+    "hash_algorithm": "sha256",
+    "payload_hash": "08f8bf3dd375100883bb63ae042c82a76f714b75e768a39ce8f9ac4b544dae03",
+    "signature": "GqrTm+wpqlAi43fQnv7xbDDRUs/FKPjpQyf8aJZ+EKIc0wzgD95hvFz7EBqwSoWQR+QgOuRAAi02QM4s8er+Aw==",
+    "signed_at": "2026-06-24T16:36:17.619Z"
+  }
+}

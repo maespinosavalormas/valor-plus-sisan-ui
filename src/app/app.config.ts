@@ -21,6 +21,7 @@ import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { appReducers, metaReducers } from './core/store/app.reducer';
 import { AuthEffects } from './features/auth/data-access/store/auth.effects';
+import { TamizajesEffects } from './tamizajes/store/tamizajes.effects';
 import { AuthService } from './core/services/auth.service';
 import { AuthInterceptor } from './core/interceptors/auth.interceptor';
 import { ErrorHandlerService } from './core/services/error-handler.service';
@@ -43,7 +44,7 @@ export const appConfig: ApplicationConfig = {
     },
     { provide: ErrorHandler, useClass: ErrorHandlerService },
     provideStore(appReducers, { metaReducers }),
-    provideEffects([AuthEffects]),
+    provideEffects([AuthEffects, TamizajesEffects]),
     ...(isDevMode() && !environment.production
       ? [
           provideStoreDevtools({
