@@ -15,3 +15,6 @@ export { FollowUpService } from './follow-up.service';
 
 // Contracts
 export * from './follow-up.contracts';
+
+// Facade
+export { EvolutionaryFacade } from './facade/evolutionary.facade';

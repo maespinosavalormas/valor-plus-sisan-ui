@@ -8,6 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { EstadoCaso } from '../data-access/follow-up.contracts';
 
 /**
@@ -34,6 +35,7 @@ import { EstadoCaso } from '../data-access/follow-up.contracts';
     MatIconModule,
     MatDialogModule,
     MatProgressBarModule,
+    MatProgressSpinnerModule,
   ],
   template: `
     <mat-card class="status-panel" [class.disabled]="readOnly">
