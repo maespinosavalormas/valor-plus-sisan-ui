@@ -17,6 +17,7 @@ import {
   selectExpediente,
   selectSeguimientosConUi,
   selectMuroHasMore,
+  selectMuroNextCursor,
   selectFollowUpLoading,
   selectFollowUpCreating,
   selectChangingStatus,
@@ -51,45 +52,46 @@ import { EvolutionaryHeaderComponent } from './evolutionary-header.component';
     EvolutionaryHeaderComponent,
   ],
   template: `
-    <div class="evolutionary-record-page">
+    <div class="evolutionary-record-page" data-testid="evolutionary-record-page">
       <!-- Loading -->
-      <div *ngIf="loading$ | async" class="loading-container">
+      <div *ngIf="loading$ | async" class="loading-container" data-testid="record-loading">
         <mat-progress-spinner mode="indeterminate" diameter="50"></mat-progress-spinner>
         <span>Cargando expediente evolutivo...</span>
       </div>
 
       <!-- Contenido -->
-      <div *ngIf="!(loading$ | async)" class="page-content">
+      <div *ngIf="!(loading$ | async)" class="page-content" data-testid="record-content">
       <!-- Header: Días en programa + Sparkline (CA-04, CA-10) -->
       <app-evolutionary-header
-        [diasEnPrograma]="diasEnPrograma$ | async"
-        [sparklineData]="sparklineData$ | async"
-        [estadoActual]="estadoActual$ | async">
+        [diasEnPrograma]="(diasEnPrograma$ | async) ?? 0"
+        [sparklineData]="(sparklineData$ | async) ?? []"
+        [estadoActual]="(estadoActual$ | async) ?? 'ACTIVO'">
       </app-evolutionary-header>
 
-        <!-- Composer (deshabilitado si read_only) -->
+        <!-- Composer (deshabilitado si read_only). EE-03: draft restaurado desde store -->
         <app-follow-up-composer
           [casoId]="casoId"
-          [disabled]="readOnly$ | async"
-          [guardando]="creating$ | async"
+          [disabled]="!!(readOnly$ | async)"
+          [guardando]="!!(creating$ | async)"
+          [initialText]="pendingDraftText"
           (enviarNota)="onEnviarNota($event)"
           (draftChange)="onDraftChange($event)">
         </app-follow-up-composer>
 
         <!-- Muro de seguimientos -->
         <app-follow-up-wall
-          [seguimientos]="seguimientos$ | async"
-          [hasMore]="hasMore$ | async"
-          [loading]="loading$ | async"
+          [seguimientos]="(seguimientos$ | async) ?? []"
+          [hasMore]="!!(hasMore$ | async)"
+          [loading]="!!(loading$ | async)"
           (cargarMas)="onCargarMas()"
           (filtrar)="onFiltrar($event)">
         </app-follow-up-wall>
 
         <!-- Panel de cambio de estado -->
         <app-status-panel
-          [estadoActual]="estadoActual$ | async"
-          [readOnly]="readOnly$ | async"
-          [aplicando]="changingStatus$ | async"
+          [estadoActual]="(estadoActual$ | async) ?? 'ACTIVO'"
+          [readOnly]="!!(readOnly$ | async)"
+          [aplicando]="!!(changingStatus$ | async)"
           (cambiarEstado)="onCambiarEstado($event)">
         </app-status-panel>
       </div>
@@ -113,6 +115,12 @@ import { EvolutionaryHeaderComponent } from './evolutionary-header.component';
 })
 export class EvolutionaryRecordPageComponent implements OnInit, OnDestroy {
   casoId!: string;
+
+  /** Texto de draft recuperado del store para restaurar el composer (EE-03) */
+  pendingDraftText = '';
+
+  /** Cursor de paginación keyset para cargarMasMuro (EE-09) */
+  private nextCursor: string | null = null;
 
   // Observables del store
   expediente$ = this.store.select(selectExpediente);
@@ -152,14 +160,18 @@ export class EvolutionaryRecordPageComponent implements OnInit, OnDestroy {
       this.store.dispatch(cargarExpediente({ casoId: this.casoId }));
       this.store.dispatch(cargarMuro({ casoId: this.casoId }));
 
-      // Cargar draft guardado si existe
+      // EE-03: Restaurar draft del store al composer cuando exista
       const draft$ = this.store.select(selectDraftPorCasoId(this.casoId));
       draft$.pipe(takeUntil(this.destroy$)).subscribe((draft) => {
-        if (draft) {
-          // TODO: Pasar al composer para restaurar
-          console.log('Draft recuperado:', draft.contenido.slice(0, 50) + '...');
+        if (draft?.texto) {
+          this.pendingDraftText = draft.texto;
         }
       });
+
+      // EE-09: Mantener cursor keyset actualizado para paginación del muro
+      this.store.select(selectMuroNextCursor)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((cursor) => { this.nextCursor = cursor; });
     });
 
     // Manejar errores
@@ -175,35 +187,35 @@ export class EvolutionaryRecordPageComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  onEnviarNota(contenido: string): void {
+  onEnviarNota(texto: string): void {
     this.store.dispatch(
       crearSeguimiento({
         casoId: this.casoId,
         dto: {
-          tipo: 'NOTA_EVOLUTIVA',
-          contenido,
+          tipo: 'MEDICA',
+          texto,
         },
       })
     );
   }
 
-  onDraftChange(draft: { casoId: string; contenido: string }): void {
+  onDraftChange(draft: { casoId: string; texto: string }): void {
     this.store.dispatch(
       guardarDraft({
         casoId: draft.casoId,
-        contenido: draft.contenido,
+        texto: draft.texto,
         timestamp: Date.now(),
       })
     );
   }
 
+  /** EE-09: Paginación keyset — usa el cursor del último batch del store */
   onCargarMas(): void {
-    // TODO: Implementar con cursor
-    this.store.dispatch(cargarMasMuro({ casoId: this.casoId, cursor: '' }));
+    this.store.dispatch(cargarMasMuro({ casoId: this.casoId, cursor: this.nextCursor ?? '' }));
   }
 
   onFiltrar(tipo: string | null): void {
-    this.store.dispatch(cargarMuro({ casoId: this.casoId, params: { tipo: tipo || undefined } }));
+    this.store.dispatch(cargarMuro({ casoId: this.casoId, params: { tipo: (tipo as any) || undefined } }));
   }
 
   onCambiarEstado(payload: {
