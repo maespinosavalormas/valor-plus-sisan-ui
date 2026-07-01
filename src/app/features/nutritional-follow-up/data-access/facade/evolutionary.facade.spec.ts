@@ -132,12 +132,12 @@ describe('EvolutionaryFacade (T7)', () => {
 
     it('should dispatch cargarMuro with tipo', () => {
       const spy = jest.spyOn(store, 'dispatch');
-      facade.loadMuro('123', 'NOTA_EVOLUTIVA');
+      facade.loadMuro('123', 'MEDICA');
       expect(spy).toHaveBeenCalledWith(
         expect.objectContaining({
           type: '[Follow Up] Cargar Muro',
           casoId: '123',
-          params: { tipo: 'NOTA_EVOLUTIVA' },
+          params: { tipo: 'MEDICA' },
         })
       );
     });
@@ -146,11 +146,11 @@ describe('EvolutionaryFacade (T7)', () => {
   describe('filterByTipo', () => {
     it('should dispatch filtrarPorTipo action', () => {
       const spy = jest.spyOn(store, 'dispatch');
-      facade.filterByTipo('NOTA_EVOLUTIVA');
+      facade.filterByTipo('MEDICA');
       expect(spy).toHaveBeenCalledWith(
         expect.objectContaining({
           type: '[Follow Up] Filtrar Por Tipo',
-          tipo: 'NOTA_EVOLUTIVA',
+          tipo: 'MEDICA',
         })
       );
     });
@@ -159,7 +159,7 @@ describe('EvolutionaryFacade (T7)', () => {
   describe('selectSeguimiento', () => {
     it('should dispatch seleccionarSeguimiento action', () => {
       const spy = jest.spyOn(store, 'dispatch');
-      const seguimiento = { uuid: 's1', casoId: '123', tipo: 'NOTA_EVOLUTIVA' as const, contenido: 'Test', autor: { id: 'a1', nombre: 'Dr', cargo: 'Médico' }, fechaHora: '2024-01-01T00:00:00Z', createdAt: '2024-01-01T00:00:00Z' };
+      const seguimiento = { uuid: 's1', casoId: '123', tipo: 'MEDICA' as const, texto: 'Test', autor: { id: 'a1', nombre: 'Dr', cargo: 'Médico' }, fechaHora: '2024-01-01T00:00:00Z', createdAt: '2024-01-01T00:00:00Z' };
       facade.selectSeguimiento(seguimiento);
       expect(spy).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -198,7 +198,7 @@ describe('EvolutionaryFacade (T7)', () => {
   describe('createFollowUp', () => {
     it('should dispatch crearSeguimiento action', () => {
       const spy = jest.spyOn(store, 'dispatch');
-      const dto = { tipo: 'NOTA_EVOLUTIVA' as const, contenido: 'Test note' };
+      const dto = { tipo: 'MEDICA' as const, texto: 'Test note' };
       facade.createFollowUp('123', dto);
       expect(spy).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -246,7 +246,7 @@ describe('EvolutionaryFacade (T7)', () => {
         of({ data: { url: 'https://presigned.url/file', expiraEnSegundos: 300 } })
       );
 
-      facade.downloadEvidence('uuid-123').subscribe({
+      facade.downloadEvidence('123', 'uuid-123').subscribe({
         next: () => {
           expect(openSpy).toHaveBeenCalledWith('https://presigned.url/file', '_blank');
           openSpy.mockRestore();
@@ -260,7 +260,7 @@ describe('EvolutionaryFacade (T7)', () => {
         of({ data: { url: '', expiraEnSegundos: 300 } })
       );
 
-      facade.downloadEvidence('uuid-123').subscribe({
+      facade.downloadEvidence('123', 'uuid-123').subscribe({
         next: () => fail('should have errored'),
         error: (err) => {
           expect(err.message).toBe('URL de descarga no disponible');
@@ -278,7 +278,7 @@ describe('EvolutionaryFacade (T7)', () => {
         expect.objectContaining({
           type: '[Follow Up] Guardar Draft',
           casoId: '123',
-          contenido: 'draft content',
+          texto: 'draft content',
         })
       );
     });

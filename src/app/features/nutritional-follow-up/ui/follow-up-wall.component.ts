@@ -19,19 +19,21 @@ import { SeguimientoEvolutivo, TIPO_ICONOS, TipoSeguimiento } from '../data-acce
     ScrollingModule,
   ],
   template: `
-    <div class="follow-up-wall">
+    <div class="follow-up-wall" data-testid="follow-up-wall">
       <!-- Filtros por tipo (CA-08) -->
-      <mat-chip-listbox class="filter-chips">
+      <mat-chip-listbox class="filter-chips" data-testid="wall-filter-chips">
         <mat-chip-option
           *ngFor="let tipo of tiposSeguimiento"
           [selected]="filtroTipo === tipo"
-          (click)="filtrar.emit(tipo)">
+          (click)="filtrar.emit(tipo)"
+          [attr.data-testid]="'wall-filter-' + tipo">
           <mat-icon>{{ getIcono(tipo) }}</mat-icon>
           {{ tipo }}
         </mat-chip-option>
         <mat-chip-option
           [selected]="!filtroTipo"
-          (click)="filtrar.emit(null)">
+          (click)="filtrar.emit(null)"
+          data-testid="wall-filter-all">
           Todos
         </mat-chip-option>
       </mat-chip-listbox>
@@ -40,28 +42,30 @@ import { SeguimientoEvolutivo, TIPO_ICONOS, TipoSeguimiento } from '../data-acce
       <cdk-virtual-scroll-viewport
         itemSize="120"
         class="timeline-viewport"
-        (scrolledIndexChange)="onScroll($event)">
+        (scrolledIndexChange)="onScroll($event)"
+        data-testid="wall-timeline-viewport">
         <div
           *cdkVirtualFor="let seguimiento of seguimientos; trackBy: trackByFn"
-          class="timeline-item">
+          class="timeline-item"
+          data-testid="wall-timeline-item">
           <mat-card [class.selected]="seleccionado?.uuid === seguimiento.uuid">
             <mat-card-header>
               <mat-icon [color]="getColor(seguimiento.tipo)">
                 {{ getIcono(seguimiento.tipo) }}
               </mat-icon>
               <mat-card-title-group>
-                <mat-card-title>
+                <mat-card-title data-testid="wall-item-autor">
                   {{ seguimiento.autor.nombre }}
                   <span class="cargo">{{ seguimiento.autor.cargo }}</span>
                 </mat-card-title>
-                <mat-card-subtitle>
+                <mat-card-subtitle data-testid="wall-item-fecha">
                   {{ seguimiento.fechaHora | date:'medium' }}
                 </mat-card-subtitle>
               </mat-card-title-group>
             </mat-card-header>
             <mat-card-content>
-              <p class="contenido" [innerHTML]="seguimiento.contenido"></p>
-              <mat-chip-set *ngIf="seguimiento.evidenciaUuid">
+              <p class="texto" [innerHTML]="seguimiento.texto" data-testid="wall-item-texto"></p>
+              <mat-chip-set *ngIf="seguimiento.evidenciaUuid" data-testid="wall-item-evidencia">
                 <mat-chip>
                   <mat-icon>attach_file</mat-icon>
                   Evidencia adjunta
@@ -78,7 +82,8 @@ import { SeguimientoEvolutivo, TIPO_ICONOS, TipoSeguimiento } from '../data-acce
           mat-stroked-button
           color="primary"
           (click)="cargarMas.emit()"
-          [disabled]="loading">
+          [disabled]="loading"
+          data-testid="wall-load-more-btn">
           <mat-icon *ngIf="loading">refresh</mat-icon>
           {{ loading ? 'Cargando...' : 'Cargar más' }}
         </button>
@@ -117,7 +122,7 @@ import { SeguimientoEvolutivo, TIPO_ICONOS, TipoSeguimiento } from '../data-acce
       color: rgba(0, 0, 0, 0.6);
       margin-left: 8px;
     }
-    .contenido {
+    .texto {
       margin-top: 8px;
       white-space: pre-wrap;
       word-break: break-word;
@@ -141,10 +146,9 @@ export class FollowUpWallComponent {
   @Output() filtrar = new EventEmitter<TipoSeguimiento | null>();
 
   tiposSeguimiento: TipoSeguimiento[] = [
-    'NOTA_EVOLUTIVA',
-    'CAMBIO_ESTADO',
-    'ALTA_MEDICA',
-    'EVIDENCIA',
+    'MEDICA',
+    'NUTRICIONAL',
+    'SOCIAL',
   ];
 
   getIcono(tipo: TipoSeguimiento): string {

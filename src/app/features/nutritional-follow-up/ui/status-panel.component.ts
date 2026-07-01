@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, Pipe, PipeTransform } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -10,6 +10,17 @@ import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { EstadoCaso } from '../data-access/follow-up.contracts';
+
+@Pipe({ name: 'fileSize', standalone: true })
+export class FileSizePipe implements PipeTransform {
+  transform(bytes: number): string {
+    if (bytes === 0) return '0 B';
+    const k = 1024;
+    const sizes = ['B', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  }
+}
 
 /**
  * Panel de cambio de estado
@@ -36,13 +47,14 @@ import { EstadoCaso } from '../data-access/follow-up.contracts';
     MatDialogModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,
+    FileSizePipe,
   ],
   template: `
-    <mat-card class="status-panel" [class.disabled]="readOnly">
+    <mat-card class="status-panel" [class.disabled]="readOnly" data-testid="status-panel">
       <mat-card-header>
         <mat-icon mat-card-avatar>swap_horiz</mat-icon>
         <mat-card-title>Cambiar Estado del Caso</mat-card-title>
-        <mat-card-subtitle *ngIf="readOnly" class="readonly-warning">
+        <mat-card-subtitle *ngIf="readOnly" class="readonly-warning" data-testid="status-readonly-warning">
           <mat-icon>lock</mat-icon> Caso en estado terminal — no se pueden realizar cambios
         </mat-card-subtitle>
       </mat-card-header>
@@ -53,15 +65,16 @@ import { EstadoCaso } from '../data-access/follow-up.contracts';
           <mat-select
             [(ngModel)]="nuevoEstado"
             (selectionChange)="onEstadoChange($event.value)"
-            [disabled]="readOnly || aplicando">
-            <mat-option *ngFor="let estado of estadosDisponibles" [value]="estado">
+            [disabled]="readOnly || aplicando"
+            data-testid="status-select">
+            <mat-option *ngFor="let estado of estadosDisponibles" [value]="estado" [attr.data-testid]="'status-option-' + estado">
               {{ estado }}
             </mat-option>
           </mat-select>
         </mat-form-field>
 
         <!-- Campos dinámicos según estado seleccionado -->
-        <div *ngIf="nuevoEstado" class="estado-fields">
+        <div *ngIf="nuevoEstado" class="estado-fields" data-testid="status-estado-fields">
           <!-- Motivo de cierre (todos los estados terminales) -->
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Motivo del cambio (mínimo 10 caracteres)</mat-label>
@@ -69,16 +82,17 @@ import { EstadoCaso } from '../data-access/follow-up.contracts';
               matInput
               [(ngModel)]="motivoCambio"
               rows="3"
-              [disabled]="readOnly || aplicando">
+              [disabled]="readOnly || aplicando"
+              data-testid="status-motivo">
             </textarea>
             <mat-hint align="end">{{ motivoCambio.length }} caracteres</mat-hint>
-            <mat-error *ngIf="motivoCambio.length > 0 && motivoCambio.length < 10">
+            <mat-error *ngIf="motivoCambio.length > 0 && motivoCambio.length < 10" data-testid="status-motivo-error">
               Debe tener al menos 10 caracteres (CA-03)
             </mat-error>
           </mat-form-field>
 
           <!-- Evidencia obligatoria para estados clínicos (CA-02, RN-04) -->
-          <div *ngIf="esEstadoClinico(nuevoEstado)" class="evidencia-section">
+          <div *ngIf="esEstadoClinico(nuevoEstado)" class="evidencia-section" data-testid="status-evidencia-section">
             <h4>
               <mat-icon color="accent">warning</mat-icon>
               Evidencia obligatoria (estado clínico)
@@ -88,49 +102,55 @@ import { EstadoCaso } from '../data-access/follow-up.contracts';
               #fileInput
               accept=".pdf,.jpg,.jpeg,.png"
               style="display: none"
-              (change)="onFileSelected($event)">
+              (change)="onFileSelected($event)"
+              data-testid="status-file-input">
             <button
               mat-stroked-button
               type="button"
               (click)="fileInput.click()"
-              [disabled]="readOnly || aplicando">
+              [disabled]="readOnly || aplicando"
+              data-testid="status-file-btn">
               <mat-icon>attach_file</mat-icon>
               Seleccionar evidencia
             </button>
-            <div *ngIf="archivoSeleccionado" class="file-info">
+            <div *ngIf="archivoSeleccionado" class="file-info" data-testid="status-file-info">
               <mat-icon>insert_drive_file</mat-icon>
-              <span>{{ archivoSeleccionado.name }}</span>
+              <span data-testid="status-file-name">{{ archivoSeleccionado.name }}</span>
               <span class="file-size">({{ archivoSeleccionado.size | fileSize }})</span>
               <mat-icon
                 *ngIf="esTamanoValido"
-                color="primary">
+                color="primary"
+                data-testid="status-file-valid">
                 check_circle
               </mat-icon>
               <mat-icon
                 *ngIf="!esTamanoValido"
-                color="warn">
+                color="warn"
+                data-testid="status-file-invalid">
                 error
               </mat-icon>
             </div>
-            <mat-error *ngIf="archivoSeleccionado && !esTamanoValido">
+            <mat-error *ngIf="archivoSeleccionado && !esTamanoValido" data-testid="status-file-error">
               CA-09: El archivo excede el límite de 5MB
             </mat-error>
             <mat-progress-bar
               *ngIf="uploadProgress > 0 && uploadProgress < 100"
               mode="determinate"
-              [value]="uploadProgress">
+              [value]="uploadProgress"
+              data-testid="status-upload-progress">
             </mat-progress-bar>
           </div>
 
           <!-- Justificación para alta médica injustificada (CA-01) -->
-          <div *ngIf="mostrarJustificacionAlta" class="justificacion-section">
+          <div *ngIf="mostrarJustificacionAlta" class="justificacion-section" data-testid="status-justificacion-section">
             <mat-form-field appearance="outline" class="full-width">
               <mat-label>Justificación de alta médica injustificada</mat-label>
               <textarea
                 matInput
                 [(ngModel)]="justificacionAlta"
                 rows="2"
-                placeholder="Explique por qué se da de alta sin cumplir criterios de recuperación...">
+                placeholder="Explique por qué se da de alta sin cumplir criterios de recuperación..."
+                data-testid="status-justificacion">
               </textarea>
             </mat-form-field>
           </div>
@@ -142,11 +162,13 @@ import { EstadoCaso } from '../data-access/follow-up.contracts';
           color="primary"
           (click)="aplicar()"
           [disabled]="!puedeAplicar() || aplicando"
-          class="apply-btn">
+          class="apply-btn"
+          data-testid="status-apply-btn">
           <mat-progress-spinner
             *ngIf="aplicando"
             diameter="20"
-            mode="indeterminate">
+            mode="indeterminate"
+            data-testid="status-apply-spinner">
           </mat-progress-spinner>
           <span *ngIf="!aplicando">Aplicar Cambio</span>
         </button>
@@ -298,19 +320,5 @@ export class StatusPanelComponent {
       justificacionAlta: this.mostrarJustificacionAlta ? this.justificacionAlta : undefined,
       evidencia: this.archivoSeleccionado || undefined,
     });
-  }
-}
-
-// Pipe para formatear tamaño de archivo
-import { Pipe, PipeTransform } from '@angular/core';
-
-@Pipe({ name: 'fileSize', standalone: true })
-export class FileSizePipe implements PipeTransform {
-  transform(bytes: number): string {
-    if (bytes === 0) return '0 B';
-    const k = 1024;
-    const sizes = ['B', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   }
 }

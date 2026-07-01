@@ -2,7 +2,8 @@
 export * from './follow-up.actions';
 
 // Reducer
-export { followUpReducer, FollowUpState, initialState } from './follow-up.reducer';
+export { followUpReducer, initialState } from './follow-up.reducer';
+export type { FollowUpState } from './follow-up.reducer';
 
 // Selectors
 export * from './follow-up.selectors';

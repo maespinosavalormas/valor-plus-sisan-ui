@@ -1,6 +1,11 @@
 import { Routes } from '@angular/router';
 import { MainLayaoutComponent } from './shell/layaout/main-layaout/main-layaout.component';
 import { AuthGuard } from './core/guards/auth.guard';
+import { importProvidersFrom } from '@angular/core';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { followUpReducer } from './features/nutritional-follow-up/data-access/follow-up.reducer';
+import { FollowUpEffects } from './features/nutritional-follow-up/data-access/follow-up.effects';
 
 export const routes: Routes = [
   {

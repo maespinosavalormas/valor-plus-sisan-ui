@@ -35,6 +35,7 @@ export class FollowUpEffects {
       ofType(fromActions.cargarMuro),
       switchMap(({ casoId, params }) =>
         this.followUpService.listarSeguimientos(casoId, params).pipe(
+          tap((response) => console.log('cargarMuro$ response:', response)),
           map((response) =>
             fromActions.cargarMuroExito({
               seguimientos: response.data.items,

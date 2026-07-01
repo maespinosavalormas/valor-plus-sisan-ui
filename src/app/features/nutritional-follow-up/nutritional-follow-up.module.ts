@@ -12,9 +12,6 @@ import { MatSortModule } from '@angular/material/sort';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import { StoreModule } from '@ngrx/store';
-import { EffectsModule } from '@ngrx/effects';
-
 import { NutritionalFollowUpPageComponent } from './feature/nutritional-follow-up-page/nutritional-follow-up-page.component';
 import { NutritionalFollowUpFormPageComponent } from './feature/nutritional-follow-up-form-page/nutritional-follow-up-form-page.component';
 import { NutritionalFollowUpListComponent } from './ui/nutritional-follow-up-list/nutritional-follow-up-list.component';
@@ -24,8 +21,6 @@ import { FollowUpComposerComponent } from './ui/follow-up-composer.component';
 import { FollowUpWallComponent } from './ui/follow-up-wall.component';
 import { StatusPanelComponent } from './ui/status-panel.component';
 import { EvolutionaryFacade } from './data-access/facade/evolutionary.facade';
-import { FollowUpEffects } from './data-access/follow-up.effects';
-import { followUpReducer } from './data-access/follow-up.reducer';
 
 const routes: Routes = [
   {
@@ -77,8 +72,7 @@ const routes: Routes = [
     FollowUpComposerComponent,
     FollowUpWallComponent,
     StatusPanelComponent,
-    StoreModule.forFeature('followUp', followUpReducer),
-    EffectsModule.forFeature([FollowUpEffects]),
+
   ],
   providers: [EvolutionaryFacade],
 })

@@ -19,10 +19,10 @@ import { MatIconModule } from '@angular/material/icon';
     MatIconModule,
   ],
   template: `
-    <mat-card class="header-card" role="region" aria-label="Resumen del expediente evolutivo">
+    <mat-card class="header-card" role="region" aria-label="Resumen del expediente evolutivo" data-testid="evolutionary-header">
       <div class="header-content">
         <!-- Días en programa (CA-04) -->
-        <div class="dias-container" role="status" aria-live="polite">
+        <div class="dias-container" role="status" aria-live="polite" data-testid="header-dias">
           <span class="dias-numero" [attr.aria-label]="diasEnPrograma + ' días en el programa'">
             {{ diasEnPrograma }}
           </span>
@@ -31,7 +31,8 @@ import { MatIconModule } from '@angular/material/icon';
 
         <!-- Sparkline ΔZ con tooltips (CA-10) -->
         <div class="sparkline-container" *ngIf="sparklineData?.length" role="img" 
-             [attr.aria-label]="'Gráfico de evolución de Z-score: ' + descripcionSparkline">
+             [attr.aria-label]="'Gráfico de evolución de Z-score: ' + descripcionSparkline"
+             data-testid="header-sparkline">
           <h4 id="sparkline-title">Evolución ΔZ-score</h4>
           <div class="sparkline-wrapper" role="figure" aria-labelledby="sparkline-title">
             <svg viewBox="0 0 400 80" preserveAspectRatio="none" class="sparkline-svg"
@@ -91,8 +92,8 @@ import { MatIconModule } from '@angular/material/icon';
         </div>
 
         <!-- Estado actual del caso -->
-        <div class="estado-container" role="status">
-          <span class="estado-badge" [class]="'estado-' + estadoActual?.toLowerCase()">
+        <div class="estado-container" role="status" data-testid="header-estado">
+          <span class="estado-badge" [class]="'estado-' + estadoActual?.toLowerCase()" data-testid="header-estado-badge">
             {{ estadoActual }}
           </span>
           <span class="estado-label">Estado actual</span>

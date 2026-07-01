@@ -90,7 +90,7 @@ describe('FollowUpEffects (T7)', () => {
 
   describe('crearSeguimiento$', () => {
     it('should dispatch crearSeguimientoExito on success', (done) => {
-      const seguimiento = { uuid: 's1', casoId: '123', tipo: 'NOTA_EVOLUTIVA', contenido: 'Test', autor: { id: 'a1', nombre: 'Dr', cargo: 'Médico' }, fechaHora: new Date().toISOString(), createdAt: new Date().toISOString() };
+      const seguimiento = { uuid: 's1', casoId: '123', tipo: 'MEDICA', texto: 'Test', autor: { id: 'a1', nombre: 'Dr', cargo: 'Médico' }, fechaHora: new Date().toISOString(), createdAt: new Date().toISOString() };
       mockService.crearSeguimiento.mockReturnValue(of({ data: seguimiento }));
 
       effects.crearSeguimiento$.subscribe((action) => {
@@ -98,7 +98,7 @@ describe('FollowUpEffects (T7)', () => {
         done();
       });
 
-      actionsSubject.next(fromActions.crearSeguimiento({ casoId: '123', dto: { tipo: 'NOTA_EVOLUTIVA', contenido: 'Test' } }));
+      actionsSubject.next(fromActions.crearSeguimiento({ casoId: '123', dto: { tipo: 'MEDICA', texto: 'Test' } }));
     });
 
     it('should dispatch crearSeguimientoError on failure', (done) => {
@@ -109,7 +109,7 @@ describe('FollowUpEffects (T7)', () => {
         done();
       });
 
-      actionsSubject.next(fromActions.crearSeguimiento({ casoId: '123', dto: { tipo: 'NOTA_EVOLUTIVA', contenido: 'Test' } }));
+      actionsSubject.next(fromActions.crearSeguimiento({ casoId: '123', dto: { tipo: 'MEDICA', texto: 'Test' } }));
     });
   });
 

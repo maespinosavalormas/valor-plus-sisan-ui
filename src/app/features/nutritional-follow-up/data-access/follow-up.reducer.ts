@@ -13,7 +13,7 @@ export interface FollowUpState {
   muroNextCursor: string | null;
   muroHasMore: boolean;
   filtroTipo: string | null;
-  drafts: Record<string, { contenido: string; timestamp: number }>; // EE-04
+  drafts: Record<string, { texto: string; timestamp: number }>; // EE-04
   loading: boolean;
   creating: boolean;
   changingStatus: boolean;
@@ -120,11 +120,11 @@ export const followUpReducer = createReducer(
   })),
 
   // Draft local (EE-04)
-  on(fromActions.guardarDraft, (state, { casoId, contenido, timestamp }) => ({
+  on(fromActions.guardarDraft, (state, { casoId, texto, timestamp }) => ({
     ...state,
     drafts: {
       ...state.drafts,
-      [casoId]: { contenido, timestamp },
+      [casoId]: { texto, timestamp },
     },
   })),
   on(fromActions.cargarDraft, (state, { casoId }) => ({

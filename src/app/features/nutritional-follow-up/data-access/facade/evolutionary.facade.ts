@@ -5,13 +5,13 @@ import { FollowUpService } from '../follow-up.service';
 import * as fromActions from '../follow-up.actions';
 import * as fromSelectors from '../follow-up.selectors';
 import {
-  FollowUpState,
   SeguimientoEvolutivo,
   ExpedienteEvolutivo,
   CrearSeguimientoDto,
   CambioEstadoPayload,
   TipoSeguimiento,
 } from '../follow-up.contracts';
+import { FollowUpState } from '../follow-up.reducer';
 
 /**
  * Smart Facade: Seguimiento Evolutivo
@@ -73,9 +73,9 @@ export class EvolutionaryFacade {
     this.store.dispatch(fromActions.seleccionarSeguimiento({ seguimiento }));
   }
 
-  saveDraft(casoId: string, contenido: string): void {
+  saveDraft(casoId: string, texto: string): void {
     this.store.dispatch(
-      fromActions.guardarDraft({ casoId, contenido, timestamp: Date.now() })
+      fromActions.guardarDraft({ casoId, texto, timestamp: Date.now() })
     );
   }
 
@@ -92,9 +92,9 @@ export class EvolutionaryFacade {
   }
 
   // ========== HTTP SERVICE ==========
-  downloadEvidence(uuid: string): Observable<void> {
+  downloadEvidence(casoId: string, evidenciaId: string): Observable<void> {
     return new Observable<void>((observer) => {
-      this.followUpService.obtenerUrlDescarga(uuid).subscribe({
+      this.followUpService.obtenerUrlDescarga(casoId, evidenciaId).subscribe({
         next: (response) => {
           if (response?.data?.url) {
             window.open(response.data.url, '_blank');

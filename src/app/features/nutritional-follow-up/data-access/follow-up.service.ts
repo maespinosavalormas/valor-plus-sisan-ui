@@ -91,12 +91,15 @@ export class FollowUpService {
   }
 
   /**
-   * GET /evidencias/:uuid/url-descarga
+   * GET /casos/:casoId/evidencias/:evidenciaId/url-descarga
    * URL presigned para descarga (CA-05)
    */
-  obtenerUrlDescarga(uuid: string): Observable<ApiResponse<{ url: string; expiraEnSegundos: number }>> {
+  obtenerUrlDescarga(
+    casoId: string,
+    evidenciaId: string
+  ): Observable<ApiResponse<{ url: string; expiraEnSegundos: number }>> {
     return this.http.get<ApiResponse<{ url: string; expiraEnSegundos: number }>>(
-      `${this.apiUrl}/evidencias/${uuid}/url-descarga`
+      `${this.apiUrl}/${casoId}/evidencias/${evidenciaId}/url-descarga`
     );
   }
 }

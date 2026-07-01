@@ -34,7 +34,7 @@ import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
     MatProgressSpinnerModule,
   ],
   template: `
-    <mat-card class="composer-card">
+    <mat-card class="composer-card" data-testid="follow-up-composer">
       <mat-card-header>
         <mat-icon mat-card-avatar>edit_note</mat-icon>
         <mat-card-title>Nueva Nota Evolutiva</mat-card-title>
@@ -44,26 +44,27 @@ import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
           <mat-label>Contenido de la nota</mat-label>
           <textarea
             matInput
-            [(ngModel)]="contenido"
+            [(ngModel)]="texto"
             rows="4"
             placeholder="Ingrese la nota evolutiva (mínimo 10 caracteres)..."
             [disabled]="disabled || guardando"
-            (input)="onInput()">
+            (input)="onInput()"
+            data-testid="composer-textarea">
           </textarea>
-          <mat-hint align="end">{{ contenido.length }} caracteres (mín. 10)</mat-hint>
-          <mat-error *ngIf="contenido.length > 0 && contenido.length < 10">
+          <mat-hint align="end">{{ texto.length }} caracteres (mín. 10)</mat-hint>
+          <mat-error *ngIf="texto.length > 0 && texto.length < 10" data-testid="composer-error-minlength">
             La nota debe tener al menos 10 caracteres (CA-03)
           </mat-error>
         </mat-form-field>
 
         <!-- Estado de draft guardado -->
-        <div class="draft-status" *ngIf="draftGuardado">
+        <div class="draft-status" *ngIf="draftGuardado" data-testid="composer-draft-status">
           <mat-icon color="primary">save</mat-icon>
           <span>Borrador guardado {{ draftFecha | date:'shortTime' }}</span>
         </div>
 
         <!-- Indicador offline -->
-        <div class="offline-warning" *ngIf="!online">
+        <div class="offline-warning" *ngIf="!online" data-testid="composer-offline-warning">
           <mat-icon color="warn">cloud_off</mat-icon>
           <span>Sin conexión. El borrador se conserva localmente (EE-03).</span>
         </div>
@@ -72,19 +73,22 @@ import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
         <button
           mat-button
           (click)="limpiar()"
-          [disabled]="guardando || !contenido">
+          [disabled]="guardando || !texto"
+          data-testid="composer-clear-btn">
           Limpiar
         </button>
         <button
           mat-raised-button
           color="primary"
           (click)="enviar()"
-          [disabled]="disabled || guardando || contenido.length < 10"
-          class="submit-btn">
+          [disabled]="disabled || guardando || texto.length < 10"
+          class="submit-btn"
+          data-testid="composer-submit-btn">
           <mat-progress-spinner
             *ngIf="guardando"
             diameter="20"
-            mode="indeterminate">
+            mode="indeterminate"
+            data-testid="composer-submit-spinner">
           </mat-progress-spinner>
           <span *ngIf="!guardando">Guardar Nota</span>
         </button>
@@ -128,9 +132,9 @@ export class FollowUpComposerComponent implements OnInit, OnDestroy {
   @Input() guardando = false;
 
   @Output() enviarNota = new EventEmitter<string>();
-  @Output() draftChange = new EventEmitter<{ casoId: string; contenido: string }>();
+  @Output() draftChange = new EventEmitter<{ casoId: string; texto: string }>();
 
-  contenido = '';
+  texto = '';
   online = navigator.onLine;
   draftGuardado = false;
   draftFecha: Date | null = null;
@@ -163,34 +167,34 @@ export class FollowUpComposerComponent implements OnInit, OnDestroy {
   }
 
   onInput(): void {
-    this.input$.next(this.contenido);
+    this.input$.next(this.texto);
   }
 
   guardarDraft(texto: string): void {
     // EE-04: Persistir en IndexedDB
-    this.draftChange.emit({ casoId: this.casoId, contenido: texto });
+    this.draftChange.emit({ casoId: this.casoId, texto });
     this.draftGuardado = true;
     this.draftFecha = new Date();
   }
 
   enviar(): void {
-    if (this.contenido.length >= 10) {
-      this.enviarNota.emit(this.contenido);
-      this.contenido = '';
+    if (this.texto.length >= 10) {
+      this.enviarNota.emit(this.texto);
+      this.texto = '';
       this.draftGuardado = false;
       this.draftFecha = null;
     }
   }
 
   limpiar(): void {
-    this.contenido = '';
+    this.texto = '';
     this.draftGuardado = false;
     this.draftFecha = null;
   }
 
   // EE-03: Método para restaurar draft tras pérdida de red
-  restaurarDraft(contenidoGuardado: string): void {
-    this.contenido = contenidoGuardado;
+  restaurarDraft(textoGuardado: string): void {
+    this.texto = textoGuardado;
     this.draftGuardado = true;
     this.draftFecha = new Date();
   }

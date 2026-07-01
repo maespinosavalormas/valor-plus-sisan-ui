@@ -9,6 +9,9 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
+    "e2e": "playwright test",
+    "e2e:ui": "playwright test --ui",
+    "e2e:report": "playwright show-report",
     "serve:ssr:sisan-app": "node dist/sisan-app/server/server.mjs"
   },
   "prettier": {
@@ -58,6 +61,7 @@
     "@angular/compiler-cli": "^21.0.0",
     "@angular/platform-browser-dynamic": "^21.0.0",
     "@ngneat/spectator": "^22.1.0",
+    "@playwright/test": "^1.61.1",
     "@testing-library/angular": "^19.4.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@types/express": "^5.0.1",

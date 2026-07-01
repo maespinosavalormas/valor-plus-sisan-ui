@@ -17,9 +17,9 @@ describe('FollowUpWallComponent (T6)', () => {
     {
       uuid: 's1',
       casoId: 'c1',
-      tipo: 'NOTA_EVOLUTIVA',
-      contenido: 'Nota 1',
-      contenidoEscapado: true,
+      tipo: 'MEDICA',
+      texto: 'Nota 1',
+      textoEscapado: true,
       autor: { id: 'a1', nombre: 'Dr. A', cargo: 'Médico' },
       fechaHora: '2024-01-01T10:00:00Z',
       createdAt: '2024-01-01T10:00:00Z',
@@ -27,9 +27,9 @@ describe('FollowUpWallComponent (T6)', () => {
     {
       uuid: 's2',
       casoId: 'c1',
-      tipo: 'CAMBIO_ESTADO',
-      contenido: 'Cambio a recuperado',
-      contenidoEscapado: true,
+      tipo: 'NUTRICIONAL',
+      texto: 'Cambio a recuperado',
+      textoEscapado: true,
       autor: { id: 'a2', nombre: 'Dr. B', cargo: 'Nutricionista' },
       fechaHora: '2024-01-02T10:00:00Z',
       createdAt: '2024-01-02T10:00:00Z',
@@ -37,9 +37,9 @@ describe('FollowUpWallComponent (T6)', () => {
     {
       uuid: 's3',
       casoId: 'c1',
-      tipo: 'EVIDENCIA',
-      contenido: 'Evidencia adjunta',
-      contenidoEscapado: true,
+      tipo: 'SOCIAL',
+      texto: 'Evidencia adjunta',
+      textoEscapado: true,
       autor: { id: 'a3', nombre: 'Enf. C', cargo: 'Enfermera' },
       fechaHora: '2024-01-03T10:00:00Z',
       evidenciaUuid: 'ev-1',
@@ -99,30 +99,28 @@ describe('FollowUpWallComponent (T6)', () => {
   describe('Filtros por tipo', () => {
     it('should list all filter chips', () => {
       const chips = fixture.debugElement.queryAll(By.css('.filter-chips mat-chip-option'));
-      expect(chips.length).toBe(5); // 4 tipos + Todos
+      expect(chips.length).toBe(4); // 3 tipos + Todos
     });
 
     it('should emit filtrar with correct tipo when chip clicked', () => {
       const spy = jest.spyOn(component.filtrar, 'emit');
       const chips = fixture.debugElement.queryAll(By.css('.filter-chips mat-chip-option'));
       chips[0].nativeElement.click();
-      expect(spy).toHaveBeenCalledWith('NOTA_EVOLUTIVA');
+      expect(spy).toHaveBeenCalledWith('MEDICA');
     });
   });
 
   describe('Badge color e iconos (CA-08)', () => {
     it('should return correct icon for each tipo', () => {
-      expect(component.getIcono('NOTA_EVOLUTIVA')).toBe(TIPO_ICONOS['NOTA_EVOLUTIVA'].icono);
-      expect(component.getIcono('CAMBIO_ESTADO')).toBe(TIPO_ICONOS['CAMBIO_ESTADO'].icono);
-      expect(component.getIcono('ALTA_MEDICA')).toBe(TIPO_ICONOS['ALTA_MEDICA'].icono);
-      expect(component.getIcono('EVIDENCIA')).toBe(TIPO_ICONOS['EVIDENCIA'].icono);
+      expect(component.getIcono('MEDICA')).toBe(TIPO_ICONOS['MEDICA'].icono);
+      expect(component.getIcono('NUTRICIONAL')).toBe(TIPO_ICONOS['NUTRICIONAL'].icono);
+      expect(component.getIcono('SOCIAL')).toBe(TIPO_ICONOS['SOCIAL'].icono);
     });
 
     it('should return correct color for each tipo', () => {
-      expect(component.getColor('NOTA_EVOLUTIVA')).toBe(TIPO_ICONOS['NOTA_EVOLUTIVA'].color);
-      expect(component.getColor('CAMBIO_ESTADO')).toBe(TIPO_ICONOS['CAMBIO_ESTADO'].color);
-      expect(component.getColor('ALTA_MEDICA')).toBe(TIPO_ICONOS['ALTA_MEDICA'].color);
-      expect(component.getColor('EVIDENCIA')).toBe(TIPO_ICONOS['EVIDENCIA'].color);
+      expect(component.getColor('MEDICA')).toBe(TIPO_ICONOS['MEDICA'].color);
+      expect(component.getColor('NUTRICIONAL')).toBe(TIPO_ICONOS['NUTRICIONAL'].color);
+      expect(component.getColor('SOCIAL')).toBe(TIPO_ICONOS['SOCIAL'].color);
     });
   });
 

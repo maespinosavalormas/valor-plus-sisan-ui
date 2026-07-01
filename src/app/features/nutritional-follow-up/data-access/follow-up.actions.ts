@@ -79,7 +79,7 @@ export const cambiarEstadoError = createAction(
 // ========== DRAFT LOCAL (EE-04) ==========
 export const guardarDraft = createAction(
   '[Follow Up] Guardar Draft',
-  props<{ casoId: string; contenido: string; timestamp: number }>()
+  props<{ casoId: string; texto: string; timestamp: number }>()
 );
 
 export const cargarDraft = createAction(

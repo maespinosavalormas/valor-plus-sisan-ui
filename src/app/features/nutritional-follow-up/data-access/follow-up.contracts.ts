@@ -7,8 +7,8 @@ export interface SeguimientoEvolutivo {
   uuid: string;
   casoId: string;
   tipo: TipoSeguimiento;
-  contenido: string;
-  contenidoEscapado: boolean;
+  texto: string;
+  textoEscapado: boolean;
   autor: AutorSnapshot;
   fechaHora: string; // ISO 8601
   evidenciaUuid?: string;
@@ -17,10 +17,9 @@ export interface SeguimientoEvolutivo {
 }
 
 export type TipoSeguimiento =
-  | 'NOTA_EVOLUTIVA'
-  | 'CAMBIO_ESTADO'
-  | 'ALTA_MEDICA'
-  | 'EVIDENCIA';
+  | 'MEDICA'
+  | 'NUTRICIONAL'
+  | 'SOCIAL';
 
 export interface AutorSnapshot {
   id: string;
@@ -77,7 +76,7 @@ export interface PaginatedResponse<T> {
 // DTOs para envío
 export interface CrearSeguimientoDto {
   tipo: TipoSeguimiento;
-  contenido: string;
+  texto: string;
   estadoCasoSnapshot?: EstadoCaso;
 }
 
@@ -90,8 +89,7 @@ export interface MuroQueryParams {
 
 // Iconos y colores por tipo (CA-08)
 export const TIPO_ICONOS: Record<TipoSeguimiento, { icono: string; color: string }> = {
-  NOTA_EVOLUTIVA: { icono: 'description', color: 'primary' },
-  CAMBIO_ESTADO: { icono: 'swap_horiz', color: 'accent' },
-  ALTA_MEDICA: { icono: 'check_circle', color: 'success' },
-  EVIDENCIA: { icono: 'attach_file', color: 'warn' },
+  MEDICA: { icono: 'description', color: 'primary' },
+  NUTRICIONAL: { icono: 'restaurant', color: 'success' },
+  SOCIAL: { icono: 'people', color: 'accent' },
 };
