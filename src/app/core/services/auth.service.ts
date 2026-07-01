@@ -146,12 +146,15 @@ export class AuthService {
   isLoggedIn(): boolean {
     try {
       const token = this.getToken();
+      console.log('AuthService.isLoggedIn: token exists?', !!token);
       if (!token) {
         return false;
       }
 
       // Verificar expiración del JWT
-      if (this.isTokenExpired(token)) {
+      const expired = this.isTokenExpired(token);
+      console.log('AuthService.isLoggedIn: token expired?', expired);
+      if (expired) {
         this.clearAuthData();
         return false;
       }

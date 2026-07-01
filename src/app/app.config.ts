@@ -12,7 +12,7 @@ import {
   HTTP_INTERCEPTORS,
 } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { provideStore } from '@ngrx/store';
+import { provideStore, provideState } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
@@ -22,6 +22,8 @@ import { provideClientHydration, withEventReplay } from '@angular/platform-brows
 import { appReducers, metaReducers } from './core/store/app.reducer';
 import { AuthEffects } from './features/auth/data-access/store/auth.effects';
 import { TamizajesEffects } from './tamizajes/store/tamizajes.effects';
+import { FollowUpEffects } from './features/nutritional-follow-up/data-access/follow-up.effects';
+import { followUpReducer } from './features/nutritional-follow-up/data-access/follow-up.reducer';
 import { AuthService } from './core/services/auth.service';
 import { AuthInterceptor } from './core/interceptors/auth.interceptor';
 import { ErrorHandlerService } from './core/services/error-handler.service';
@@ -44,7 +46,8 @@ export const appConfig: ApplicationConfig = {
     },
     { provide: ErrorHandler, useClass: ErrorHandlerService },
     provideStore(appReducers, { metaReducers }),
-    provideEffects([AuthEffects, TamizajesEffects]),
+    provideEffects([AuthEffects, TamizajesEffects, FollowUpEffects]),
+    provideState('followUp', followUpReducer),
     ...(isDevMode() && !environment.production
       ? [
           provideStoreDevtools({
@@ -53,7 +56,7 @@ export const appConfig: ApplicationConfig = {
           }),
         ]
       : []),
-    provideClientHydration(),
+    // provideClientHydration(),
     AuthGuard,
     RoleGuard,
     LoadingService,

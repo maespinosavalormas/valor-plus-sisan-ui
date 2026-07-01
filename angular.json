@@ -85,6 +85,14 @@
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
+            },
+            "e2e": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "ssr": false,
+              "server": false,
+              "outputMode": "static"
             }
           },
           "defaultConfiguration": "production"
@@ -97,6 +105,9 @@
             },
             "development": {
               "buildTarget": "sisan-app:build:development"
+            },
+            "e2e": {
+              "buildTarget": "sisan-app:build:e2e"
             }
           },
           "defaultConfiguration": "development"

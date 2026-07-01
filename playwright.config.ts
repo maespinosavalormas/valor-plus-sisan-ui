@@ -21,7 +21,7 @@ loadE2eCasoEnv();
 export const STORAGE_STATE = path.join(__dirname, 'e2e/.auth/user.json');
 
 export default defineConfig({
-  testDir: './e2e/tests',
+  testDir: './e2e',
   timeout: 90_000,
   expect: { timeout: 10_000 },
   fullyParallel: true,
@@ -31,9 +31,13 @@ export default defineConfig({
   reporter: [
     ['list'],
     ['html', { outputFolder: 'playwright-report', open: 'never' }],
+    ['junit', { outputFile: 'playwright-report/junit.xml' }],
   ],
   use: {
-    baseURL: process.env.PLAYWRIGHT_BASE_URL_SISAN ?? 'http://localhost:4200',
+    baseURL:
+      process.env.PLAYWRIGHT_BASE_URL_SISAN ??
+      process.env['PLAYWRIGHT_BASE_URL'] ??
+      'http://localhost:4200',
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
     video: 'off',
@@ -54,6 +58,7 @@ export default defineConfig({
         ...devices['Desktop Chrome'],
         storageState: STORAGE_STATE,
       },
+      testMatch: /e2e\/tests\/(?!tamizajes\/).+\.e2e\.spec\.ts/,
       dependencies: ['setup'],
     },
     {
@@ -61,5 +66,20 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] },
       testMatch: /.*login\.e2e\.spec\.ts/,
     },
+    {
+      name: 'tamizajes',
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: STORAGE_STATE,
+      },
+      testDir: './e2e/tests/tamizajes',
+      dependencies: ['setup'],
+    },
   ],
+  webServer: {
+    command: 'npx ng serve --configuration e2e --poll=2000',
+    url: 'http://localhost:4200',
+    reuseExistingServer: !process.env.CI,
+    timeout: 120 * 1000,
+  },
 });
