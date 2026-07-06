@@ -24,6 +24,8 @@ import { AuthEffects } from './features/auth/data-access/store/auth.effects';
 import { TamizajesEffects } from './tamizajes/store/tamizajes.effects';
 import { FollowUpEffects } from './features/nutritional-follow-up/data-access/follow-up.effects';
 import { followUpReducer } from './features/nutritional-follow-up/data-access/follow-up.reducer';
+import { ElsaEffects } from './features/estilos-vida/data-access/elsa.effects';
+import { elsaReducer } from './features/estilos-vida/data-access/elsa.reducer';
 import { AuthService } from './core/services/auth.service';
 import { AuthInterceptor } from './core/interceptors/auth.interceptor';
 import { ErrorHandlerService } from './core/services/error-handler.service';
@@ -46,8 +48,9 @@ export const appConfig: ApplicationConfig = {
     },
     { provide: ErrorHandler, useClass: ErrorHandlerService },
     provideStore(appReducers, { metaReducers }),
-    provideEffects([AuthEffects, TamizajesEffects, FollowUpEffects]),
+    provideEffects([AuthEffects, TamizajesEffects, FollowUpEffects, ElsaEffects]),
     provideState('followUp', followUpReducer),
+    provideState('elsa', elsaReducer),
     ...(isDevMode() && !environment.production
       ? [
           provideStoreDevtools({

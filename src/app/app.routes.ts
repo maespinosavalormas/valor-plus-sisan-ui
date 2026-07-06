@@ -87,8 +87,12 @@ export const routes: Routes = [
         loadChildren: () => import('./features/reports/reports.module').then((m) => m.ReportsModule),
       },
       {
-      path: 'targeting-up',
+        path: 'targeting-up',
         loadChildren: () => import('./features/targeting-up/targeting-up.module').then((m) => m.TargetingUpModule),
+      },
+      {
+        path: 'estilos-vida',
+        loadChildren: () => import('./features/estilos-vida/estilos-vida.module').then((m) => m.EstilosVidaModule),
       }
     ],
   },

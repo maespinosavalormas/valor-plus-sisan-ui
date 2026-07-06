@@ -75,6 +75,11 @@ export default defineConfig({
       testDir: './e2e/tests/tamizajes',
       dependencies: ['setup'],
     },
+    {
+      name: 'estilos-vida-ui',
+      use: { ...devices['Desktop Chrome'] },
+      testMatch: /e2e\/tests\/estilos-vida\/.*\.spec\.ts/,
+    },
   ],
   webServer: {
     command: 'npx ng serve --configuration e2e --poll=2000',

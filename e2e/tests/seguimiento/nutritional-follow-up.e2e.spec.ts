@@ -11,8 +11,8 @@
  */
 
 import { test, expect } from '@playwright/test';
-import { authenticate } from './utils/auth.helper';
-import { mockNutritionalFollowUpApis, mockAuthApis, MOCK_EXPEDIENTE } from './utils/api-mocks';
+import { authenticate } from '../../utils/auth.helper';
+import { mockNutritionalFollowUpApis, mockAuthApis, MOCK_EXPEDIENTE } from '../../utils/api-mocks';
 
 const CASO_ID = MOCK_EXPEDIENTE.casoId;
 const PAGE_URL = `/nutritional-follow-up/${CASO_ID}/expediente-evolutivo`;

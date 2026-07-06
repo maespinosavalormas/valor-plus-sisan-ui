@@ -130,6 +130,7 @@ export class FollowUpComposerComponent implements OnInit, OnDestroy {
   @Input() casoId!: string;
   @Input() disabled = false;
   @Input() guardando = false;
+  @Input() initialText: string | null = null;
 
   @Output() enviarNota = new EventEmitter<string>();
   @Output() draftChange = new EventEmitter<{ casoId: string; texto: string }>();
@@ -143,6 +144,10 @@ export class FollowUpComposerComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   ngOnInit(): void {
+    if (this.initialText) {
+      this.restaurarDraft(this.initialText);
+    }
+
     // EE-04: Auto-guardar draft con debounce
     this.input$
       .pipe(
