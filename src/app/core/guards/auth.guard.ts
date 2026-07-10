@@ -17,6 +17,7 @@ export class AuthGuard implements CanActivate {
   private platformId = inject(PLATFORM_ID);
 
   canActivate(): Observable<boolean | UrlTree> {
+    console.log('AuthGuard: canActivate called');
     // En el servidor, permitir acceso temporalmente
     if (!isPlatformBrowser(this.platformId)) {
       return of(true);
@@ -24,6 +25,7 @@ export class AuthGuard implements CanActivate {
 
     // Verificar localStorage primero (más rápido que esperar el store)
     if (this.authService.isLoggedIn()) {
+      console.log('AuthGuard: isLoggedIn true, returning true');
       return of(true);
     }
 

@@ -1,0 +1,145 @@
+<testsuites id="" name="" tests="13" failures="1" skipped="0" errors="2" time="41.050562000000006">
+<testsuite name="nutritional-follow-up.spec.ts" timestamp="2026-06-26T15:39:46.951Z" hostname="chromium" tests="13" failures="1" skipped="0" time="78.962" errors="2">
+<testcase name="HU-015 — Expediente Evolutivo › Page Load (EE-10) › renders header with days and sparkline" classname="nutritional-follow-up.spec.ts" time="1.643">
+</testcase>
+<testcase name="HU-015 — Expediente Evolutivo › Page Load (EE-10) › renders composer, wall and status panel" classname="nutritional-follow-up.spec.ts" time="1.846">
+</testcase>
+<testcase name="HU-015 — Expediente Evolutivo › Page Load (EE-10) › loads timeline items in the wall" classname="nutritional-follow-up.spec.ts" time="1.658">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../test-results/nutritional-follow-up-HU-0-ecb04--timeline-items-in-the-wall-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|../test-results/nutritional-follow-up-HU-0-ecb04--timeline-items-in-the-wall-chromium/video.webm]]
+
+[[ATTACHMENT|../test-results/nutritional-follow-up-HU-0-ecb04--timeline-items-in-the-wall-chromium/error-context.md]]
+]]>
+</system-out>
+<failure message="expect(received).toBeGreaterThanOrEqual(expected)" type="expect.toBeGreaterThanOrEqual">
+<![CDATA[  [chromium] › nutritional-follow-up.spec.ts:61:9 › HU-015 — Expediente Evolutivo › Page Load (EE-10) › loads timeline items in the wall 
+
+    Error: expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 3
+    Received:    0
+
+      63 |       const items = page.getByTestId('wall-timeline-item');
+      64 |       const count = await items.count();
+    > 65 |       expect(count).toBeGreaterThanOrEqual(3);
+         |                     ^
+      66 |       expect(count % 3).toBe(0); // Should be 3, 6, 9... based on render count
+      67 |     });
+      68 |   });
+        at /home/gooderp-dev/framework-sdd/develop/valor-plus/frontend/sisan-ui/e2e/nutritional-follow-up.spec.ts:65:21
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../test-results/nutritional-follow-up-HU-0-ecb04--timeline-items-in-the-wall-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../test-results/nutritional-follow-up-HU-0-ecb04--timeline-items-in-the-wall-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/nutritional-follow-up-HU-0-ecb04--timeline-items-in-the-wall-chromium/error-context.md
+]]>
+</failure>
+</testcase>
+<testcase name="HU-015 — Expediente Evolutivo › Create Follow-Up (CA-03, EE-04, EE-03) › creates a new note and it appears in the wall" classname="nutritional-follow-up.spec.ts" time="1.871">
+</testcase>
+<testcase name="HU-015 — Expediente Evolutivo › Create Follow-Up (CA-03, EE-04, EE-03) › shows min-length error when text &lt; 10 chars" classname="nutritional-follow-up.spec.ts" time="1.901">
+</testcase>
+<testcase name="HU-015 — Expediente Evolutivo › Create Follow-Up (CA-03, EE-04, EE-03) › clear button resets the composer" classname="nutritional-follow-up.spec.ts" time="1.94">
+</testcase>
+<testcase name="HU-015 — Expediente Evolutivo › Wall Filters &amp; Pagination (CA-08, EE-09) › filters by MEDICA type" classname="nutritional-follow-up.spec.ts" time="1.879">
+</testcase>
+<testcase name="HU-015 — Expediente Evolutivo › Wall Filters &amp; Pagination (CA-08, EE-09) › filters by NUTRICIONAL type" classname="nutritional-follow-up.spec.ts" time="1.717">
+</testcase>
+<testcase name="HU-015 — Expediente Evolutivo › Wall Filters &amp; Pagination (CA-08, EE-09) › reset filter to Todos" classname="nutritional-follow-up.spec.ts" time="1.008">
+</testcase>
+<testcase name="HU-015 — Expediente Evolutivo › Wall Filters &amp; Pagination (CA-08, EE-09) › load-more button not visible when hasMore=false" classname="nutritional-follow-up.spec.ts" time="0.795">
+</testcase>
+<testcase name="HU-015 — Expediente Evolutivo › Status Change (CA-01, CA-02, CA-05, CA-09, CA-12) › selects new state and applies change" classname="nutritional-follow-up.spec.ts" time="30.716">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../test-results/nutritional-follow-up-HU-0-f5514-ew-state-and-applies-change-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|../test-results/nutritional-follow-up-HU-0-f5514-ew-state-and-applies-change-chromium/video.webm]]
+
+[[ATTACHMENT|../test-results/nutritional-follow-up-HU-0-f5514-ew-state-and-applies-change-chromium/error-context.md]]
+]]>
+</system-out>
+<error message="Test timeout of 30000ms exceeded." type="Error">
+<![CDATA[  [chromium] › nutritional-follow-up.spec.ts:144:9 › HU-015 — Expediente Evolutivo › Status Change (CA-01, CA-02, CA-05, CA-09, CA-12) › selects new state and applies change 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.fill: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByTestId('status-motive').first()
+
+
+      152 |       // Close the overlay by pressing Escape
+      153 |       await page.keyboard.press('Escape');
+    > 154 |       await motive.fill('El paciente ha mejorado significativamente después de 3 meses de tratamiento.');
+          |                    ^
+      155 |
+      156 |       await expect(applyBtn).toBeEnabled();
+      157 |       await applyBtn.click();
+        at /home/gooderp-dev/framework-sdd/develop/valor-plus/frontend/sisan-ui/e2e/nutritional-follow-up.spec.ts:154:20
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../test-results/nutritional-follow-up-HU-0-f5514-ew-state-and-applies-change-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../test-results/nutritional-follow-up-HU-0-f5514-ew-state-and-applies-change-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/nutritional-follow-up-HU-0-f5514-ew-state-and-applies-change-chromium/error-context.md
+]]>
+</error>
+</testcase>
+<testcase name="HU-015 — Expediente Evolutivo › Status Change (CA-01, CA-02, CA-05, CA-09, CA-12) › apply button disabled when motive &lt; 10 chars" classname="nutritional-follow-up.spec.ts" time="30.716">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../test-results/nutritional-follow-up-HU-0-47fb0-sabled-when-motive-10-chars-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|../test-results/nutritional-follow-up-HU-0-47fb0-sabled-when-motive-10-chars-chromium/video.webm]]
+
+[[ATTACHMENT|../test-results/nutritional-follow-up-HU-0-47fb0-sabled-when-motive-10-chars-chromium/error-context.md]]
+]]>
+</system-out>
+<error message="Test timeout of 30000ms exceeded." type="Error">
+<![CDATA[  [chromium] › nutritional-follow-up.spec.ts:165:9 › HU-015 — Expediente Evolutivo › Status Change (CA-01, CA-02, CA-05, CA-09, CA-12) › apply button disabled when motive < 10 chars 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.fill: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByTestId('status-motive').first()
+
+
+      173 |       // Close the overlay by pressing Escape
+      174 |       await page.keyboard.press('Escape');
+    > 175 |       await motive.fill('corto');
+          |                    ^
+      176 |       await expect(applyBtn).toBeDisabled();
+      177 |     });
+      178 |   });
+        at /home/gooderp-dev/framework-sdd/develop/valor-plus/frontend/sisan-ui/e2e/nutritional-follow-up.spec.ts:175:20
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../test-results/nutritional-follow-up-HU-0-47fb0-sabled-when-motive-10-chars-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../test-results/nutritional-follow-up-HU-0-47fb0-sabled-when-motive-10-chars-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/nutritional-follow-up-HU-0-47fb0-sabled-when-motive-10-chars-chromium/error-context.md
+]]>
+</error>
+</testcase>
+<testcase name="HU-015 — Expediente Evolutivo › Read-Only Mode (CA-07) › shows read-only warning when case is terminal" classname="nutritional-follow-up.spec.ts" time="1.272">
+</testcase>
+</testsuite>
+</testsuites>
