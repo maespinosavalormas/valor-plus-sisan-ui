@@ -1,0 +1,122 @@
+<div class="modal-header bg-light border-bottom">
+  <h5 class="modal-title" id="inactivateElsaModalLabel">
+    Inactivar Registro ELSA
+    <small class="text-muted" *ngIf="patientName">
+      - {{ patientName }}
+    </small>
+  </h5>
+  <button
+    type="button"
+    class="btn-close"
+    (click)="cancel()"
+    data-testid="inactivate-elsa-close-button"
+    aria-label="Close">
+  </button>
+</div>
+
+<form [formGroup]="form" (ngSubmit)="submit()" class="modal-body">
+  <!-- Warning Alert -->
+  <div class="alert alert-warning" role="alert" data-testid="inactivate-elsa-warning">
+    <strong>Advertencia:</strong> Esta acción marcará el registro ELSA como inactivo.
+    No podrá ser revertida sin intervención del administrador.
+  </div>
+
+  <!-- Motivo de Inactivación -->
+  <div class="mb-4">
+    <label for="motivoInput" class="form-label fw-bold">
+      Motivo de Inactivación <span class="text-danger">*</span>
+    </label>
+    <div class="input-group mb-2">
+      <textarea
+        id="motivoInput"
+        formControlName="motivo_inactivacion"
+        class="form-control"
+        rows="3"
+        placeholder="Ingrese el motivo (mínimo 15 caracteres)"
+        data-testid="inactivate-elsa-motivo-input"
+        [class.is-invalid]="isMotivoTouched && motivoErrors">
+      </textarea>
+      <span class="input-group-text text-muted small">
+        {{ charCount }}/250
+      </span>
+    </div>
+
+    <!-- Validation Errors -->
+    <div *ngIf="isMotivoTouched && motivoErrors" class="invalid-feedback d-block">
+      <div *ngIf="motivoErrors['required']">El motivo es requerido</div>
+      <div *ngIf="motivoErrors['minlength']">
+        Mínimo {{ motivoErrors['minlength'].requiredLength }} caracteres (actual: {{ charCount }})
+      </div>
+      <div *ngIf="motivoErrors['maxlength']">
+        No puede exceder {{ motivoErrors['maxlength'].requiredLength }} caracteres
+      </div>
+      <div *ngIf="motivoErrors['xss']" class="text-danger">
+        <strong>Caracteres no permitidos:</strong> &lt; &gt; ' " `
+      </div>
+    </div>
+
+    <!-- Help Text -->
+    <small class="text-muted d-block mt-2">
+      Proporcione un motivo claro y detallado (máximo 250 caracteres)
+    </small>
+  </div>
+
+  <!-- TOTP Token Input -->
+  <div class="mb-4">
+    <label for="tokenInput" class="form-label fw-bold">
+      Código de Verificación (6 dígitos) <span class="text-danger">*</span>
+    </label>
+    <input
+      type="text"
+      id="tokenInput"
+      formControlName="totp_token"
+      class="form-control form-control-lg text-center font-monospace"
+      placeholder="000000"
+      maxlength="6"
+      inputmode="numeric"
+      data-testid="inactivate-elsa-token-input"
+      [class.is-invalid]="isTokenTouched && tokenErrors" />
+
+    <!-- Validation Errors -->
+    <div *ngIf="isTokenTouched && tokenErrors" class="invalid-feedback d-block">
+      <div *ngIf="tokenErrors['required']">El código es requerido</div>
+      <div *ngIf="tokenErrors['pattern']">Debe ser exactamente 6 dígitos</div>
+    </div>
+
+    <!-- Help Text -->
+    <small class="text-muted d-block mt-2">
+      Ingrese el código de 6 dígitos de su aplicación autenticadora (TOTP) o correo electrónico
+    </small>
+  </div>
+
+  <!-- Error Alert -->
+  <div *ngIf="error" class="alert alert-danger" role="alert" data-testid="inactivate-elsa-error">
+    <strong>Error:</strong> {{ error }}
+  </div>
+
+  <!-- Modal Footer -->
+  <div class="modal-footer border-top bg-light">
+    <button
+      type="button"
+      class="btn btn-secondary"
+      (click)="cancel()"
+      [disabled]="loading"
+      data-testid="inactivate-elsa-cancel">
+      Cancelar
+    </button>
+
+    <button
+      type="submit"
+      class="btn btn-danger"
+      [disabled]="!isFormValid"
+      data-testid="inactivate-elsa-submit">
+      <span *ngIf="!loading">
+        <i class="bi bi-exclamation-triangle me-2"></i>Inactivar Registro
+      </span>
+      <span *ngIf="loading">
+        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+        Procesando...
+      </span>
+    </button>
+  </div>
+</form>

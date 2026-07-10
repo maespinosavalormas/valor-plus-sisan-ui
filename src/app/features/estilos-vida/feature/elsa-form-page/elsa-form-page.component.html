@@ -1,0 +1,103 @@
+<section class="elsa-form-page" data-testid="elsa-form-page">
+  <mat-card class="elsa-form-page__card">
+    <mat-card-header>
+      <mat-icon mat-card-avatar>assignment</mat-icon>
+      <mat-card-title>Nuevo cuestionario ELSA</mat-card-title>
+      <mat-card-subtitle>Evaluación de Estilos de Vida Saludable</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="form" (ngSubmit)="submitForm()">
+        <mat-stepper
+          [linear]="true"
+          orientation="horizontal"
+          [selectedIndex]="currentStep"
+          (selectionChange)="onStepChange($event.selectedIndex)"
+          class="elsa-form-page__stepper"
+        >
+          <mat-step [stepControl]="form" label="Paciente">
+            <app-elsa-patient-search [form]="form" />
+            <div class="elsa-form-page__step-actions">
+              <button mat-raised-button color="primary" matStepperNext type="button" data-testid="step-next-paciente">
+                Siguiente
+              </button>
+            </div>
+          </mat-step>
+
+          <mat-step [stepControl]="form" label="Alimentación">
+            <app-elsa-alimentacion-section [form]="form" (previewChange)="nutritionPreview = $event" />
+            <div class="elsa-form-page__step-actions">
+              <button mat-stroked-button matStepperPrevious type="button">Anterior</button>
+              <button mat-raised-button color="primary" matStepperNext type="button">Siguiente</button>
+            </div>
+          </mat-step>
+
+          <mat-step [stepControl]="form" label="Actividad Física">
+            <app-elsa-actividad-fisica-section [form]="form" (previewChange)="activityPreview = $event" />
+            <div class="elsa-form-page__step-actions">
+              <button mat-stroked-button matStepperPrevious type="button">Anterior</button>
+              <button mat-raised-button color="primary" matStepperNext type="button">Siguiente</button>
+            </div>
+          </mat-step>
+
+          <mat-step [stepControl]="form" label="Tabaco">
+            <app-elsa-tabaco-section [form]="form" [patient]="patient$ | async" />
+            <div class="elsa-form-page__step-actions">
+              <button mat-stroked-button matStepperPrevious type="button">Anterior</button>
+              <button mat-raised-button color="primary" matStepperNext type="button">Siguiente</button>
+            </div>
+          </mat-step>
+
+          <mat-step [stepControl]="form" label="Alcohol">
+            <app-elsa-alcohol-section [form]="form" [patient]="patient$ | async" (previewChange)="alcoholPreview = $event" />
+            <div class="elsa-form-page__step-actions">
+              <button mat-stroked-button matStepperPrevious type="button">Anterior</button>
+              <button mat-raised-button color="primary" matStepperNext type="button">Siguiente</button>
+            </div>
+          </mat-step>
+
+          <mat-step label="Resumen">
+            <app-elsa-resumen
+              [nutrition]="nutritionPreview"
+              [physicalActivity]="activityPreview"
+              [alcohol]="alcoholPreview"
+              [patient]="patient$ | async"
+            />
+
+            <div class="elsa-form-page__submit-actions">
+              <button mat-stroked-button matStepperPrevious type="button" data-testid="step-back-resumen">Anterior</button>
+
+              <button
+                *ngIf="loading$ | async; else submitBtn"
+                mat-raised-button
+                color="primary"
+                disabled
+                type="button"
+                data-testid="elsa-submit-loading"
+              >
+                <mat-progress-spinner diameter="20" mode="indeterminate" />
+                Guardando...
+              </button>
+
+              <ng-template #submitBtn>
+                <button
+                  mat-raised-button
+                  color="primary"
+                  type="submit"
+                  [disabled]="form.invalid || isSubmitting"
+                  data-testid="elsa-submit"
+                >
+                  Guardar ELSA
+                </button>
+              </ng-template>
+            </div>
+
+            <div *ngIf="error$ | async as error" class="elsa-form-page__error" data-testid="elsa-error">
+              {{ error }}
+            </div>
+          </mat-step>
+        </mat-stepper>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</section>

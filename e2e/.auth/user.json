@@ -4,14 +4,8 @@
     {
       "origin": "http://localhost:4200",
       "localStorage": [
-        {
-          "name": "token",
-          "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzOTA0Nzc1Ni02ZGRmLTQ1Y2UtOWQyNC02M2Q4NzkyZTNjOTkiLCJlbWFpbCI6InBydWViYUBzaXNhbi5jb20iLCJyb2xlcyI6WyJTVVBFUl9BRE1JTiJdLCJjdXN0b206dGVuYW50X2lkIjoidmFsb3ItcGx1cyIsImN1c3RvbTpyb2xlIjoiU1VQRVJfQURNSU4iLCJpYXQiOjE3ODI0MjE2MjUsImV4cCI6MTc4MjQyNTIyNSwiaXNzIjoic2lzYW4tYmFja2VuZCJ9.GJExvZSHpFea3N8aGj64GwiW2Kz0jqY3_8pAhsgO7d0"
-        },
-        {
-          "name": "currentUser",
-          "value": "{\"id\":\"39047756-6ddf-45ce-9d24-63d8792e3c99\",\"email\":\"prueba@sisan.com\",\"roles\":[\"SUPER_ADMIN\"]}"
-        }
+        { "name": "token", "value": "mock.eyJzdWIiOiJlMmUtdXNlci1pZCIsImVtYWlsIjoiZTJlQHNpc2FuLmxvY2FsIiwidXNlcm5hbWUiOiJlMmUtdXNlciIsInJvbGVzIjpbInVzZXIiXSwiY3VzdG9tOnRlbmFudF9pZCI6InRlbmFudC1lMmUiLCJleHAiOjk5OTk5OTk5OTksImlhdCI6MTcwMDAwMDAwMH0=.signature" },
+        { "name": "currentUser", "value": "{\"id\":\"e2e-user-id\",\"email\":\"e2e@sisan.local\",\"username\":\"e2e-user\",\"firstName\":\"E2E\",\"lastName\":\"Tester\",\"roles\":[\"user\"]}" }
       ]
     }
   ]

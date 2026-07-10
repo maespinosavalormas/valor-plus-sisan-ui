@@ -1,0 +1,46 @@
+.elsa-form-page {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.elsa-form-page__card {
+  margin-bottom: 16px;
+}
+
+.elsa-form-page__stepper {
+  margin-top: 16px;
+}
+
+.elsa-form-page__step-actions,
+.elsa-form-page__submit-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.elsa-form-page__submit-actions {
+  align-items: center;
+}
+
+.elsa-form-page__error {
+  margin-top: 16px;
+  padding: 12px;
+  border-radius: 8px;
+  background-color: #ffebee;
+  color: #c62828;
+  font-size: 0.875rem;
+}
+
+@media (max-width: 600px) {
+  .elsa-form-page {
+    padding: 8px;
+  }
+
+  .elsa-form-page__step-actions,
+  .elsa-form-page__submit-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+}

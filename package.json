@@ -12,6 +12,8 @@
     "e2e": "playwright test",
     "e2e:ui": "playwright test --ui",
     "e2e:report": "playwright show-report",
+    "e2e:tamizajes": "eval \"$(node ../../backend/sisan-backend/scripts/seed-e2e-tamizajes.mjs --shell)\" && npx playwright test e2e/tests/tamizajes --project=sisan --reporter=list",
+    "e2e:tamizajes:seed": "node ../../backend/sisan-backend/scripts/seed-e2e-tamizajes.mjs --write-env",
     "serve:ssr:sisan-app": "node dist/sisan-app/server/server.mjs"
   },
   "prettier": {
