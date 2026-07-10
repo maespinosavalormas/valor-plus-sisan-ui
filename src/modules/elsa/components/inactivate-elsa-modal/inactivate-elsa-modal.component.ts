@@ -1,12 +1,14 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import {
   FormBuilder,
   FormGroup,
   Validators,
   AbstractControl,
   ValidatorFn,
+  ReactiveFormsModule,
 } from '@angular/forms';
-import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModalRef, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import Swal from 'sweetalert2';
@@ -17,6 +19,8 @@ import { InactivateElsaDTO } from '../../../../shared/models/inactivate-elsa.mod
   selector: 'app-inactivate-elsa-modal',
   templateUrl: './inactivate-elsa-modal.component.html',
   styleUrls: ['./inactivate-elsa-modal.component.scss'],
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, NgbModule],
 })
 export class InactivateElsaModalComponent implements OnInit, OnDestroy {
   @Input() elsaId: string = '';
