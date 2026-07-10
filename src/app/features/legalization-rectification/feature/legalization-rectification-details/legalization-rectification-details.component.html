@@ -1,0 +1,362 @@
+<div class="legalization-rectification-details-page">
+  <app-legalization-rectification-details-header
+    [rectification]="rectification"
+    [showBackButton]="true"
+    [activeView]="currentView"
+    (backClicked)="onBack()"
+    (viewChanged)="onViewChange($event)"
+    (editClicked)="onEdit()">
+  </app-legalization-rectification-details-header>
+
+  <div class="rectification-info-content" *ngIf="currentView === 'details'">
+    <!-- 1️⃣ Tipo de Población -->
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon">
+          <mat-icon>group</mat-icon>
+        </div>
+        <div class="section-title">
+          <h4>Tipo de Población</h4>
+        </div>
+      </div>
+      <div class="section-content">
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Número de documento del participante (a):</span>
+            <span class="info-value">{{ rectification?.numeroDocumentoParticipante || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Seleccione el tipo de población participante:</span>
+            <span class="info-value">{{ rectification?.tipoPoblacionParticipante || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Tipo de documento del participante (a):</span>
+            <span class="info-value">{{ rectification?.tipoDocumentoParticipante || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Primer nombre del participante (a):</span>
+            <span class="info-value">{{ rectification?.primerNombreParticipante || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Segundo nombre del participante (a):</span>
+            <span class="info-value">{{ rectification?.segundoNombreParticipante || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Primer apellido del participante (a):</span>
+            <span class="info-value">{{ rectification?.primerApellidoParticipante || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Segundo apellido del participante (a):</span>
+            <span class="info-value">{{ rectification?.segundoApellidoParticipante || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Género:</span>
+            <span class="info-value">{{ rectification?.generoParticipante || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Región:</span>
+            <span class="info-value">{{ rectification?.regionParticipante || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Municipio:</span>
+            <span class="info-value">{{ rectification?.municipioParticipante || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Teléfono de contacto del beneficiario (a):</span>
+            <span class="info-value">{{ formatPhone(rectification?.telefonoContactoBeneficiario) }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Número telefónico actual:</span>
+            <span class="info-value">{{ formatPhone(rectification?.telefonoActualBeneficiario) }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Dirección o ubicación:</span>
+            <span class="info-value">{{ rectification?.direccionUbicacionBeneficiario || 'N/A' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2️⃣ Responsable de la Entrega -->
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon">
+          <mat-icon>person</mat-icon>
+        </div>
+        <div class="section-title">
+          <h4>Responsable de la Entrega</h4>
+        </div>
+      </div>
+      <div class="section-content">
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Región:</span>
+            <span class="info-value">{{ rectification?.regionResponsable || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Municipio:</span>
+            <span class="info-value">{{ rectification?.municipioResponsable || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Nombres y apellidos de la persona que realiza la entrega:</span>
+            <span class="info-value">{{ rectification?.nombresApellidosEntrega || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Tipo de documento de la persona que realiza la entrega:</span>
+            <span class="info-value">{{ rectification?.tipoDocumentoEntrega || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Número de documento de la persona que realiza la entrega:</span>
+            <span class="info-value">{{ rectification?.numeroDocumentoEntrega || 'N/A' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3️⃣ Entrega del Complemento -->
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon">
+          <mat-icon>local_shipping</mat-icon>
+        </div>
+        <div class="section-title">
+          <h4>Entrega del Complemento</h4>
+        </div>
+      </div>
+      <div class="section-content">
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Fecha de entrega:</span>
+            <span class="info-value">{{ rectification?.fechaEntrega || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Período de entrega:</span>
+            <span class="info-value">{{ rectification?.periodoEntrega || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Quien recibe el complemento:</span>
+            <span class="info-value">{{ rectification?.quienRecibeComplemento || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Tipo de documento del cuidador (a):</span>
+            <span class="info-value">{{ rectification?.tipoDocumentoCuidador || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Número de documento del cuidador:</span>
+            <span class="info-value">{{ rectification?.numeroDocumentoCuidador || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Primer nombre del cuidador (a):</span>
+            <span class="info-value">{{ rectification?.primerNombreCuidador || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Segundo nombre del cuidador (a):</span>
+            <span class="info-value">{{ rectification?.segundoNombreCuidador || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Primer apellido del cuidador (a):</span>
+            <span class="info-value">{{ rectification?.primerApellidoCuidador || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Segundo apellido del cuidador (a):</span>
+            <span class="info-value">{{ rectification?.segundoApellidoCuidador || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Número telefónico de contacto 1:</span>
+            <span class="info-value">{{ formatPhone(rectification?.telefonoContacto1Cuidador) }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Número telefónico de contacto 2:</span>
+            <span class="info-value">{{ formatPhone(rectification?.telefonoContacto2Cuidador) }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Tipo de documento del cuidador (a):</span>
+            <span class="info-value">{{ rectification?.tipoDocumentoCuidador || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Número de documento del cuidador:</span>
+            <span class="info-value">{{ rectification?.numeroDocumentoCuidador || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Primer nombre del cuidador (a):</span>
+            <span class="info-value">{{ rectification?.primerNombreCuidador || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Segundo nombre del cuidador (a):</span>
+            <span class="info-value">{{ rectification?.segundoNombreCuidador || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Primer apellido del cuidador (a):</span>
+            <span class="info-value">{{ rectification?.primerApellidoCuidador || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Segundo apellido del cuidador (a):</span>
+            <span class="info-value">{{ rectification?.segundoApellidoCuidador || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Número telefónico de contacto 1:</span>
+            <span class="info-value">{{ formatPhone(rectification?.telefonoContacto1Cuidador) }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Número telefónico de contacto 2:</span>
+            <span class="info-value">{{ formatPhone(rectification?.telefonoContacto2Cuidador) }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Seleccione el Lugar de entrega del paquete alimentario:</span>
+            <span class="info-value">{{ rectification?.lugarEntregaPaquete || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Ubicación Georeferenciación:</span>
+            <span class="info-value">{{ formatCoordinates() }}</span>
+          </div>
+          <div class="info-item full-width">
+            <span class="info-label">1. Yo, actuando en representación y con la autorización expresa de todos los miembros de mi hogar, incluyendo a menores y mayores de edad, autorizo a la GOBERNACIÓN DE ANTIOQUIA para que en cumplimiento a lo determinado en la Ley 1581 de 2012 (uso de los datos personales), en el marco de sus procesos de atención, actúe como responsable del tratamiento de los datos personales de los cuales somos titulares, realice la recolección, uso y tratamiento de nuestros datos, ya sea de forma conjunta o separada, conforme a la política de tratamiento de datos personales de la Gobernación de Antioquia, disponible en https://sedeelectronica.antioquia.gov.co/publicaciones/203/politica-para-el-tratamiento-de-datos-personales/:</span>
+            <span class="info-value">{{ rectification?.consentimientoInformado1 || 'N/A' }}</span>
+          </div>
+          <div class="info-item full-width">
+            <span class="info-label">2. Asimismo, autorizo a la administración departamental para captar, tomar, almacenar, editar, divulgar y publicar imágenes, audios o datos de nuestra familia, o de alguno de sus integrantes, (incluyendo menores y mayores de edad), con fines estadísticos, académicos o para la promoción de los derechos de los niños, niñas, adolescentes y familias. Esto se realizará conforme a la política de tratamiento de datos personales de la Gobernación de Antioquia, y dando cumplimiento a lo dispuesto en la Ley 1581 de 2012.:</span>
+            <span class="info-value">{{ rectification?.consentimientoInformado2 || 'N/A' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4️⃣ Datos de Subsanación -->
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon">
+          <mat-icon>edit</mat-icon>
+        </div>
+        <div class="section-title">
+          <h4>Datos de Subsanación</h4>
+        </div>
+      </div>
+      <div class="section-content">
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Subsanar datos del cuidador por entrega a un menor de edad:</span>
+            <span class="info-value">{{ rectification?.subsanarDatosCuidador || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Quien recibe el complemento:</span>
+            <span class="info-value">{{ rectification?.quienRecibeComplementoSubsanacion || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Tipo de documento del cuidador (a):</span>
+            <span class="info-value">{{ rectification?.tipoDocumentoCuidadorSubsanacion || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Número de documento del cuidador:</span>
+            <span class="info-value">{{ rectification?.numeroDocumentoCuidadorSubsanacion || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Primer nombre del cuidador (a):</span>
+            <span class="info-value">{{ rectification?.primerNombreCuidadorSubsanacion || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Segundo nombre del cuidador (a):</span>
+            <span class="info-value">{{ rectification?.segundoNombreCuidadorSubsanacion || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Primer apellido del cuidador (a):</span>
+            <span class="info-value">{{ rectification?.primerApellidoCuidadorSubsanacion || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Segundo apellido del cuidador (a):</span>
+            <span class="info-value">{{ rectification?.segundoApellidoCuidadorSubsanacion || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Número telefónico de contacto 1:</span>
+            <span class="info-value">{{ formatPhone(rectification?.telefonoContacto1CuidadorSubsanacion) }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Número telefónico de contacto 2:</span>
+            <span class="info-value">{{ formatPhone(rectification?.telefonoContacto2CuidadorSubsanacion) }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Observaciones de subsanaciones:</span>
+            <span class="info-value">{{ rectification?.observacionesSubsanaciones || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Subsanar cargue de autorización por escrito de la persona autorizada:</span>
+            <span class="info-value">{{ formatFileName(rectification?.autorizacionEscritaSubsanacion) }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Fotografia documento de identidad participante (original, la fotografia debe tomarse lo mas clara posible):</span>
+            <span class="info-value">{{ formatFileName(rectification?.fotoDocumentoIdentidadParticipante) }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Fotografia documento de identidad cuidador o persona autorizada (original, la fotografia debe tomarse lo mas clara posible):</span>
+            <span class="info-value">{{ formatFileName(rectification?.fotoDocumentoIdentidadCuidador) }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Fotografía de persona que recibe con el paquete alimentario (foto lo mas clara posible mostrando de frente el paquete alimentario y a la persona que recibe):</span>
+            <span class="info-value">{{ formatFileName(rectification?.fotografiaPersonaPaquete) }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Firma de la persona que recibe el paquete alimentario:</span>
+            <span class="info-value">{{ formatFileName(rectification?.firmaPersonaRecibe) }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Selecciónes si se realizo la subsanación o es una legalización que esta completa y no hay que subsanar:</span>
+            <span class="info-value">{{ rectification?.tipoSubsanacion1 || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Selecciónes si se realizo la subsanación o es una legalización que esta completa y no hay que subsanar:</span>
+            <span class="info-value">{{ rectification?.tipoSubsanacion2 || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Tipo de documento de la persona que realiza la subsanación:</span>
+            <span class="info-value">{{ rectification?.tipoDocumentoSubsanacion || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Numero de documento de la persona que realiza la subsanación:</span>
+            <span class="info-value">{{ rectification?.numeroDocumentoSubsanacion || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Nombres y Apellidos de responsable subsanación:</span>
+            <span class="info-value">{{ rectification?.nombresApellidosSubsanacion || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Observaciones encontradas en el proceso de subsanación:</span>
+            <span class="info-value">{{ rectification?.observacionesProcesoSubsanacion || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Fecha y hora de finalización de la subsanación:</span>
+            <span class="info-value">{{ rectification?.fechaHoraFinalizacionSubsanacion || 'N/A' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Auditoría -->
+    <div class="info-section" *ngIf="rectification?.createdAt || rectification?.updatedAt">
+      <div class="section-header">
+        <div class="section-icon">
+          <mat-icon>history</mat-icon>
+        </div>
+        <div class="section-title">
+          <h4>Información de Auditoría</h4>
+        </div>
+      </div>
+      <div class="section-content">
+        <div class="info-grid">
+          <div class="info-item" *ngIf="rectification?.createdAt">
+            <span class="info-label">Fecha de Creación:</span>
+            <span class="info-value">{{ formatDate(rectification?.createdAt) }}</span>
+          </div>
+          <div class="info-item" *ngIf="rectification?.updatedAt">
+            <span class="info-label">Última Actualización:</span>
+            <span class="info-value">{{ formatDate(rectification?.updatedAt) }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <app-legalization-rectification-traceability
+    *ngIf="currentView === 'traceability'"
+    [rectification]="rectification"
+    (back)="onBack()">
+  </app-legalization-rectification-traceability>
+</div>

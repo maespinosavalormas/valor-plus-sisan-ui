@@ -1,0 +1,189 @@
+<div class="cases-container">
+  <div class="cases-header">
+    <div class="header-title">
+      <mat-icon>medical_services</mat-icon>
+      <span>Administrar Casos de Desnutrición</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 10px;">
+        <div class="load-info-menu">
+          <button mat-flat-button class="btn-load-info" [matMenuTriggerFor]="loadInfoMenu">
+            <span class="btn-text">Cargar Información</span>
+            <mat-icon class="btn-icon">arrow_drop_down</mat-icon>
+          </button>
+          <mat-menu #loadInfoMenu="matMenu" class="load-info-dropdown">
+            <button mat-menu-item (click)="loadIcbfCase()">
+              <mat-icon>child_care</mat-icon>
+              <span>Cargar Informacion de ICBF</span>
+            </button>
+            <button mat-menu-item (click)="loadArrullosCase()">
+              <mat-icon>family_restroom</mat-icon>
+              <span>Cargar Informacion de Arrullos</span>
+            </button>
+            <button mat-menu-item (click)="loadComfamaCase()">
+              <mat-icon>business</mat-icon>
+              <span>Cargar Informacion de Comfama</span>
+            </button>
+            <button mat-menu-item (click)="loadComfenalcoCase()">
+              <mat-icon>apartment</mat-icon>
+              <span>Cargar Informacion de Comfenalco</span>
+            </button>
+          </mat-menu>
+        </div>
+      
+        <button mat-flat-button class="btn-import-case" (click)="openCsvUploadModal()">
+        <span class="btn-text">Cargar Caso</span>
+        <mat-icon class="btn-icon">add</mat-icon>
+        </button>
+
+
+        <button mat-flat-button class="btn-new-case" (click)="openCaseForm()">
+        <span class="btn-text">Nuevo Caso</span>
+        <mat-icon class="btn-icon">add</mat-icon>
+        </button>
+    </div>
+  </div>
+
+  <!-- CSV Upload Modal -->
+  <div class="modal-overlay" *ngIf="showCsvUploadModal">
+    <div class="modal-container" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Cargar Caso desde Sivigila</h3>
+        <button mat-icon-button class="close-btn" (click)="closeCsvUploadModal()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+      <div class="modal-content">
+        <div class="file-upload-container">
+          <input type="file" accept=".csv" (change)="onCsvFileSelected($event)" id="csvFileInput">
+          <label for="csvFileInput" class="file-upload-label">
+            <mat-icon>upload_file</mat-icon>
+            <span>Seleccionar archivo CSV</span>
+          </label>
+        </div>
+        <p *ngIf="selectedCsvFile">{{ selectedCsvFile.name }}</p>
+      </div>
+      <div class="modal-footer">
+        <button mat-flat-button class="btn-guardar" (click)="uploadCsvFile()">
+          <mat-icon>upload</mat-icon>
+          Cargar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ICBF Upload Modal -->
+  <div class="modal-overlay" *ngIf="showIcbfUploadModal">
+    <div class="modal-container" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Cargar Información de ICBF</h3>
+        <button mat-icon-button class="close-btn" (click)="closeIcbfUploadModal()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+      <div class="modal-content">
+        <div class="file-upload-container">
+          <input type="file" accept=".csv" (change)="onIcbfFileSelected($event)" id="icbfFileInput">
+          <label for="icbfFileInput" class="file-upload-label">
+            <mat-icon>upload_file</mat-icon>
+            <span>Seleccionar archivo CSV</span>
+          </label>
+        </div>
+        <p *ngIf="selectedIcbfFile">{{ selectedIcbfFile.name }}</p>
+      </div>
+      <div class="modal-footer">
+        <button mat-flat-button class="btn-guardar" (click)="uploadIcbfFile()">
+          <mat-icon>upload</mat-icon>
+          Cargar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Arrullos Upload Modal -->
+  <div class="modal-overlay" *ngIf="showArrullosUploadModal">
+    <div class="modal-container" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Cargar Información de Arrullos</h3>
+        <button mat-icon-button class="close-btn" (click)="closeArrullosUploadModal()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+      <div class="modal-content">
+        <div class="file-upload-container">
+          <input type="file" accept=".csv" (change)="onArrullosFileSelected($event)" id="arrullosFileInput">
+          <label for="arrullosFileInput" class="file-upload-label">
+            <mat-icon>upload_file</mat-icon>
+            <span>Seleccionar archivo CSV</span>
+          </label>
+        </div>
+        <p *ngIf="selectedArrullosFile">{{ selectedArrullosFile.name }}</p>
+      </div>
+      <div class="modal-footer">
+        <button mat-flat-button class="btn-guardar" (click)="uploadArrullosFile()">
+          <mat-icon>upload</mat-icon>
+          Cargar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Comfama Upload Modal -->
+  <div class="modal-overlay" *ngIf="showComfamaUploadModal">
+    <div class="modal-container" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Cargar Información de Comfama</h3>
+        <button mat-icon-button class="close-btn" (click)="closeComfamaUploadModal()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+      <div class="modal-content">
+        <div class="file-upload-container">
+          <input type="file" accept=".csv" (change)="onComfamaFileSelected($event)" id="comfamaFileInput">
+          <label for="comfamaFileInput" class="file-upload-label">
+            <mat-icon>upload_file</mat-icon>
+            <span>Seleccionar archivo CSV</span>
+          </label>
+        </div>
+        <p *ngIf="selectedComfamaFile">{{ selectedComfamaFile.name }}</p>
+      </div>
+      <div class="modal-footer">
+        <button mat-flat-button class="btn-guardar" (click)="uploadComfamaFile()">
+          <mat-icon>upload</mat-icon>
+          Cargar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Comfenalco Upload Modal -->
+  <div class="modal-overlay" *ngIf="showComfenalcoUploadModal">
+    <div class="modal-container" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Cargar Información de Comfenalco</h3>
+        <button mat-icon-button class="close-btn" (click)="closeComfenalcoUploadModal()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+      <div class="modal-content">
+        <div class="file-upload-container">
+          <input type="file" accept=".csv" (change)="onComfenalcoFileSelected($event)" id="comfenalcoFileInput">
+          <label for="comfenalcoFileInput" class="file-upload-label">
+            <mat-icon>upload_file</mat-icon>
+            <span>Seleccionar archivo CSV</span>
+          </label>
+        </div>
+        <p *ngIf="selectedComfenalcoFile">{{ selectedComfenalcoFile.name }}</p>
+      </div>
+      <div class="modal-footer">
+        <button mat-flat-button class="btn-guardar" (click)="uploadComfenalcoFile()">
+          <mat-icon>upload</mat-icon>
+          Cargar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="cases-content">
+    <app-cases-list></app-cases-list>
+  </div>
+</div>

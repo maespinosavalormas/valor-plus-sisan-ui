@@ -1,0 +1,70 @@
+<div class="pcd-emergencies-traceability-container">
+  <div class="tab-content">
+        <!-- Sección de búsqueda y filtros -->
+        <div class="search-section">
+          <div class="search-container">
+            <mat-icon class="search-icon">search</mat-icon>
+            <input 
+              class="search-input" 
+              placeholder="Buscar por acción, usuario o descripción..." 
+              (input)="onSearchChange($any($event).target.value)"
+              [value]="searchTerm">
+            <mat-icon 
+              class="clear-search" 
+              *ngIf="searchTerm"
+              (click)="clearSearch()">clear</mat-icon>
+          </div>
+
+          <div class="filter-container">
+            <select 
+              class="tipo-filter" 
+              (change)="onTipoChange($any($event).target.value)"
+              [value]="selectedTipo">
+              <option value="all">Todos los tipos</option>
+              <option *ngFor="let tipo of getAvailableTipos()" [value]="tipo">
+                {{ getTipoLabel(tipo) }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Results Summary -->
+        <div class="results-summary" *ngIf="filteredActivityData.length !== activityData.length">
+          <span class="summary-text">
+            Mostrando {{ filteredActivityData.length }} de {{ activityData.length }} registros
+          </span>
+        </div>
+
+        <!-- Lista de actividad -->
+        <div class="activity-list">
+          <div class="activity-item" *ngFor="let item of filteredActivityData; trackBy: trackByActivity">
+            <div class="activity-header">
+              <div class="activity-accion">
+                <span class="accion-label">Acción:</span>
+                <span class="accion-value">{{ item.accion }}</span>
+              </div>
+              <div class="activity-tipo">
+                <span class="tipo-badge" [class]="item.tipo">{{ getTipoLabel(item.tipo) }}</span>
+              </div>
+            </div>
+            <div class="activity-fecha">
+              <span class="fecha-label">Fecha:</span>
+              <span class="fecha-value">{{ item.fecha }}</span>
+            </div>
+            <div class="activity-usuario">
+              <span class="usuario-label">Usuario:</span>
+              <span class="usuario-value">{{ item.usuario }}</span>
+            </div>
+            <div class="activity-descripcion">
+              <span class="descripcion-label">Descripción:</span>
+              <span class="descripcion-value">{{ item.descripcion }}</span>
+            </div>
+          </div>
+          
+          <div class="no-activity" *ngIf="filteredActivityData.length === 0">
+            <mat-icon>history</mat-icon>
+            <span>No hay registros de actividad para esta emergencia PCD</span>
+          </div>
+        </div>
+</div>
+</div>

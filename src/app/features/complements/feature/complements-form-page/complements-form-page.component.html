@@ -1,0 +1,444 @@
+<div class="form-container">
+  <div class="form-header">
+    <div class="form-title">
+      <span>{{ title }}</span>
+    </div>
+    <button mat-icon-button class="close-button" (click)="onCancel()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <form [formGroup]="form" class="form-grid">
+    <!-- SECCION 1: Responsable de la entrega -->
+    <h4 class="section-title">
+      <mat-icon>person</mat-icon>
+      Responsable de la entrega
+    </h4>
+    <div class="field">
+      <span class="field-label req">Región:</span>
+      <mat-select class="control" formControlName="region" placeholder="Seleccione región" required>
+        <mat-option *ngFor="let region of regions" [value]="region">{{ region }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Municipio:</span>
+      <mat-select class="control" formControlName="municipio" placeholder="Seleccione municipio" required>
+        <mat-option *ngFor="let municipio of municipios" [value]="municipio">{{ municipio }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Nombres y apellidos de la persona que realiza la entrega:</span>
+      <input class="control" formControlName="nombresApellidosEntrega" placeholder="Ingrese nombres y apellidos" required>
+    </div>
+    <div class="field">
+      <span class="field-label req">Tipo de documento de la persona que realiza la entrega:</span>
+      <mat-select class="control" formControlName="tipoDocumentoEntrega" placeholder="Seleccione tipo documento" required>
+        <mat-option *ngFor="let tipo of tiposDocumento" [value]="tipo">{{ tipo }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Número de documento de la persona que realiza la entrega:</span>
+      <input class="control" type="text" formControlName="numeroDocumentoEntrega" placeholder="Ingrese número documento" pattern="[0-9]*" required>
+    </div>
+
+    <!-- SECCION 2: Tipo de población -->
+    <h4 class="section-title">
+      <mat-icon>groups</mat-icon>
+      Tipo de población
+    </h4>
+    <div class="field">
+      <span class="field-label req">Seleccione el tipo de población participante:</span>
+      <mat-select class="control" formControlName="tipoPoblacionParticipante" placeholder="Seleccione tipo población" required>
+        <mat-option *ngFor="let tipo of tiposPoblacion" [value]="tipo">{{ tipo }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Número de documento del participante (a):</span>
+      <input class="control" type="text" formControlName="numeroDocumentoParticipante" placeholder="Ingrese número documento" pattern="[0-9]*" required>
+    </div>
+
+    <!-- Alert if already received -->
+    <div class="field full-width" *ngIf="mostrarAlertaBeneficiarioYaRecibio">
+      <div style="background-color: #ffebee; border: 1px solid #f44336; padding: 12px; border-radius: 8px; color: #c62828;">
+        <mat-icon style="vertical-align: middle; margin-right: 8px;">warning</mat-icon>
+        El beneficiario ya ha recibido el complemento alimentario. No es posible otorgarlo más de una vez.
+      </div>
+    </div>
+
+    <!-- Participant info fields -->
+    <div class="field readonly-field">
+      <span class="field-label">Tipo de documento del participante (a):</span>
+      <mat-select class="control" formControlName="tipoDocumentoParticipanteInfo" placeholder="Campo precargado" readonly>
+        <mat-option *ngFor="let tipo of tiposDocumento" [value]="tipo">{{ tipo }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Primer nombre del participante (a):</span>
+      <input class="control" formControlName="primerNombreParticipante" placeholder="Campo precargado" readonly>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Segundo nombre del participante (a):</span>
+      <input class="control" formControlName="segundoNombreParticipante" placeholder="Campo precargado" readonly>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Primer apellido del participante (a):</span>
+      <input class="control" formControlName="primerApellidoParticipante" placeholder="Campo precargado" readonly>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Segundo apellido del participante (a):</span>
+      <input class="control" formControlName="segundoApellidoParticipante" placeholder="Campo precargado" readonly>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Edad:</span>
+      <input class="control" type="text" formControlName="edadParticipante" placeholder="Campo precargado" readonly>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Género:</span>
+      <mat-select class="control" formControlName="generoParticipante" placeholder="Campo precargado">
+        <mat-option *ngFor="let genero of sexos" [value]="genero">{{ genero }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Región:</span>
+      <mat-select class="control" formControlName="regionParticipante" placeholder="Campo precargado">
+        <mat-option *ngFor="let region of regions" [value]="region">{{ region }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Municipio:</span>
+      <mat-select class="control" formControlName="municipioParticipante" placeholder="Campo precargado">
+        <mat-option *ngFor="let municipio of municipios" [value]="municipio">{{ municipio }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Teléfono de contacto del beneficiario (a):</span>
+      <input class="control" type="text" formControlName="telefonoContactoBeneficiario" placeholder="Campo precargado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label req">Número telefónico actual:</span>
+      <input class="control" type="text" formControlName="numeroTelefonicoActual" placeholder="Ingrese teléfono actual" required>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Dirección o ubicación:</span>
+      <input class="control" formControlName="direccionUbicacion" placeholder="Campo precargado" readonly>
+    </div>
+
+    <!-- Second set of participant fields -->
+    <div class="field">
+      <span class="field-label req">Número de documento del participante (a):</span>
+      <input class="control" type="text" formControlName="numeroDocumentoParticipante2" placeholder="Ingrese número documento" pattern="[0-9]*" required>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Tipo de documento del participante (a):</span>
+      <mat-select class="control" formControlName="tipoDocumentoParticipanteInfo2" placeholder="Campo precargado">
+        <mat-option *ngFor="let tipo of tiposDocumento" [value]="tipo">{{ tipo }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Primer nombre del participante (a):</span>
+      <input class="control" formControlName="primerNombreParticipante2" placeholder="Campo precargado" readonly>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Segundo nombre del participante (a):</span>
+      <input class="control" formControlName="segundoNombreParticipante2" placeholder="Campo precargado" readonly>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Primer apellido del participante (a):</span>
+      <input class="control" formControlName="primerApellidoParticipante2" placeholder="Campo precargado" readonly>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Segundo apellido del participante (a):</span>
+      <input class="control" formControlName="segundoApellidoParticipante2" placeholder="Campo precargado" readonly>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Género:</span>
+      <mat-select class="control" formControlName="generoParticipante2" placeholder="Campo precargado">
+        <mat-option *ngFor="let genero of sexos" [value]="genero">{{ genero }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Región:</span>
+      <mat-select class="control" formControlName="regionParticipante2" placeholder="Campo precargado">
+        <mat-option *ngFor="let region of regions" [value]="region">{{ region }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Municipio:</span>
+      <mat-select class="control" formControlName="municipioParticipante2" placeholder="Campo precargado">
+        <mat-option *ngFor="let municipio of municipios" [value]="municipio">{{ municipio }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Teléfono de contacto del beneficiario (a):</span>
+      <input class="control" type="text" formControlName="telefonoContactoBeneficiario2" placeholder="Campo precargado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label req">Número telefónico actual:</span>
+      <input class="control" type="text" formControlName="numeroTelefonicoActual2" placeholder="Ingrese teléfono actual" required>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Dirección o ubicación:</span>
+      <input class="control" formControlName="direccionUbicacion2" placeholder="Campo precargado" readonly>
+    </div>
+    <h4 class="section-title">
+      <mat-icon>local_shipping</mat-icon>
+      Entrega del complemento
+    </h4>
+    <div class="field">
+      <span class="field-label req">Fecha de entrega:</span>
+      <input class="control" type="date" formControlName="fechaEntrega" required>
+    </div>
+    <div class="field">
+      <span class="field-label req">Período de entrega:</span>
+      <mat-select class="control" formControlName="periodoEntrega" placeholder="Seleccione período" required>
+        <mat-option *ngFor="let periodo of periodosEntrega" [value]="periodo">{{ periodo }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Seleccione el municipio:</span>
+      <input class="control" formControlName="municipioEntrega" placeholder="Campo precargado" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label req">Seleccione el lugar encuentro:</span>
+      <mat-select class="control" formControlName="lugarEncuentro" placeholder="Seleccione lugar" required>
+        <mat-option *ngFor="let lugar of lugaresEncuentro" [value]="lugar">{{ lugar }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Seleccione el grupo:</span>
+      <mat-select class="control" formControlName="grupo" placeholder="Seleccione grupo" required>
+        <mat-option *ngFor="let grupo of grupos" [value]="grupo">{{ grupo }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Quien recibe el complemento:</span>
+      <mat-select class="control" formControlName="quienRecibeComplemento" placeholder="Seleccione quien recibe" required>
+        <mat-option *ngFor="let quien of quienesReciben" [value]="quien">{{ quien }}</mat-option>
+      </mat-select>
+    </div>
+
+    <!-- Cuidador info fields -->
+    <div class="field readonly-field">
+      <span class="field-label">Tipo de documento del cuidador (a):</span>
+      <mat-select class="control" formControlName="tipoDocumentoCuidador" placeholder="Campo precargado" readonly>
+        <mat-option *ngFor="let tipo of tiposDocumento" [value]="tipo">{{ tipo }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Número de documento del cuidador:</span>
+      <input class="control" type="text" formControlName="numeroDocumentoCuidador" placeholder="Campo precargado" readonly>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Primer nombre del cuidador (a):</span>
+      <input class="control" formControlName="primerNombreCuidador" placeholder="Campo precargado" readonly>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Segundo nombre del cuidador (a):</span>
+      <input class="control" formControlName="segundoNombreCuidador" placeholder="Campo precargado" readonly>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Primer apellido del cuidador (a):</span>
+      <input class="control" formControlName="primerApellidoCuidador" placeholder="Campo precargado" readonly>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Segundo apellido del cuidador (a):</span>
+      <input class="control" formControlName="segundoApellidoCuidador" placeholder="Campo precargado" readonly>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Número telefónico de contacto 1:</span>
+      <input class="control" type="text" formControlName="numeroTelefonicoContacto1" placeholder="Campo precargado" readonly>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Número telefónico de contacto 2:</span>
+      <input class="control" type="text" formControlName="numeroTelefonicoContacto2" placeholder="Campo precargado" readonly>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Tipo participante:</span>
+      <input class="control" formControlName="tipoParticipante" placeholder="Campo precargado" readonly>
+    </div>
+
+    <!-- Second set of caregiver fields -->
+    <div class="field readonly-field">
+      <span class="field-label">Tipo de documento del cuidador (a):</span>
+      <mat-select class="control" formControlName="tipoDocumentoCuidador2" placeholder="Campo precargado">
+        <mat-option *ngFor="let tipo of tiposDocumento" [value]="tipo">{{ tipo }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Número de documento del cuidador:</span>
+      <input class="control" type="text" formControlName="numeroDocumentoCuidador2" placeholder="Campo precargado" readonly>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Primer nombre del cuidador (a):</span>
+      <input class="control" formControlName="primerNombreCuidador2" placeholder="Campo precargado" readonly>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Segundo nombre del cuidador (a):</span>
+      <input class="control" formControlName="segundoNombreCuidador2" placeholder="Campo precargado" readonly>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Primer apellido del cuidador (a):</span>
+      <input class="control" formControlName="primerApellidoCuidador2" placeholder="Campo precargado" readonly>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Segundo apellido del cuidador (a):</span>
+      <input class="control" formControlName="segundoApellidoCuidador2" placeholder="Campo precargado" readonly>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Número telefónico de contacto 1:</span>
+      <input class="control" type="text" formControlName="numeroTelefonicoContacto12" placeholder="Campo precargado" readonly>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Número telefónico de contacto 2:</span>
+      <input class="control" type="text" formControlName="numeroTelefonicoContacto22" placeholder="Campo precargado" readonly>
+    </div>
+
+
+    <!-- Third set of caregiver fields -->
+    <div class="field readonly-field">
+      <span class="field-label">Tipo de documento del cuidador (a):</span>
+      <mat-select class="control" formControlName="tipoDocumentoCuidador3" placeholder="Campo precargado">
+        <mat-option *ngFor="let tipo of tiposDocumento" [value]="tipo">{{ tipo }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Número de documento del cuidador:</span>
+      <input class="control" type="text" formControlName="numeroDocumentoCuidador3" placeholder="Campo precargado" readonly>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Primer nombre del cuidador (a):</span>
+      <input class="control" formControlName="primerNombreCuidador3" placeholder="Campo precargado" readonly>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Segundo nombre del cuidador (a):</span>
+      <input class="control" formControlName="segundoNombreCuidador3" placeholder="Campo precargado" readonly>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Primer apellido del cuidador (a):</span>
+      <input class="control" formControlName="primerApellidoCuidador3" placeholder="Campo precargado" readonly>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Segundo apellido del cuidador (a):</span>
+      <input class="control" formControlName="segundoApellidoCuidador3" placeholder="Campo precargado" readonly>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Número telefónico de contacto 1:</span>
+      <input class="control" type="text" formControlName="numeroTelefonicoContacto13" placeholder="Campo precargado" readonly>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Número telefónico de contacto 2:</span>
+      <input class="control" type="text" formControlName="numeroTelefonicoContacto23" placeholder="Campo precargado" readonly>
+    </div>
+    <div class="field full-width">
+      <span class="field-label">Adjuntar autorización de la persona autorizada:</span>
+      <div class="file-upload-container">
+        <input class="file-input" type="file" id="adjuntarAutorizacion" formControlName="adjuntarAutorizacion" accept=".pdf" (change)="onFileSelected($event, 'adjuntarAutorizacion')">
+        <label class="file-upload-label" for="adjuntarAutorizacion" [class.active]="selectedFiles['adjuntarAutorizacion']">
+          <mat-icon class="upload-icon">upload_file</mat-icon>
+          <span class="upload-text">{{ selectedFiles['adjuntarAutorizacion'] || 'Campo precargado' }}</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Map for geolocation -->
+    <div class="field full-width">
+      <span class="field-label req">Ubicación Georeferenciación:</span>
+      <div
+        *ngIf="isBrowser"
+        class="map-container"
+        id="map-container">
+      </div>
+      <div class="coordinates-display">
+        Latitud: <strong>{{ displayedLatitud }}</strong><br>
+        Longitud: <strong>{{ displayedLongitud }}</strong>
+      </div>
+    </div>
+
+    <!-- SECCION 4: Consentimiento informado -->
+    <h4 class="section-title">
+      <mat-icon>assignment</mat-icon>
+      Consentimiento informado
+    </h4>
+    <div class="field full-width">
+      <span class="field-label autorizo">1. Yo, actuando en representación y con la autorización expresa de todos los miembros de mi hogar, incluyendo a menores y mayores de edad, autorizo a la GOBERNACIÓN DE ANTIOQUIA para que en cumplimiento a lo determinado en la Ley 1581 de 2012 (uso de los datos personales), en el marco de sus procesos de atención, actúe como responsable del tratamiento de los datos personales de los cuales somos titulares, realice la recolección, uso y tratamiento de nuestros datos, ya sea de forma conjunta o separada, conforme a la política de tratamiento de datos personales de la Gobernación de Antioquia, disponible en https://sedeelectronica.antioquia.gov.co/publicaciones/203/politica-para-el-tratamiento-de-datos-personales/:</span>
+      <mat-select class="control" formControlName="consentimientoDatosPersonales" placeholder="Seleccione" required>
+        <mat-option value="si">Sí</mat-option>
+        <mat-option value="no">No</mat-option>
+      </mat-select>
+    </div>
+    <div class="field full-width">
+      <span class="field-label autorizo">2. Asimismo, autorizo a la administración departamental para captar, tomar, almacenar, editar, divulgar y publicar imágenes, audios o datos de nuestra familia, o de alguno de sus integrantes, (incluyendo menores y mayores de edad), con fines estadísticos, académicos o para la promoción de los derechos de los niños, niñas, adolescentes y familias. Esto se realizará conforme a la política de tratamiento de datos personales de la Gobernación de Antioquia, y dando cumplimiento a lo dispuesto en la Ley 1581 de 2012.:</span>
+      <mat-select class="control" formControlName="consentimientoImagenesAudios" placeholder="Seleccione" required>
+        <mat-option value="si">Sí</mat-option>
+        <mat-option value="no">No</mat-option>
+      </mat-select>
+    </div>
+
+    <!-- File uploads for consent -->
+    <div class="field full-width">
+      <span class="field-label">Fotografía documento de identidad participante (original):</span>
+      <div class="file-upload-container">
+        <input class="file-input" type="file" id="fotografiaDocumentoIdentidadParticipante" formControlName="fotografiaDocumentoIdentidadParticipante" accept=".pdf" (change)="onFileSelected($event, 'fotografiaDocumentoIdentidadParticipante')">
+        <label class="file-upload-label" for="fotografiaDocumentoIdentidadParticipante" [class.active]="selectedFiles['fotografiaDocumentoIdentidadParticipante']">
+          <mat-icon class="upload-icon">upload_file</mat-icon>
+          <span class="upload-text">{{ selectedFiles['fotografiaDocumentoIdentidadParticipante'] || 'Seleccionar archivo PDF' }}</span>
+        </label>
+      </div>
+    </div>
+    <div class="field full-width">
+      <span class="field-label">Fotografía documento de identidad cuidador o persona autorizada (original):</span>
+      <div class="file-upload-container">
+        <input class="file-input" type="file" id="fotografiaDocumentoIdentidadCuidador" formControlName="fotografiaDocumentoIdentidadCuidador" accept=".pdf" (change)="onFileSelected($event, 'fotografiaDocumentoIdentidadCuidador')">
+        <label class="file-upload-label" for="fotografiaDocumentoIdentidadCuidador" [class.active]="selectedFiles['fotografiaDocumentoIdentidadCuidador']">
+          <mat-icon class="upload-icon">upload_file</mat-icon>
+          <span class="upload-text">{{ selectedFiles['fotografiaDocumentoIdentidadCuidador'] || 'Seleccionar archivo PDF' }}</span>
+        </label>
+      </div>
+    </div>
+    <div class="field full-width">
+      <span class="field-label">Fotografía de persona que recibe:</span>
+      <div class="file-upload-container">
+        <input class="file-input" type="file" id="fotografiaPersonaRecibe" formControlName="fotografiaPersonaRecibe" accept=".pdf" (change)="onFileSelected($event, 'fotografiaPersonaRecibe')">
+        <label class="file-upload-label" for="fotografiaPersonaRecibe" [class.active]="selectedFiles['fotografiaPersonaRecibe']">
+          <mat-icon class="upload-icon">upload_file</mat-icon>
+          <span class="upload-text">{{ selectedFiles['fotografiaPersonaRecibe'] || 'Seleccionar archivo PDF' }}</span>
+        </label>
+      </div>
+      <p style="font-size: 12px; color: var(--gray-tertiary); margin-top: 4px;">
+        La fotografía debe mostrar claramente el rostro de quien recibe. Debe coincidir con la persona del documento y con el complemento visible al frente.
+      </p>
+    </div>
+    <div class="field full-width">
+      <span class="field-label req">Seleccione el tipo de registro si firma la persona que recibe el paquete o si se toma la foto de la planilla física de la persona que ya recibió el paquete:</span>
+      <mat-select class="control" formControlName="tipoRegistro" placeholder="Seleccione tipo registro" required>
+        <mat-option *ngFor="let tipo of tiposRegistro" [value]="tipo">{{ tipo }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field full-width">
+      <span class="field-label">Firma de persona que recibe el complemento alimentario:</span>
+      <div class="file-upload-container">
+        <input class="file-input" type="file" id="firmaPersonaRecibe" formControlName="firmaPersonaRecibe" accept=".pdf" (change)="onFileSelected($event, 'firmaPersonaRecibe')">
+        <label class="file-upload-label" for="firmaPersonaRecibe" [class.active]="selectedFiles['firmaPersonaRecibe']">
+          <mat-icon class="upload-icon">upload_file</mat-icon>
+          <span class="upload-text">{{ selectedFiles['firmaPersonaRecibe'] || 'Seleccionar archivo PDF' }}</span>
+        </label>
+      </div>
+    </div>
+    <div class="field full-width">
+      <span class="field-label">Fotografía de la planilla que soporta la firma de la entrega:</span>
+      <div class="file-upload-container">
+        <input class="file-input" type="file" id="fotografiaPlanillaFirma" formControlName="fotografiaPlanillaFirma" accept=".pdf" (change)="onFileSelected($event, 'fotografiaPlanillaFirma')">
+        <label class="file-upload-label" for="fotografiaPlanillaFirma" [class.active]="selectedFiles['fotografiaPlanillaFirma']">
+          <mat-icon class="upload-icon">upload_file</mat-icon>
+          <span class="upload-text">{{ selectedFiles['fotografiaPlanillaFirma'] || 'Seleccionar archivo PDF' }}</span>
+        </label>
+      </div>
+    </div>
+
+  </form>
+
+  <div class="actions">
+    <button mat-button class="btn-cancel" (click)="onCancel()">Cancelar</button>
+    <button mat-raised-button class="btn-guardar" (click)="onSave()" [disabled]="!form.valid">Guardar</button>
+  </div>
+</div>

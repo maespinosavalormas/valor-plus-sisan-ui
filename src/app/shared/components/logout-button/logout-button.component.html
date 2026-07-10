@@ -1,0 +1,17 @@
+<button
+  mat-button
+  color="warn"
+  (click)="onLogout()"
+  [disabled]="isLoggingOut"
+  class="logout-button"
+  type="button"
+>
+  <mat-icon *ngIf="!isLoggingOut">logout</mat-icon>
+  <mat-spinner
+    *ngIf="isLoggingOut"
+    diameter="20"
+    strokeWidth="2"
+    class="logout-spinner"
+  ></mat-spinner>
+  <span>{{ buttonText }}</span>
+</button>

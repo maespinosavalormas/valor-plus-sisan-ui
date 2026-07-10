@@ -1,0 +1,413 @@
+<div class="legalization-packages-details-page">
+  <!-- Header Component -->
+  <app-legalization-packages-details-header
+    [package]="package"
+    [showBackButton]="true"
+    [activeView]="currentView"
+    (backClicked)="onBack()"
+    (viewChanged)="onViewChange($event)">
+  </app-legalization-packages-details-header>
+
+  <div class="page-content">
+    <!-- Información Detallada del Paquete de Legalización -->
+    <div class="package-info-content" *ngIf="currentView === 'details'">
+    <!-- Sección 1: Responsable de la Entrega -->
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon">
+          <mat-icon>person</mat-icon>
+        </div>
+        <div class="section-title">
+          <h4>Responsable de la Entrega</h4>
+        </div>
+      </div>
+      <div class="section-content">
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Región:</span>
+            <span class="info-value">{{ package?.regionResponsable || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Municipio:</span>
+            <span class="info-value">{{ package?.municipioResponsable || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Nombres y Apellidos de la Persona que Realiza la Entrega:</span>
+            <span class="info-value">{{ package?.nombresResponsable || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Tipo de Documento de la Persona que Realiza la Entrega:</span>
+            <span class="info-value">{{ package?.tipoDocumentoResponsable || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Número de Documento de la Persona que Realiza la Entrega:</span>
+            <span class="info-value">{{ package?.numeroDocumentoResponsable || 'N/A' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección 2: Tipo de Población (Precargado Focalización PCD, ICBF o Emergencia CSV) -->
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon">
+          <mat-icon>groups</mat-icon>
+        </div>
+        <div class="section-title">
+          <h4>Tipo de Población (Precargado Focalización PCD, ICBF o Emergencia CSV)</h4>
+        </div>
+      </div>
+      <div class="section-content">
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Número de Documento del Participante:</span>
+            <span class="info-value">{{ package?.numeroDocumentoParticipante || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">El Participante es Registro como Participante de ICBF para Recibir Paquete Alimentario:</span>
+            <span class="info-value">{{ package?.participanteICBF || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Seleccione el Tipo de Población Participante:</span>
+            <span class="info-value">{{ package?.tipoPoblacionParticipante || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Tipo de Documento del Participante:</span>
+            <span class="info-value">{{ package?.tipoDocumentoParticipante || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Primer Nombre del Participante:</span>
+            <span class="info-value">{{ package?.primerNombreParticipante || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Segundo Nombre del Participante:</span>
+            <span class="info-value">{{ package?.segundoNombreParticipante || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Primer Apellido del Participante:</span>
+            <span class="info-value">{{ package?.primerApellidoParticipante || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Segundo Apellido del Participante:</span>
+            <span class="info-value">{{ package?.segundoApellidoParticipante || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Género:</span>
+            <span class="info-value">{{ package?.generoParticipante || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Región:</span>
+            <span class="info-value">{{ package?.regionParticipante || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Municipio:</span>
+            <span class="info-value">{{ package?.municipioParticipante || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Teléfono de Contacto del Beneficiario:</span>
+            <span class="info-value">{{ package?.telefonoContactoBeneficiario || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Número Telefónico Actual:</span>
+            <span class="info-value">{{ package?.numeroTelefonoActual || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Dirección o Ubicación:</span>
+            <span class="info-value">{{ package?.direccionUbicacion || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Tipo de Criterio de Ingreso:</span>
+            <span class="info-value">{{ package?.tipoCriterioIngreso || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">El Participante es Registro como Participante de ICBF para Recibir Paquete Alimentario:</span>
+            <span class="info-value">{{ package?.participanteRegistroICBF || 'N/A' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección 3: Tipo de Población (Emergencia Nuevo Ingreso) -->
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon">
+          <mat-icon>person_add</mat-icon>
+        </div>
+        <div class="section-title">
+          <h4>Tipo de Población (Emergencia Nuevo Ingreso)</h4>
+        </div>
+      </div>
+      <div class="section-content">
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Número de Documento del Participante (a):</span>
+            <span class="info-value">{{ package?.numeroDocumentoParticipanteA || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Tipo de Documento del Participante (a):</span>
+            <span class="info-value">{{ package?.tipoDocumentoParticipanteA || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Primer Nombre del Participante (a):</span>
+            <span class="info-value">{{ package?.primerNombreParticipanteA || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Segundo Nombre del Participante (a):</span>
+            <span class="info-value">{{ package?.segundoNombreParticipanteA || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Primer Apellido del Participante (a):</span>
+            <span class="info-value">{{ package?.primerApellidoParticipanteA || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Segundo Apellido del Participante (a):</span>
+            <span class="info-value">{{ package?.segundoApellidoParticipanteA || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Género:</span>
+            <span class="info-value">{{ package?.generoA || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Región:</span>
+            <span class="info-value">{{ package?.regionA || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Municipio:</span>
+            <span class="info-value">{{ package?.municipioA || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Teléfono de Contacto del Beneficiario (a):</span>
+            <span class="info-value">{{ package?.telefonoContactoBeneficiarioA || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Número Telefónico Actual:</span>
+            <span class="info-value">{{ package?.telefonoActualA || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Dirección o Ubicación:</span>
+            <span class="info-value">{{ package?.direccionUbicacionA || 'N/A' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección 4: Entrega del Complemento -->
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon">
+          <mat-icon>local_shipping</mat-icon>
+        </div>
+        <div class="section-title">
+          <h4>Entrega del Complemento</h4>
+        </div>
+      </div>
+      <div class="section-content">
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Fecha de Entrega:</span>
+            <span class="info-value">{{ formatDate(package?.fechaEntrega) }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Período de Entrega:</span>
+            <span class="info-value">{{ package?.periodoEntrega || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Quien Recibe el Complemento:</span>
+            <span class="info-value">{{ package?.quienRecibeComplemento || 'N/A' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección 5: El Cuidador o Cuidadora -->
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon">
+          <mat-icon>supervisor_account</mat-icon>
+        </div>
+        <div class="section-title">
+          <h4>El Cuidador o Cuidadora</h4>
+        </div>
+      </div>
+      <div class="section-content">
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Tipo de Documento del Cuidador (a):</span>
+            <span class="info-value">{{ package?.tipoDocumentoCuidador || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Número de Documento del Cuidador:</span>
+            <span class="info-value">{{ package?.numeroDocumentoCuidador || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Primer Nombre del Cuidador (a):</span>
+            <span class="info-value">{{ package?.primerNombreCuidador || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Segundo Nombre del Cuidador (a):</span>
+            <span class="info-value">{{ package?.segundoNombreCuidador || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Primer Apellido del Cuidador (a):</span>
+            <span class="info-value">{{ package?.primerApellidoCuidador || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Segundo Apellido del Cuidador (a):</span>
+            <span class="info-value">{{ package?.segundoApellidoCuidador || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Número Telefónico de Contacto 1:</span>
+            <span class="info-value">{{ package?.telefonoContacto1Cuidador || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Número Telefónico de Contacto 2:</span>
+            <span class="info-value">{{ package?.telefonoContacto2Cuidador || 'N/A' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección 6: Otro Autorizado -->
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon">
+          <mat-icon>person_add</mat-icon>
+        </div>
+        <div class="section-title">
+          <h4>Otro Autorizado</h4>
+        </div>
+      </div>
+      <div class="section-content">
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Tipo de Documento del Cuidador (a):</span>
+            <span class="info-value">{{ package?.tipoDocumentoAutorizado || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Número de Documento del Cuidador:</span>
+            <span class="info-value">{{ package?.numeroDocumentoAutorizado || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Primer Nombre del Cuidador (a):</span>
+            <span class="info-value">{{ package?.primerNombreAutorizado || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Segundo Nombre del Cuidador (a):</span>
+            <span class="info-value">{{ package?.segundoNombreAutorizado || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Primer Apellido del Cuidador (a):</span>
+            <span class="info-value">{{ package?.primerApellidoAutorizado || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Segundo Apellido del Cuidador (a):</span>
+            <span class="info-value">{{ package?.segundoApellidoAutorizado || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Número Telefónico de Contacto 1:</span>
+            <span class="info-value">{{ package?.telefonoContacto1Autorizado || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Número Telefónico de Contacto 2:</span>
+            <span class="info-value">{{ package?.telefonoContacto2Autorizado || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Adjuntar Autorización por Escrito de la Persona Autorizada:</span>
+            <span class="info-value">{{ package?.autorizacionEscrita || 'No adjuntado' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección 7: Entrega del Complemento -->
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon">
+          <mat-icon>location_on</mat-icon>
+        </div>
+        <div class="section-title">
+          <h4>Entrega del Complemento</h4>
+        </div>
+      </div>
+      <div class="section-content">
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Seleccione el Lugar de Entrega del Paquete Alimentario:</span>
+            <span class="info-value">{{ package?.lugarEntregaPaquete || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Ubicación:</span>
+            <span class="info-value">Latitud: {{ package?.ubicacionLatitud || 'N/A' }}, Longitud: {{ package?.ubicacionLongitud || 'N/A' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección 8: Consentimiento Informado -->
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon">
+          <mat-icon>check_circle</mat-icon>
+        </div>
+        <div class="section-title">
+          <h4>Consentimiento Informado</h4>
+        </div>
+      </div>
+      <div class="section-content">
+        <div class="info-grid">
+          <div class="info-item full-width">
+            <span class="info-label">Consentimiento Informado:</span>
+            <span class="info-value">{{ package?.consentimientoInformado || 'N/A' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección 9: Entrega del Complemento -->
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon">
+          <mat-icon>photo_camera</mat-icon>
+        </div>
+        <div class="section-title">
+          <h4>Entrega del Complemento</h4>
+        </div>
+      </div>
+      <div class="section-content">
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Fotografia Documento de Identidad Participante (Original, la fotografía debe tomarse lo más clara posible):</span>
+            <span class="info-value">{{ package?.fotoDocumentoIdentidadParticipante || 'No adjuntado' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Fotografia Documento de Identidad Cuidador o Persona Autorizada (Original, la fotografía debe tomarse lo más clara posible):</span>
+            <span class="info-value">{{ package?.fotoDocumentoIdentidadCuidador || 'No adjuntado' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Fotografía de Persona que Recibe con el Paquete Alimentario (Foto lo más clara posible mostrando de frente el paquete alimentario y a la persona que recibe):</span>
+            <span class="info-value">{{ package?.fotografiaPersonaPaquete || 'No adjuntado' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Seleccione el Tipo de Registro si Firma la Persona que Recibe el Paquete o si se Toma la Foto de la Planilla Física de la Persona que ya Recibió el Paquete:</span>
+            <span class="info-value">{{ package?.tipoRegistroFirma || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Firma de la Persona que Recibe el Paquete Alimentario:</span>
+            <span class="info-value">{{ package?.firmaPersonaRecibe || 'No adjuntado' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Fotografía de la Planilla que Soporta las Legalizaciones en Físico (Foto lo más clara posible mostrando la planilla con la firma de la persona que recibió el paquete):</span>
+            <span class="info-value">{{ package?.fotografiaPlanilla || 'No adjuntado' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Legalization Packages Traceability Component -->
+  <app-legalization-packages-traceability 
+    *ngIf="currentView === 'traceability'"
+    [package]="package"
+    (back)="onBack()">
+  </app-legalization-packages-traceability>
+</div>

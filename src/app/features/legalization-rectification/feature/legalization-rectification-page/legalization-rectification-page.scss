@@ -1,0 +1,72 @@
+.lifestyles-container {
+  padding: 14px;
+  min-width: 100vh;
+  min-height: 85vh !important;
+  max-height: 85vh !important;
+  margin: 0 auto;
+  background-color: var(--white);
+  border-radius: 8px;
+}
+
+.lifestyles-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--gray-secondary);
+  margin-top: -6px;
+
+  .header-title {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    align-content: center;
+
+    mat-icon {
+      color: var(--blue-primary) !important;
+      font-size: 17px;
+      width: 18px;
+      height: 18px;
+    }
+
+    span {
+      font-size: 11px !important;
+      font-weight: 500;
+      color: var(--black);
+    }
+  }
+
+  .btn-new-lifestyle {
+    border-radius: 10px;
+    height: 32px;
+    padding: 0 12px;
+    font-weight: 500;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    background-color: var(--blue-primary) !important;
+    color: var(--white);
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+
+    mat-icon {
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      vertical-align: middle;
+    }
+  }
+}

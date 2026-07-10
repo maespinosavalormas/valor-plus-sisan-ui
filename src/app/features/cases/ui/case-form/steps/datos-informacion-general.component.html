@@ -1,0 +1,108 @@
+<div class="form-header">
+  <h2 mat-dialog-title class="form-title">{{ data.isEdit ? 'Editar Información General' : 'Información General' }}</h2>
+  <button mat-icon-button class="close-button" (click)="cancelForm()">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+<form [formGroup]="form" mat-dialog-content>
+  <div class="form-grid">
+  <div class="field">
+    <label class="field-label">Código UPGD<span class="req">*</span></label>
+    <input
+      class="control"
+      type="text"
+      formControlName="upgdCode"
+      placeholder="Ingrese código UPGD"
+      maxlength="12"
+      autocomplete="off"
+    />
+
+    <div
+      class="field-error"
+      *ngIf="form.get('upgdCode')?.touched && form.get('upgdCode')?.hasError('required')"
+    >
+      Campo obligatorio
+    </div>
+  </div>
+
+  <div class="field">
+    <label class="field-label">Nombre UPGD<span class="req">*</span></label>
+    <input
+      class="control"
+      type="text"
+      formControlName="upgdName"
+      placeholder="Ingrese nombre UPGD"
+      maxlength="200"
+      autocomplete="off"
+    />
+    <div
+      class="field-error"
+      *ngIf="form.get('upgdName')?.touched && form.get('upgdName')?.hasError('required')"
+    >
+      Campo obligatorio
+    </div>
+  </div>
+
+  <div class="field">
+    <label class="field-label">Nombre Evento<span class="req">*</span></label>
+    <mat-select
+      class="filter-select"
+      panelClass="evento-select-panel"
+      [formControl]="eventCtrl"
+      placeholder="Seleccione evento"
+      disableOptionCentering>
+      <mat-option>
+        <ngx-mat-select-search
+          [formControl]="eventFilterCtrl"
+          placeholderLabel="Buscar evento..."
+          noEntriesFoundLabel="No encontrado">
+        </ngx-mat-select-search>
+      </mat-option>
+      <mat-option *ngFor="let event of filteredEvents" [value]="event">
+        {{ event.name }}
+      </mat-option>
+    </mat-select>
+
+    <div
+      class="field-error"
+      *ngIf="form.get('eventCode')?.touched && form.get('eventCode')?.hasError('required')"
+    >
+      Campo obligatorio
+    </div>
+  </div>
+
+  <div class="field">
+    <label class="field-label">Fecha de Notificación<span class="req">*</span></label>
+    <input
+      class="control"
+      type="date"
+      formControlName="notificationDate"
+      autocomplete="off"
+    />
+    <div
+      class="field-error"
+      *ngIf="form.get('notificationDate')?.touched && form.get('notificationDate')?.hasError('required')"
+    >
+      Campo obligatorio
+    </div>
+  </div>
+  </div>
+</form>
+
+<div class="step-counter">
+  {{ currentStep }}/{{ totalSteps }}
+</div>
+
+<mat-dialog-actions align="end" class="dialog-actions">
+  <button mat-button class="btn-cancel" type="button" (click)="goBack()">Cancelar</button>
+  <button
+    mat-flat-button
+    class="btn-guardar"
+    type="button"
+    (click)="saveForm()"
+    [disabled]="form.invalid"
+  >
+    {{ isLastStep ? 'Guardar' : 'Siguiente' }}
+  </button>
+</mat-dialog-actions>

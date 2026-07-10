@@ -1,0 +1,204 @@
+<div class="characterization-up-details-page">
+  <app-characterization-up-details-header
+    [characterizationUp]="characterizationUp"
+    [showBackButton]="true"
+    [activeView]="currentView"
+    (backClicked)="onBack()"
+    (viewChanged)="onViewChange($event)"
+    (editClicked)="onEdit()">
+  </app-characterization-up-details-header>
+
+  <div class="characterization-up-info-content" *ngIf="currentView === 'details'">
+    <!-- SECCION 1: Información General -->
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon"><mat-icon>info</mat-icon></div>
+        <div class="section-title"><h4>Información General</h4></div>
+      </div>
+      <div class="section-content">
+        <div class="info-grid">
+          <div class="info-item"><span class="info-label">Código de la unidad productiva (codigo registrado en la focalización):</span><span class="info-value">{{ characterizationUp?.codigoUnidadProductiva || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Tipo de unidad productiva sobre la cual va a Caracterizar:</span><span class="info-value">{{ characterizationUp?.tipoUnidadProductiva || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Nombre del Representantes de la Unidad productiva y el codigo de la unidad productiva:</span><span class="info-value">{{ characterizationUp?.nombreRepresentanteUnidad || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Convenio:</span><span class="info-value">{{ characterizationUp?.convenio || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Nombres y apellidos del funcionario que realiza la visita:</span><span class="info-value">{{ characterizationUp?.funcionarioVisita || 'N/A' }}</span></div>
+          <div class="info-item full-width"><span class="info-label">Ubicación Georeferenciación unidad productiva:</span><span class="info-value">{{ formatCoordinates() }}</span></div>
+          <div class="info-item"><span class="info-label">Región:</span><span class="info-value">{{ characterizationUp?.region || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Municipio:</span><span class="info-value">{{ characterizationUp?.municipio || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Zona:</span><span class="info-value">{{ characterizationUp?.zona || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Tipo Barrio o Vereda:</span><span class="info-value">{{ characterizationUp?.tipoBarrioVereda || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Diligencie el nombre del barrio:</span><span class="info-value">{{ characterizationUp?.nombreBarrio || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Seleccione la vereda:</span><span class="info-value">{{ characterizationUp?.vereda || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Dirección o ubicación:</span><span class="info-value">{{ characterizationUp?.direccionUbicacion || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Teléfono de contacto:</span><span class="info-value">{{ characterizationUp?.telefonoContacto || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Tipo de encuesta:</span><span class="info-value">{{ characterizationUp?.tipoEncuesta || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">¿Es víctima del conflicto armado?:</span><span class="info-value">{{ characterizationUp?.victimaConflicto || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Número de Registro Único de Victimas - RUV:</span><span class="info-value">{{ characterizationUp?.numeroRUV || 'N/A' }}</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECCION 2: Representante UP -->
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon"><mat-icon>person</mat-icon></div>
+        <div class="section-title"><h4>Representante UP</h4></div>
+      </div>
+      <div class="section-content">
+        <div class="info-grid">
+          <div class="info-item"><span class="info-label">Tipo de documento del responsable (a):</span><span class="info-value">{{ characterizationUp?.tipoDocumentoResponsable || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Número de documento representante o responsable de la unidad productiva:</span><span class="info-value">{{ characterizationUp?.numeroDocumentoResponsable || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Primer nombre del responsable (a):</span><span class="info-value">{{ characterizationUp?.primerNombreResponsable || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Segundo nombre del responsable (a):</span><span class="info-value">{{ characterizationUp?.segundoNombreResponsable || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Primer apellido del responsable (a):</span><span class="info-value">{{ characterizationUp?.primerApellidoResponsable || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Segundo apellido del responsable (a):</span><span class="info-value">{{ characterizationUp?.segundoApellidoResponsable || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Fecha de nacimiento:</span><span class="info-value">{{ characterizationUp?.fechaNacimientoResponsable || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Edad en años:</span><span class="info-value">{{ characterizationUp?.edadResponsable || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Sexo:</span><span class="info-value">{{ characterizationUp?.sexoResponsable || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Estado civil:</span><span class="info-value">{{ characterizationUp?.estadoCivilResponsable || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Grupo Etnico:</span><span class="info-value">{{ characterizationUp?.grupoEtnicoResponsable || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Grupos poblacionales vulnerables:</span><span class="info-value">{{ characterizationUp?.gruposVulnerablesResponsable || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Ocupación:</span><span class="info-value">{{ characterizationUp?.ocupacionResponsable || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Cual?:</span><span class="info-value">{{ characterizationUp?.cualOcupacionResponsable || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Actividad laboral:</span><span class="info-value">{{ characterizationUp?.actividadLaboralResponsable || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Nombre IE ó CER:</span><span class="info-value">{{ characterizationUp?.nombreIEResponsable || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Codigo consecutivo DANE sede IE o CER:</span><span class="info-value">{{ characterizationUp?.codigoDaneResponsable || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Area disponible en m2 para implementación de la unidad productiva:</span><span class="info-value">{{ characterizationUp?.areaDisponibleResponsable || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Numero de miembros participantes de la asociación:</span><span class="info-value">{{ characterizationUp?.numeroMiembrosAsociacion || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Número de estudiantes participantes:</span><span class="info-value">{{ characterizationUp?.numeroEstudiantesParticipantes || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Número de estudiantes participantes de primaria:</span><span class="info-value">{{ characterizationUp?.numeroEstudiantesPrimaria || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Número de estudiantes participantes de secundaria:</span><span class="info-value">{{ characterizationUp?.numeroEstudiantesSecundaria || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">La Institución Educativa tiene experiencia en la producción de alimentos frescos:</span><span class="info-value">{{ characterizationUp?.experienciaAlimentosFrescos || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Nombre de la asociación:</span><span class="info-value">{{ characterizationUp?.nombreAsociacion || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Código o NIT de la asociación:</span><span class="info-value">{{ characterizationUp?.codigoNitAsociacion || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Número telefónico de contacto del representante legal de la asociación comunitaria:</span><span class="info-value">{{ characterizationUp?.telefonoContactoRepresentante || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Correo electronico de contacto del representante legal de la asociación comunitaria:</span><span class="info-value">{{ characterizationUp?.correoContactoRepresentante || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Area disponible en m2 para implementación de la unidad productiva:</span><span class="info-value">{{ characterizationUp?.areaDisponibleAsociacion || 'N/A' }}</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECCION 3: CARAC GRU FAM -->
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon"><mat-icon>family_restroom</mat-icon></div>
+        <div class="section-title"><h4>Datos Integrantes de la Familia</h4></div>
+      </div>
+      <div class="section-content">
+        <div class="info-grid" *ngIf="characterizationUp?.integrantesGrupoFamiliar?.length; else noIntegrantes">
+          <div class="info-item full-width" *ngFor="let integrante of characterizationUp?.integrantesGrupoFamiliar; let i = index">
+            <div class="repeat-block">
+              <div class="repeat-title">Integrante {{ i + 1 }}</div>
+              <div class="info-grid">
+                <div class="info-item"><span class="info-label">Parentesco familiar:</span><span class="info-value">{{ integrante?.parentescoFamiliar || 'N/A' }}</span></div>
+                <div class="info-item"><span class="info-label">Tipo documento identidad:</span><span class="info-value">{{ integrante?.tipoDocumentoIdentidad || 'N/A' }}</span></div>
+                <div class="info-item"><span class="info-label">Número documento identidad:</span><span class="info-value">{{ integrante?.numeroDocumentoIdentidad || 'N/A' }}</span></div>
+                <div class="info-item"><span class="info-label">Primer nombre:</span><span class="info-value">{{ integrante?.primerNombre || 'N/A' }}</span></div>
+                <div class="info-item"><span class="info-label">Segundo nombre:</span><span class="info-value">{{ integrante?.segundoNombre || 'N/A' }}</span></div>
+                <div class="info-item"><span class="info-label">Primer apellido:</span><span class="info-value">{{ integrante?.primerApellido || 'N/A' }}</span></div>
+                <div class="info-item"><span class="info-label">Segundo apellido:</span><span class="info-value">{{ integrante?.segundoApellido || 'N/A' }}</span></div>
+                <div class="info-item"><span class="info-label">Fecha de nacimiento:</span><span class="info-value">{{ integrante?.fechaNacimiento || 'N/A' }}</span></div>
+                <div class="info-item"><span class="info-label">Edad en años:</span><span class="info-value">{{ integrante?.edad || 'N/A' }}</span></div>
+                <div class="info-item"><span class="info-label">Sexo:</span><span class="info-value">{{ integrante?.sexo || 'N/A' }}</span></div>
+                <div class="info-item"><span class="info-label">Participa en un programa de atención a la primera infancia:</span><span class="info-value">{{ integrante?.participaProgramaPrimeraInfancia || 'N/A' }}</span></div>
+                <div class="info-item"><span class="info-label">¿Cual programa?:</span><span class="info-value">{{ integrante?.cualProgramaPrimeraInfancia || 'N/A' }}</span></div>
+                <div class="info-item"><span class="info-label">Cual otro programa?:</span><span class="info-value">{{ integrante?.cualOtroPrograma || 'N/A' }}</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <ng-template #noIntegrantes>
+          <div class="info-grid">
+            <div class="info-item full-width"><span class="info-label">Integrantes:</span><span class="info-value">N/A</span></div>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+
+    <!-- SECCION 4: CARAC GRUP UPC -->
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon"><mat-icon>groups</mat-icon></div>
+        <div class="section-title"><h4>Datos Integrantes Unidad Productiva Comunitaria</h4></div>
+      </div>
+      <div class="section-content">
+        <div class="info-grid">
+          <div class="info-item"><span class="info-label">Numero de miembros participantes de la asociación:</span><span class="info-value">{{ characterizationUp?.numeroMiembrosParticipantesAsociacion || 'N/A' }}</span></div>
+        </div>
+
+        <div class="info-grid" *ngIf="characterizationUp?.participantesUnidadProductiva?.length; else noParticipantes">
+          <div class="info-item full-width" *ngFor="let participante of characterizationUp?.participantesUnidadProductiva; let i = index">
+            <div class="repeat-block">
+              <div class="repeat-title">Participante {{ i + 1 }}</div>
+              <div class="info-grid">
+                <div class="info-item"><span class="info-label">Tipo de documento del Participante de la Unidad productiva comunitaria:</span><span class="info-value">{{ participante?.tipoDocumentoParticipante || 'N/A' }}</span></div>
+                <div class="info-item"><span class="info-label">Número de documento del Participante de la Unidad productiva comunitaria:</span><span class="info-value">{{ participante?.numeroDocumentoParticipante || 'N/A' }}</span></div>
+                <div class="info-item"><span class="info-label">Primer nombre del Participante de la Unidad productiva comunitaria:</span><span class="info-value">{{ participante?.primerNombreParticipante || 'N/A' }}</span></div>
+                <div class="info-item"><span class="info-label">Segundo nombre del Participante de la Unidad productiva comunitaria:</span><span class="info-value">{{ participante?.segundoNombreParticipante || 'N/A' }}</span></div>
+                <div class="info-item"><span class="info-label">Primer apellido del Participante de la Unidad productiva comunitaria:</span><span class="info-value">{{ participante?.primerApellidoParticipante || 'N/A' }}</span></div>
+                <div class="info-item"><span class="info-label">Segundo apellido del Participante de la Unidad productiva comunitaria:</span><span class="info-value">{{ participante?.segundoApellidoParticipante || 'N/A' }}</span></div>
+                <div class="info-item"><span class="info-label">Fecha de nacimiento:</span><span class="info-value">{{ participante?.fechaNacimientoParticipante || 'N/A' }}</span></div>
+                <div class="info-item"><span class="info-label">Edad en años:</span><span class="info-value">{{ participante?.edadParticipante || 'N/A' }}</span></div>
+                <div class="info-item"><span class="info-label">Sexo:</span><span class="info-value">{{ participante?.sexoParticipante || 'N/A' }}</span></div>
+                <div class="info-item"><span class="info-label">Número telefónico de contacto del Participante de la Unidad productiva comunitaria:</span><span class="info-value">{{ participante?.telefonoContactoParticipante || 'N/A' }}</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <ng-template #noParticipantes>
+          <div class="info-grid">
+            <div class="info-item full-width"><span class="info-label">Participantes:</span><span class="info-value">N/A</span></div>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+
+    <!-- SECCION 5: Residuos -->
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon"><mat-icon>recycling</mat-icon></div>
+        <div class="section-title"><h4>Residuos</h4></div>
+      </div>
+      <div class="section-content">
+        <div class="info-grid">
+          <div class="info-item"><span class="info-label">La asociación tiene experiencia en la producción de alimentos frescos:</span><span class="info-value">{{ characterizationUp?.experienciaProduccionAlimentos || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">La asociación utiliza en la siembra semillas nativas:</span><span class="info-value">{{ characterizationUp?.utilizaSemillasNativas || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">La asociación tiene otros procesos de producción agricola?:</span><span class="info-value">{{ characterizationUp?.otrosProcesosProduccionAgricola || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Cuales otros tipos de producción:</span><span class="info-value">{{ characterizationUp?.cualesOtrosProcesosProduccion || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Se realiza comercialización de estos productos:</span><span class="info-value">{{ characterizationUp?.realizaComercializacion || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Donde realiza su proceso de comercialización:</span><span class="info-value">{{ characterizationUp?.dondeComercializacion || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">La asociación se encuentra registrada en el COMPAN:</span><span class="info-value">{{ characterizationUp?.registradaCompan || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Ha participado en los procesos del COMPAN:</span><span class="info-value">{{ characterizationUp?.participadoCompan || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">¿Suelen separar o clasificar los residuos sólidos generados en el hogar? (separa los biodegradables -residuos de alimento, material vegetal – de los no biodegradables) Separación en la fuente:</span><span class="info-value">{{ characterizationUp?.separacionResiduosHogar || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">¿Suelen separar o clasificar los residuos sólidos generados en el plantel educativo? (separa los biodegradables -residuos de alimento, material vegetal – de los no biodegradables) Separación en la fuente:</span><span class="info-value">{{ characterizationUp?.separacionResiduosEducativo || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">¿Qué estrategias utilizan en el hogar para el aprovechamiento de los residuos sólidos no biodegradables?:</span><span class="info-value">{{ characterizationUp?.estrategiasAprovechamientoResiduos || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">El predio cuenta con compostera:</span><span class="info-value">{{ characterizationUp?.cuentaCompostera || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Cual será el destino de la producción de la Institución Educativa:</span><span class="info-value">{{ characterizationUp?.destinoProduccionInstitucion || 'N/A' }}</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECCION 6: Consentimiento informado -->
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon"><mat-icon>assignment</mat-icon></div>
+        <div class="section-title"><h4>Consentimiento informado</h4></div>
+      </div>
+      <div class="section-content">
+        <div class="info-grid">
+          <div class="info-item"><span class="info-label">Fecha y hora de finalización de la encuesta:</span><span class="info-value">{{ characterizationUp?.fechaHoraFinalizacion || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Año de realización de la encuesta:</span><span class="info-value">{{ characterizationUp?.anoRealizacionEncuesta || 'N/A' }}</span></div>
+          <div class="info-item full-width"><span class="info-label">1. Yo, actuando en representación y con la autorización expresa de todos los miembros de mi hogar, incluyendo a menores y mayores de edad, autorizo a la GOBERNACIÓN DE ANTIOQUIA para que en cumplimiento a lo determinado en la Ley 1581 de 2012 (uso de los datos personales), en el marco de sus procesos de atención, actúe como responsable del tratamiento de los datos personales de los cuales somos titulares, realice la recolección, uso y tratamiento de nuestros datos, ya sea de forma conjunta o separada, conforme a la política de tratamiento de datos personales de la Gobernación de Antioquia, disponible en https://sedeelectronica.antioquia.gov.co/publicaciones/203/politica-para-el-tratamiento-de-datos-personales/:</span><span class="info-value">{{ characterizationUp?.consentimientoDatosPersonales || 'N/A' }}</span></div>
+          <div class="info-item full-width"><span class="info-label">2. Asimismo, autorizo a la administración departamental para captar, tomar, almacenar, editar, divulgar y publicar imágenes, audios o datos de nuestra familia, o de alguno de sus integrantes, (incluyendo menores y mayores de edad), con fines estadísticos, académicos o para la promoción de los derechos de los niños, niñas, adolescentes y familias. Esto se realizará conforme a la política de tratamiento de datos personales de la Gobernación de Antioquia, y dando cumplimiento a lo dispuesto en la Ley 1581 de 2012.:</span><span class="info-value">{{ characterizationUp?.consentimientoImagenesAudios || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Firma del representante de la Unidad productiva:</span><span class="info-value">{{ formatFileName(characterizationUp?.firmaRepresentante) }}</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <app-characterization-up-traceability
+    *ngIf="currentView === 'traceability'"
+    [characterizationUp]="characterizationUp"
+    (back)="onBack()">
+  </app-characterization-up-traceability>
+</div>

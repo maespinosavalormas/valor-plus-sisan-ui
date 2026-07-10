@@ -1,0 +1,137 @@
+.dialog-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 32px;
+  text-align: center;
+  min-width: 400px;
+  max-width: 500px;
+  min-height: 300px;
+}
+
+.icon-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 24px;
+
+  .dialog-icon {
+    font-size: 140px;
+    width: 140px;
+    height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &.success .dialog-icon {
+    color: var(--black);
+  }
+
+  &.warning .dialog-icon {
+    color: var(--black);
+  }
+
+  &.error .dialog-icon {
+    color: var(--black);
+  }
+}
+
+.dialog-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--strong-blue-primary);
+  margin: 0 0 24px 0;
+  padding: 0;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.dialog-message {
+  margin: 0 0 32px 0;
+  padding: 0;
+  max-height: none;
+  overflow: visible;
+
+  p {
+    font-size: 0.8rem;
+    color: var(--strong-blue-primary);
+    margin: 0;
+    line-height: 1.5;
+    text-align: center;
+  }
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+  min-height: auto;
+  width: 100%;
+  margin-top: 20px !important;
+
+  button {
+    flex: 1;
+    max-width: 200px;
+    height: 40px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    text-transform: none;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+  }
+
+  .btn-cancel {
+    border: 1.5px solid var(--strong-blue-secondary) !important;
+    color: var(--strong-blue-secondary) !important;
+    background-color: var(--white) !important;
+
+    &:hover {
+      background-color: var(--strong-blue-secondary) !important;
+      color: var(--white) !important;
+      border-color: var(--strong-blue-secondary) !important;
+    }
+  }
+
+  .btn-confirm {
+    background-color: var(--blue-primary) !important;
+    color: var(--white) !important;
+    border: 1.5px solid var(--blue-primary) !important;
+  }
+}
+
+// Sobrescribir estilos de Material Dialog
+::ng-deep {
+  .mat-mdc-dialog-container {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .mat-mdc-dialog-container .mdc-dialog__surface {
+    border-radius: 16px !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .mat-mdc-dialog-title {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .mat-mdc-dialog-content {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .mat-mdc-dialog-actions {
+    padding: 0 !important;
+    margin: 0 !important;
+    min-height: auto !important;
+  }
+}

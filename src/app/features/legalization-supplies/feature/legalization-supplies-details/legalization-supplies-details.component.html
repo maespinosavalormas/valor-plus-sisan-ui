@@ -1,0 +1,305 @@
+<div class="pcd-emergencies-details-page">
+  <app-legalization-supplies-details-header
+    [legalization]="legalization"
+    [showBackButton]="true"
+    [activeView]="currentView"
+    (backClicked)="onBack()"
+    (viewChanged)="onViewChange($event)"
+    (editClicked)="onEdit()">
+  </app-legalization-supplies-details-header>
+
+  <div class="emergency-info-content" *ngIf="currentView === 'details'">
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon">
+          <mat-icon>info</mat-icon>
+        </div>
+        <div class="section-title">
+          <h4>Información General</h4>
+        </div>
+      </div>
+      <div class="section-content">
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Código de la unidad productiva (código registrado en la focalización):</span>
+            <span class="info-value">{{ getCodigoUP() }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Nombre completo del beneficiario:</span>
+            <span class="info-value">{{ legalization?.nombreBeneficiario || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Tipo de unidad productiva:</span>
+            <span class="info-value">{{ legalization?.tipoUnidadProductiva || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">No se encuentra caracterizado:</span>
+            <span class="info-value">{{ legalization?.noCaracterizado || 'N/A' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon">
+          <mat-icon>person</mat-icon>
+        </div>
+        <div class="section-title">
+          <h4>Datos Representante Unidad Productiva</h4>
+        </div>
+      </div>
+      <div class="section-content">
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Nombre del responsable:</span>
+            <span class="info-value">{{ legalization?.nombreResponsable || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Tipo de documento del responsable:</span>
+            <span class="info-value">{{ legalization?.tipoDocumentoResponsable || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Número de documento representante:</span>
+            <span class="info-value">{{ legalization?.numeroDocumentoResponsable || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Teléfono de contacto:</span>
+            <span class="info-value">{{ legalization?.telefonoContacto || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Convenio:</span>
+            <span class="info-value">{{ legalization?.convenio || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Región:</span>
+            <span class="info-value">{{ legalization?.region || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Municipio:</span>
+            <span class="info-value">{{ legalization?.municipio || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Zona:</span>
+            <span class="info-value">{{ legalization?.zona || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Tipo Barrio o Vereda:</span>
+            <span class="info-value">{{ legalization?.tipoBarrioVereda || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Nombre del barrio:</span>
+            <span class="info-value">{{ legalization?.nombreBarrio || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Vereda:</span>
+            <span class="info-value">{{ legalization?.vereda || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Dirección o ubicación:</span>
+            <span class="info-value">{{ legalization?.direccionUbicacion || 'N/A' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon">
+          <mat-icon>badge</mat-icon>
+        </div>
+        <div class="section-title">
+          <h4>Información del funcionario</h4>
+        </div>
+      </div>
+      <div class="section-content">
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Número de documento del funcionario:</span>
+            <span class="info-value">{{ legalization?.numeroDocumentoFuncionario || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Nombres y apellidos del funcionario que realiza la entrega:</span>
+            <span class="info-value">{{ legalization?.nombresApellidosFuncionario || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Teléfono del funcionario:</span>
+            <span class="info-value">{{ legalization?.telefonoFuncionario || 'N/A' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon">
+          <mat-icon>local_shipping</mat-icon>
+        </div>
+        <div class="section-title">
+          <h4>Información de la entrega</h4>
+        </div>
+      </div>
+      <div class="section-content">
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Tipo de sistema bajo condiciones protegidas:</span>
+            <span class="info-value">{{ legalization?.tipoSistemaCondicionesProtegidas || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Fecha de la entrega:</span>
+            <span class="info-value">{{ legalization?.fechaEntrega || 'N/A' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon">
+          <mat-icon>inventory</mat-icon>
+        </div>
+        <div class="section-title">
+          <h4>Detalles de la entrega</h4>
+        </div>
+      </div>
+      <div class="section-content">
+        <div class="info-grid">
+          <div class="info-item full-width" *ngIf="getEntregasRealizadas().length === 0">
+            <span class="info-label">Entregas realizadas:</span>
+            <span class="info-value">N/A</span>
+          </div>
+        </div>
+
+        <div class="info-section" *ngFor="let entrega of getEntregasRealizadas(); let i = index">
+          <div class="section-header">
+            <div class="section-icon">
+              <mat-icon>local_shipping</mat-icon>
+            </div>
+            <div class="section-title">
+              <h4>Entrega {{ i + 1 }}</h4>
+            </div>
+          </div>
+          <div class="section-content">
+            <div class="info-grid">
+              <div class="info-item">
+                <span class="info-label">Seleccione el tipo de entrega:</span>
+                <span class="info-value">{{ entrega?.tipoEntrega || 'N/A' }}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Tipo de entrega fijo:</span>
+                <span class="info-value">{{ entrega?.tipoEntregaFijo || 'N/A' }}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Entrega Seleccionada:</span>
+                <span class="info-value">{{ entrega?.entregaSeleccionada || 'N/A' }}</span>
+              </div>
+              <div class="info-item full-width">
+                <span class="info-label">
+                  Una vez seleccionado el tipo de entrega, no lo modifique. Si lo cambió por error, debe regresarlo exactamente al valor seleccionado inicialmente. Si fue seleccionado por error desde el inicio, elimine el registro y créelo nuevamente. Si requiere un tipo de entrega adicional, agréguelo en la parte inferior.
+                </span>
+              </div>
+            </div>
+
+            <div class="info-section" *ngFor="let articulo of getDetalleArticulos(i); let j = index">
+              <div class="section-header">
+                <div class="section-icon">
+                  <mat-icon>inventory_2</mat-icon>
+                </div>
+                <div class="section-title">
+                  <h4>Artículo {{ j + 1 }}</h4>
+                </div>
+              </div>
+              <div class="section-content">
+                <div class="info-grid">
+                  <div class="info-item">
+                    <span class="info-label">Seleccione el artículo:</span>
+                    <span class="info-value">{{ articulo?.articuloSeleccionado || 'N/A' }}</span>
+                  </div>
+                  <div class="info-item">
+                    <span class="info-label">Medidas:</span>
+                    <span class="info-value">{{ articulo?.medidas || 'N/A' }}</span>
+                  </div>
+                  <div class="info-item">
+                    <span class="info-label">Unidad de medida:</span>
+                    <span class="info-value">{{ articulo?.unidadMedida || 'N/A' }}</span>
+                  </div>
+                  <div class="info-item">
+                    <span class="info-label">Cantidad Contratada:</span>
+                    <span class="info-value">{{ articulo?.cantidadContratada ?? 'N/A' }}</span>
+                  </div>
+                  <div class="info-item">
+                    <span class="info-label">Cantidad Entregada:</span>
+                    <span class="info-value">{{ articulo?.cantidadEntregada ?? 'N/A' }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="info-grid" *ngIf="getDetalleArticulos(i).length === 0">
+              <div class="info-item full-width">
+                <span class="info-label">Detalle artículos:</span>
+                <span class="info-value">N/A</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon">
+          <mat-icon>attach_file</mat-icon>
+        </div>
+        <div class="section-title">
+          <h4>Soporte</h4>
+        </div>
+      </div>
+      <div class="section-content">
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Evidencia Fotográfica:</span>
+            <span class="info-value">{{ legalization?.evidenciaFotografica || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">¿Se utiliza acta física para la realización de la entrega?:</span>
+            <span class="info-value">{{ legalization?.utilizaActaFisica || 'N/A' }}</span>
+          </div>
+          <div class="info-item" *ngIf="legalization?.utilizaActaFisica === 'si'">
+            <span class="info-label">Acta física escaneada:</span>
+            <span class="info-value">{{ legalization?.actaFisicaEscaneada || 'N/A' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon">
+          <mat-icon>draw</mat-icon>
+        </div>
+        <div class="section-title">
+          <h4>Firmas</h4>
+        </div>
+      </div>
+      <div class="section-content">
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Firma del representante de la Unidad productiva:</span>
+            <span class="info-value">{{ legalization?.firmaRepresentante || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Firma del Funcionario Municipio:</span>
+            <span class="info-value">{{ legalization?.firmaFuncionarioMunicipio || 'N/A' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <app-legalization-supplies-traceability
+    *ngIf="currentView === 'traceability'"
+    [legalization]="legalization"
+    (back)="onBack()">
+  </app-legalization-supplies-traceability>
+</div>

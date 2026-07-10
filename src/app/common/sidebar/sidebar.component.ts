@@ -1,0 +1,467 @@
+import { Component, ViewChild, OnInit, ChangeDetectorRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet, RouterModule, NavigationEnd } from '@angular/router';
+import { MatListModule } from '@angular/material/list';
+import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
+import { MatIconModule } from '@angular/material/icon';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
+import { filter } from 'rxjs/operators';
+import { MatMenuModule } from '@angular/material/menu';
+import { SidebarService } from '../services/sidebar.service';
+import { AuthService, User as AuthUser } from '../../core/services/auth.service';
+import { UsersService } from '../../features/users/data-access/services/users-service';
+import { User as CompleteUser } from '../models/user.model';
+import { LogoutButtonComponent } from '../../shared/components/logout-button/logout-button.component';
+
+interface Notification {
+  id: number;
+  type: 'case_assignment' | 'case_update' | 'upgrade_request' | 'file_upload' | 'mention' | 'comment';
+  initials?: string;
+  icon?: string;
+  avatarColor: string;
+  message: string;
+  time: string;
+  category: string;
+  read: boolean;
+  filter: 'all' | 'following' | 'archive';
+  attachment?: {
+    name: string;
+    size: string;
+  };
+  preview?: string;
+  actions?: boolean;
+}
+
+@Component({
+  selector: 'app-sidebar',
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule,
+    MatIconModule,
+    MatSidenavModule,
+    MatListModule,
+    MatToolbarModule,
+    MatButtonModule,
+    MatMenuModule,
+    LogoutButtonComponent
+  ],
+  templateUrl: './sidebar.component.html',
+  styleUrl: './sidebar.component.scss',
+})
+export class SidebarComponent implements OnInit {
+  @ViewChild(MatSidenav, { static: true })
+  sidenav!: MatSidenav;
+  
+  pageTitle: string = 'Dashboard';
+  userInitials: string = 'U';
+  userName: string = 'Usuario';
+  userEmail: string = '';
+  lifestylesExpanded: boolean = false;
+  lifestylesPanelTop: number = 200;
+  monitoringExpanded: boolean = false;
+  monitoringPanelTop: number = 200;
+  productiveUnitsExpanded: boolean = false;
+  productiveUnitsPanelTop: number = 200;
+
+  
+  activeFilter: 'all' | 'following' | 'archive' = 'all';
+  
+  notifications: Notification[] = [
+    {
+      id: 1,
+      type: 'case_assignment',
+      initials: 'MD',
+      avatarColor: '#10b981',
+      message: '<strong>María Díaz</strong> te asignó el caso <strong>Desnutrición Aguda - Paciente #2453</strong>',
+      time: 'Hace 2h',
+      category: 'Caso Crítico',
+      read: false,
+      filter: 'all'
+    },
+    {
+      id: 2,
+      type: 'mention',
+      initials: 'JR',
+      avatarColor: '#f59e0b',
+      message: '<strong>Juan Rodríguez</strong> te mencionó en <strong>Seguimiento Nutricional</strong>',
+      time: 'Hace 4h',
+      category: 'Lista de Seguimiento',
+      read: false,
+      filter: 'following'
+    },
+    {
+      id: 3,
+      type: 'upgrade_request',
+      initials: 'SM',
+      avatarColor: '#ef4444',
+      message: '<strong>Sandra Martínez</strong> solicita actualizar el estado del caso',
+      time: 'Hace 12h',
+      category: 'Solicitud Urgente',
+      read: false,
+      filter: 'all',
+      actions: true
+    },
+    {
+      id: 4,
+      type: 'file_upload',
+      initials: 'AS',
+      avatarColor: '#6366f1',
+      message: '<strong>Alberto Sánchez</strong> subió un archivo',
+      time: 'Hace 1d',
+      category: 'Resultados de Laboratorio',
+      read: true,
+      filter: 'all',
+      attachment: {
+        name: 'resultados_lab_pac2453.pdf',
+        size: '2.3mb'
+      }
+    },
+    {
+      id: 5,
+      type: 'case_update',
+      icon: 'celebration',
+      avatarColor: '#8b5cf6',
+      message: '<strong>Caso Actualizado:</strong> Paciente #2451 muestra mejora significativa',
+      time: 'Hace 4h',
+      category: 'Actualización Positiva',
+      read: false,
+      filter: 'following',
+      preview: 'El paciente ha ganado 500g en la última semana. Los niveles de hemoglobina han mejorado.'
+    },
+    {
+      id: 6,
+      type: 'comment',
+      initials: 'RT',
+      avatarColor: '#14b8a6',
+      message: '<strong>Rosa Torres</strong> comentó en <strong>Informe Nutricional Mensual</strong>',
+      time: 'Hace 4h',
+      category: 'Comentario',
+      read: false,
+      filter: 'following',
+      preview: 'Necesitamos añadir los datos de micronutrientes al informe principal antes del viernes.'
+    },
+    {
+      id: 7,
+      type: 'upgrade_request',
+      initials: 'DM',
+      avatarColor: '#ec4899',
+      message: '<strong>Diego Mendoza</strong> solicita revisión de protocolo',
+      time: 'Hace 12h',
+      category: 'Revisión Médica',
+      read: false,
+      filter: 'all',
+      actions: true
+    },
+    {
+      id: 8,
+      type: 'case_assignment',
+      icon: 'local_hospital',
+      avatarColor: '#f43f5e',
+      message: '<strong>Nuevo Caso Urgente:</strong> Desnutrición severa detectada en comunidad rural',
+      time: 'Hace 30min',
+      category: 'Caso Crítico',
+      read: false,
+      filter: 'all'
+    }
+  ];
+
+  constructor(
+    private router: Router, 
+    private sidebarService: SidebarService, 
+    private authService: AuthService,
+    private usersService: UsersService,
+    private cdr: ChangeDetectorRef
+  ) {}
+
+  ngOnInit() {
+    this.updatePageTitle(this.router.url);
+    
+    // Register sidenav with service
+    this.sidebarService.setSidenav(this.sidenav);
+    
+    // Load user data
+    this.loadUserData();
+    
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe((event: any) => {
+      this.updatePageTitle(event.url);
+    });
+  }
+
+  private loadUserData(): void {
+    // 1. Primero cargar datos del localStorage (instantáneo - no espera)
+    const cachedUser = this.authService.getUser();
+    console.log('Datos del localStorage:', cachedUser);
+    if (cachedUser) {
+      this.updateUserInfo(cachedUser);
+    }
+
+    // 2. Luego obtener datos frescos del backend
+    this.usersService.getMyProfile().subscribe({
+      next: (profile) => {
+        console.log('Datos del API:', profile);
+        this.updateUserInfo(profile);
+      },
+      error: (error) => {
+        console.log('Error cargando perfil desde API:', error);
+        // Si falla la API, ya tenemos los datos del localStorage cargados
+      }
+    });
+  }
+
+  private updateUserInfo(user: AuthUser | CompleteUser): void {
+    // Debug: Log the complete user object
+    console.log('Complete user object received:', user);
+    console.log('User properties:', Object.keys(user));
+    
+    // Extract first name and last name with proper formatting
+    let firstName = (user.firstName || '').trim();
+    let lastName = (user.lastName || '').trim();
+    
+    // Capitalize first letter of each name
+    firstName = firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
+    lastName = lastName.charAt(0).toUpperCase() + lastName.slice(1).toLowerCase();
+    
+    console.log('Extracted firstName:', firstName);
+    console.log('Extracted lastName:', lastName);
+    
+    // Set user name (first name + last name)
+    if (firstName && lastName) {
+      this.userName = `${firstName} ${lastName}`;
+    } else if (firstName) {
+      this.userName = firstName;
+    } else if (lastName) {
+      this.userName = lastName;
+    } else {
+      this.userName = 'Usuario';
+    }
+    
+    // Set user email
+    this.userEmail = user.email || 'usuario@ejemplo.com';
+    
+    // Generate initials (first letter of first name + first letter of last name)
+    const firstInitial = firstName ? firstName.charAt(0).toUpperCase() : '';
+    const lastInitial = lastName ? lastName.charAt(0).toUpperCase() : '';
+    this.userInitials = firstInitial && lastInitial 
+      ? `${firstInitial}${lastInitial}` 
+      : (firstInitial || lastInitial || 'U');
+    
+    // If we don't have firstName/lastName, try to extract from email
+    if (!firstName && !lastName && user.email) {
+      const emailName = user.email.split('@')[0];
+      this.userName = emailName;
+      this.userInitials = emailName.substring(0, 2).toUpperCase();
+      console.log('Using email-based name:', emailName);
+    }
+    
+    console.log('User info updated:', {
+      name: this.userName,
+      email: this.userEmail,
+      initials: this.userInitials,
+      originalFirstName: firstName,
+      originalLastName: lastName
+    });
+    
+    // Forzar detección de cambios para actualizar la UI inmediatamente
+    this.cdr.detectChanges();
+  }
+
+  toggleLifestyles(event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    if (!this.lifestylesExpanded) {
+      const target = event.currentTarget as HTMLElement;
+      const rect = target.getBoundingClientRect();
+      this.lifestylesPanelTop = rect.top;
+    }
+    
+    this.lifestylesExpanded = !this.lifestylesExpanded;
+  }
+
+  isLifestylesActive(): boolean {
+    return this.router.url.includes('lifestyles');
+  }
+
+  toggleMonitoring(event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    if (!this.monitoringExpanded) {
+      const target = event.currentTarget as HTMLElement;
+      const rect = target.getBoundingClientRect();
+      this.monitoringPanelTop = rect.top;
+    }
+    
+    this.monitoringExpanded = !this.monitoringExpanded;
+  }
+
+  isMonitoringActive(): boolean {
+    return this.router.url.includes('monitoring');
+  }
+
+  toggleProductiveUnits(event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    if (!this.productiveUnitsExpanded) {
+      const target = event.currentTarget as HTMLElement;
+      const rect = target.getBoundingClientRect();
+      this.productiveUnitsPanelTop = rect.top;
+    }
+    
+    this.productiveUnitsExpanded = !this.productiveUnitsExpanded;
+  }
+
+  isProductiveUnitsActive(): boolean {
+    return this.router.url.includes('productive-units');
+  }
+
+  private updatePageTitle(url: string): void {
+    if (url.includes('home')) {
+      this.pageTitle = 'Dashboard';
+    } else if (url.includes('users')) {
+      this.pageTitle = 'Gestión de Usuarios';
+    } else if (url.includes('cases')) {
+      this.pageTitle = 'Casos de Desnutrición';
+    } else if (url.includes('pcd-emergencies')) {
+      this.pageTitle = 'PCD y Emergencias';
+    } else if (url.includes('legalization-packages')) {
+      this.pageTitle = 'Legalización Paquetes';
+    } else if (url.includes('legalization-rectification')) {
+      this.pageTitle = 'Subsanación Legalización';
+    } else if (url.includes('nutritional-follow-up')) {
+      this.pageTitle = 'Seguimiento Nutricional';
+    } else if (url.includes('psychosocial')) {
+      this.pageTitle = 'Psicosocial';
+    } else if (url.includes('complements')) {
+      this.pageTitle = 'Complementos';
+    } else if (url.includes('targeting-up')) {
+      this.pageTitle = 'Focalizacion UP';
+    } else if (url.includes('characterization-up')) {
+      this.pageTitle = 'Caracterizacion UP';
+    } else if (url.includes('at-comprehensive-up')) {
+      this.pageTitle = 'AT Integral UP';
+    } else if (url.includes('legalization-supplies')) {
+      this.pageTitle = 'Legalizacion de Insumos UP';
+    } else if (url.includes('physical-activity')) {
+      this.pageTitle = 'Gestion de Actividad Fisica';
+    } else if (url.includes('programs')) {
+      this.pageTitle = 'Gestión de Programas';
+    } else if (url.includes('traceability')) {
+      this.pageTitle = 'Trazabilidad';
+    } else if (url.includes('reports')) {
+      this.pageTitle = 'Reportes';
+    } else {
+      this.pageTitle = 'Dashboard';
+    }
+  }
+
+  // Métodos para filtros
+  setFilter(filter: 'all' | 'following' | 'archive'): void {
+    this.activeFilter = filter;
+  }
+
+  getFilterCount(filter: 'all' | 'following' | 'archive'): number {
+    if (filter === 'all') {
+      return this.notifications.filter(n => !n.read).length;
+    }
+    if (filter === 'following') {
+      return this.notifications.filter(n => n.filter === 'following' && !n.read).length;
+    }
+    if (filter === 'archive') {
+      return this.notifications.filter(n => n.filter === 'archive').length;
+    }
+    return 0;
+  }
+
+  getFilteredNotifications(): Notification[] {
+    if (this.activeFilter === 'all') {
+      return this.notifications.filter(n => n.filter === 'all' || n.filter === 'following');
+    }
+    return this.notifications.filter(n => n.filter === this.activeFilter);
+  }
+
+  // Métodos para notificaciones
+  markAllAsRead(): void {
+    this.notifications.forEach(n => {
+      if (this.activeFilter === 'all' || n.filter === this.activeFilter) {
+        n.read = true;
+      }
+    });
+  }
+
+  handleNotificationClick(notification: Notification): void {
+    notification.read = true;
+    
+    // Navegar según el tipo de notificación
+    switch (notification.type) {
+      case 'case_assignment':
+      case 'case_update':
+        this.router.navigate(['/cases', notification.id]);
+        break;
+      case 'file_upload':
+        this.router.navigate(['/cases', notification.id, 'files']);
+        break;
+      case 'mention':
+      case 'comment':
+        this.router.navigate(['/cases', notification.id, 'comments']);
+        break;
+      case 'upgrade_request':
+        // Mantener el menú abierto si hay acciones
+        if (!notification.actions) {
+          this.router.navigate(['/cases', notification.id]);
+        }
+        break;
+      default:
+        console.log('Notificación clickeada:', notification);
+    }
+  }
+
+  handleAction(event: Event, notification: Notification, action: 'accept' | 'decline'): void {
+    event.stopPropagation();
+    
+    if (action === 'accept') {
+      console.log('Solicitud aceptada:', notification);
+      // Aquí puedes hacer una llamada al backend para aceptar la solicitud
+      // this.notificationService.acceptRequest(notification.id).subscribe(...)
+      
+      notification.read = true;
+      notification.actions = false; // Ocultar los botones después de aceptar
+      
+      // Opcionalmente mostrar un mensaje de éxito
+      // this.snackBar.open('Solicitud aceptada', 'Cerrar', { duration: 3000 });
+      
+    } else if (action === 'decline') {
+      console.log('Solicitud rechazada:', notification);
+      // Aquí puedes hacer una llamada al backend para rechazar la solicitud
+      // this.notificationService.declineRequest(notification.id).subscribe(...)
+      
+      notification.read = true;
+      notification.actions = false; // Ocultar los botones después de rechazar
+    
+    }
+  }
+
+  openSettings(): void {
+    console.log('Abriendo configuración de notificaciones');
+    // Navegar a la página de configuración de notificaciones
+    this.router.navigate(['/settings/notifications']);
+  }
+
+  // Métodos del usuario
+  editProfile(): void {
+    this.router.navigate(['/profile']);
+  }
+
+  // Método auxiliar para descargar archivos adjuntos
+  downloadAttachment(event: Event, attachment: { name: string; size: string }): void {
+    event.stopPropagation();
+    console.log('Descargando archivo:', attachment.name);
+    // Aquí implementarías la lógica de descarga
+    // this.fileService.download(attachment.id).subscribe(...)
+  }
+}

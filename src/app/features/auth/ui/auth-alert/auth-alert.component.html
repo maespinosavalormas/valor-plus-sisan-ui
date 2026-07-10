@@ -1,0 +1,24 @@
+<div *ngIf="visible" 
+     class="alert-popup-overlay"
+     [class.closing]="isClosing">
+  
+  <div class="auth-alert" 
+       [ngClass]="'auth-alert--' + type">
+    
+    <!-- Icono -->
+    <div class="alert-icon">
+      <mat-icon>{{ getIcon() }}</mat-icon>
+    </div>
+
+    <!-- Contenido -->
+    <div class="alert-content">
+      <h4 *ngIf="title">{{ title }}</h4>
+      <p>{{ message }}</p>
+    </div>
+
+    <!-- Botón cerrar -->
+    <button mat-icon-button class="alert-close" (click)="close()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+</div>

@@ -1,0 +1,84 @@
+<!-- Header reutilizable -->
+<app-program-header
+  [program]="program"
+  [activeView]="'tasks'"
+  (backClicked)="goBack()"
+  (viewChanged)="onViewChange($event)">
+</app-program-header>
+
+<div class="programs-tasks-page">
+  <div class="main-content">
+    <!-- Vista de Tareas/Actividades -->
+    <div class="tasks-view">
+      <div class="tasks-header">
+        <h2 class="section-title">Actividades del Programa</h2>
+        <button mat-raised-button class="add-task-btn" color="primary" (click)="createTask()">
+          <mat-icon>add</mat-icon>
+          Nueva Actividad
+        </button>
+      </div>
+
+      <div class="tasks-list">
+        <!-- Tareas de ejemplo -->
+        <div class="task-card" *ngFor="let task of mockTasks">
+          <div class="task-header">
+            <div class="task-left">
+              <mat-icon class="task-icon">{{ task.icon }}</mat-icon>
+              <span class="task-title">{{ task.nombreActividad }}</span>
+              <span class="task-number">{{ task.numeroActividad }}</span>
+            </div>
+            <div class="task-right">
+              <span [ngClass]="getTaskStatusClass(task.status)" class="task-status">
+                {{ task.status }}
+              </span>
+            </div>
+          </div>
+          
+          <!-- Campos específicos solicitados -->
+          <div class="task-details">
+            <div class="task-field">
+              <span class="field-label">Inicio:</span>
+              <span class="field-value">{{ task.fechaInicio }}</span>
+            </div>
+            <div class="task-field">
+              <span class="field-label">Fin:</span>
+              <span class="field-value">{{ task.fechaFin }}</span>
+            </div>
+            <div class="task-field">
+              <span class="field-label">Responsable:</span>
+              <span class="field-value">{{ formatResponsables(task.responsable) }}</span>
+            </div>
+          </div>
+          
+          <!-- Descripción y acciones en la misma línea -->
+          <div class="task-footer">
+            <p class="task-description">{{ task.description }}</p>
+            <div class="action-buttons">
+              <button mat-icon-button class="action-btn edit-btn" (click)="editTask(task)" 
+                      matTooltip="Editar tarea">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button class="action-btn delete-btn" (click)="deleteTask(task)" 
+                      matTooltip="Eliminar tarea">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+
+        <!-- Estado vacío -->
+        <div class="empty-tasks" *ngIf="mockTasks.length === 0">
+          <mat-icon>assignment</mat-icon>
+          <h3>No hay tareas</h3>
+          <p>No se han registrado tareas para este programa.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Estado de carga -->
+  <div class="loading-state" *ngIf="!program">
+    <mat-icon>hourglass_empty</mat-icon>
+    <h2>Cargando...</h2>
+    <p>Obteniendo detalles del programa.</p>
+  </div>
+</div>

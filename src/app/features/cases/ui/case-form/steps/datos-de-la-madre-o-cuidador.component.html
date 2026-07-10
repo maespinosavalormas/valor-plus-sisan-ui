@@ -1,0 +1,181 @@
+<div class="form-header">
+  <h2 mat-dialog-title class="form-title">
+    {{ data.isEdit ? 'Editar Datos de la Madre' : 'Datos de la Madre' }}
+  </h2>
+
+  <button mat-icon-button class="close-button" (click)="cancelForm()">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+<form [formGroup]="form" mat-dialog-content>
+  <div class="form-grid">
+    <div class="field">
+      <label class="field-label">Primer nombre<span class="req">*</span></label>
+
+      <input
+        class="control"
+        type="text"
+        formControlName="firstName"
+        placeholder="Ingrese primer nombre"
+        maxlength="20"
+        autocomplete="off"
+      />
+
+      <div
+        class="field-error"
+        *ngIf="form.get('firstName')?.touched && form.get('firstName')?.hasError('required')"
+      >
+        Campo obligatorio
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Segundo nombre</label>
+
+      <input
+        class="control"
+        type="text"
+        formControlName="middleName"
+        placeholder="Ingrese segundo nombre"
+        maxlength="20"
+        autocomplete="off"
+      />
+    </div>
+
+    <div class="field">
+      <label class="field-label">Primer apellido<span class="req">*</span></label>
+
+      <input
+        class="control"
+        type="text"
+        formControlName="firstLastName"
+        placeholder="Ingrese primer apellido"
+        maxlength="20"
+        autocomplete="off"
+      />
+
+      <div
+        class="field-error"
+        *ngIf="
+          form.get('firstLastName')?.touched && form.get('firstLastName')?.hasError('required')
+        "
+      >
+        Campo obligatorio
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Segundo apellido</label>
+
+      <input
+        class="control"
+        type="text"
+        formControlName="secondLastName"
+        placeholder="Ingrese segundo apellido"
+        maxlength="20"
+        autocomplete="off"
+      />
+    </div>
+
+    <div class="field">
+      <label class="field-label">Tipo de ID</label>
+      <mat-select
+        class="filter-select"
+        panelClass="evento-select-panel"
+        [formControl]="documentTypeCtrl"
+        placeholder="Seleccione tipo de documento"
+        disableOptionCentering>
+        <mat-option>
+          <ngx-mat-select-search
+            [formControl]="documentTypeFilterCtrl"
+            placeholderLabel="Buscar tipo..."
+            noEntriesFoundLabel="No encontrado">
+          </ngx-mat-select-search>
+        </mat-option>
+        <mat-option *ngFor="let tipo of filteredIdentificationTypes" [value]="tipo">
+          {{ tipo.name }}
+        </mat-option>
+      </mat-select>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Número de identificación<span class="req">*</span></label>
+
+      <input
+        class="control"
+        type="text"
+        formControlName="documentNumber"
+        placeholder="Ingrese número de identificación"
+        maxlength="20"
+        autocomplete="off"
+      />
+
+      <div
+        class="field-error"
+        *ngIf="
+          form.get('documentNumber')?.touched && form.get('documentNumber')?.hasError('required')
+        "
+      >
+        Campo obligatorio
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Nivel educativo de la madre o cuidador</label>
+
+      <select class="control control-select" formControlName="educationalLevelCode">
+        <option value="">Seleccione nivel educativo</option>
+
+        <option *ngFor="let nivel of educationalLevels$ | async" [value]="nivel.code">
+          {{ nivel.name }}
+        </option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Número de hijos<span class="req">*</span></label>
+
+      <input
+        class="control"
+        type="number"
+        formControlName="childrenNumber"
+        placeholder="Ingrese número de hijos"
+        maxlength="2"
+        autocomplete="off"
+      />
+
+      <div
+        class="field-error"
+        *ngIf="
+          form.get('childrenNumber')?.touched && form.get('childrenNumber')?.hasError('required')
+        "
+      >
+        Campo obligatorio
+      </div>
+
+      <div
+        class="field-error"
+        *ngIf="form.get('childrenNumber')?.touched && form.get('childrenNumber')?.hasError('min')"
+      >
+        El valor debe ser mayor o igual a 0
+      </div>
+    </div>
+  </div>
+</form>
+
+<div class="step-counter">{{ currentStep }}/{{ totalSteps }}</div>
+
+<mat-dialog-actions align="end" class="dialog-actions">
+  <button mat-button class="btn-cancel" type="button" (click)="goBack()">Anterior</button>
+
+  <button
+    mat-flat-button
+    class="btn-guardar"
+    type="button"
+    (click)="saveForm()"
+    [disabled]="form.invalid"
+  >
+    {{ isLastStep ? 'Guardar' : 'Siguiente' }}
+  </button>
+</mat-dialog-actions>

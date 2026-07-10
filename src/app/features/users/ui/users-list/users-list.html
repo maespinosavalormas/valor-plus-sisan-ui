@@ -1,0 +1,121 @@
+<div class="users-filters">
+  <button
+    mat-button
+    class="filter-btn"
+    [class.active]="selectedRole === 'ALL'"
+    (click)="filterByRole('ALL')">
+    Todos ({{ getRoleCount('ALL') }})
+  </button>
+
+  <button
+    mat-button
+    class="filter-btn"
+    [class.active]="selectedRole === 'ADMIN'"
+    (click)="filterByRole('ADMIN')">
+    Administrador ({{ getRoleCount('ADMIN') }})
+  </button>
+
+  <button
+    mat-button
+    class="filter-btn"
+    [class.active]="selectedRole === 'HEALTH_PROVIDER'"
+    (click)="filterByRole('HEALTH_PROVIDER')">
+    Prestador de salud ({{ getRoleCount('HEALTH_PROVIDER') }})
+  </button>
+
+  <button
+    mat-button
+    class="filter-btn"
+    [class.active]="selectedRole === 'MUNICIPALITY'"
+    (click)="filterByRole('MUNICIPALITY')">
+    Municipio ({{ getRoleCount('MUNICIPALITY') }})
+  </button>
+
+  <button
+    mat-button
+    class="filter-btn"
+    [class.active]="selectedRole === 'OFFICIAL'"
+    (click)="filterByRole('OFFICIAL')">
+    Funcionario ({{ getRoleCount('OFFICIAL') }})
+  </button>
+
+  <button
+    mat-button
+    class="filter-btn"
+    [class.active]="selectedRole === 'COMMITTEE'"
+    (click)="filterByRole('COMMITTEE')">
+    Comité ({{ getRoleCount('COMMITTEE') }})
+  </button>
+</div>
+<mat-divider></mat-divider>
+<table mat-table [dataSource]="filteredUsers" class="mat-elevation-z8">
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef>Cuenta</th>
+    <td mat-cell *matCellDef="let u">
+      <div class="user-info-container">
+        <div class="user-avatar-circle">
+          {{ getInitials(u.firstName, u.lastName) }}
+        </div>
+        <span class="user-name">{{ u.firstName }} {{ u.lastName }}</span>
+      </div>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="email">
+    <th mat-header-cell *matHeaderCellDef>Correo Electronico</th>
+    <td mat-cell *matCellDef="let u">{{ u.email }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="role">
+    <th mat-header-cell *matHeaderCellDef>Rol</th>
+    <td mat-cell *matCellDef="let u">{{ formatRoles(u.roles) }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="state">
+    <th mat-header-cell *matHeaderCellDef>Estado</th>
+    <td mat-cell *matCellDef="let u">
+      <span [ngClass]="getStatusClass(u.isActive)" class="status-badge">
+        {{ getStatusLabel(u.isActive) }}
+      </span>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef>Acciones</th>
+    <td mat-cell *matCellDef="let u">
+      <div class="actions-container">
+        <button mat-flat-button class="btn-editar" (click)="$event.stopPropagation(); onEdit(u)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        
+        <button mat-flat-button class="btn-ver" (click)="$event.stopPropagation(); onView(u)">
+          <mat-icon>remove_red_eye</mat-icon>
+        </button>
+        
+        <!-- Custom Toggle Switch -->
+        <div class="custom-toggle-container" (click)="$event.stopPropagation()">
+          <div class="custom-toggle" [class.active]="u.isActive">
+            <button 
+              class="toggle-option toggle-inactive" 
+              [class.selected]="!u.isActive"
+              [disabled]="!u.isActive"
+              (click)="onToggleStatus(u, false)">
+              Inactivar
+            </button>
+            <button 
+              class="toggle-option toggle-active" 
+              [class.selected]="u.isActive"
+              [disabled]="u.isActive"
+              (click)="onToggleStatus(u, true)">
+              Activar
+            </button>
+            <div class="toggle-slider" [class.right]="u.isActive"></div>
+          </div>
+        </div>
+      </div>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+</table>

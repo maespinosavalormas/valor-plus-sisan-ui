@@ -1,0 +1,36 @@
+.logout-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  
+  &:hover:not(:disabled) {
+    background-color: rgba(244, 67, 54, 0.1);
+  }
+  
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+}
+
+.logout-spinner {
+  width: 20px;
+  height: 20px;
+  ::ng-deep circle {
+    stroke: #f44336;
+  }
+}
+
+.logout-text {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}

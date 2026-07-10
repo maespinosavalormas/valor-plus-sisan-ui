@@ -1,0 +1,113 @@
+<div class="case-grid">
+
+  <!-- COMENTARIOS -->
+  <div class="card comments-card">
+
+    <div class="card__header">
+      <div class="card__title-group">
+        <div class="card__icon">
+          <mat-icon>comment</mat-icon>
+        </div>
+
+        <h3>Comentarios</h3>
+      </div>
+
+      <span class="badge">{{ comments.length }}</span>
+    </div>
+
+
+    <div class="comments-list">
+
+      <!-- ITEM -->
+      <div class="comment-item" *ngFor="let comment of comments">
+
+        <div class="comment-content">
+
+          <div class="comment-header">
+            <strong>{{ comment.author }}</strong>
+            <span>{{ comment.timestamp }}</span>
+          </div>
+
+          <div class="comment-message">
+            {{ comment.message }}
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- INPUT COMENTARIO -->
+
+    <div class="comment-input">
+
+      <textarea [(ngModel)]="newComment" placeholder="Escribe un comentario..."></textarea>
+
+      <button class="btn-primary" (click)="addComment()">
+        <mat-icon>send</mat-icon>
+      </button>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- EVIDENCIA -->
+
+  <div class="card evidence-card">
+
+    <div class="card__header">
+
+      <div class="card__title-group">
+        <div class="card__icon">
+          <mat-icon>attach_file</mat-icon>
+        </div>
+
+        <h3>Evidencia</h3>
+      </div>
+
+      <span class="badge">{{ files.length }} archivos</span>
+
+    </div>
+
+
+    <!-- DROPZONE -->
+
+    <div class="dropzone" (click)="fileInput.click()">
+
+      <input type="file" #fileInput multiple accept="application/pdf" (change)="onFileSelected($event)" style="display: none;">
+
+      <i class="fa-solid fa-upload"></i>
+
+      <p>
+        Adjuntar Evidencia
+      </p>
+    </div>
+
+
+
+    <!-- LISTA ARCHIVOS -->
+
+    <div class="files-list">
+
+      <div class="file-item" *ngFor="let file of files">
+
+        <div class="file-icon pdf">
+          <mat-icon>attach_file</mat-icon>
+        </div>
+
+        <div class="file-info">
+          <strong>{{ file.name }}</strong>
+          <span>{{ (file.size / 1024 / 1024).toFixed(2) }} MB · Usuario Actual · Ahora</span>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

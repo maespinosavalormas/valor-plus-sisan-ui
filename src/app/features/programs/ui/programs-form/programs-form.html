@@ -1,0 +1,169 @@
+<div class="form-header">
+  <h2 mat-dialog-title class="form-title">{{ data.isEdit ? 'Editar programa' : 'Crear programa' }}</h2>
+  <button mat-icon-button class="close-button" (click)="onCancel()">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+<form [formGroup]="form" mat-dialog-content>
+  <div class="form-grid">
+    <div class="form-col">
+      <div class="field">
+        <label class="field-label">Programa a ejecutar<span class="req">*</span></label>
+        <input
+          class="control"
+          type="text"
+          formControlName="name"
+          placeholder="Ingrese el nombre del programa"
+          autocomplete="off"
+          maxlength="200"
+        />
+        <div
+          class="field-error"
+          *ngIf="name?.touched && name?.hasError('required')"
+        >
+          Campo obligatorio
+        </div>
+        <div
+          class="field-error"
+          *ngIf="name?.touched && name?.hasError('maxlength')"
+        >
+          Máximo 200 caracteres
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label">Descripción del programa<span class="req">*</span></label>
+        <textarea
+          class="control"
+          formControlName="description"
+          placeholder="Ingrese la descripción del programa"
+          rows="4"
+          maxlength="500"
+        ></textarea>
+        <div
+          class="field-error"
+          *ngIf="description?.touched && description?.hasError('required')"
+        >
+          Campo obligatorio
+        </div>
+        <div
+          class="field-error"
+          *ngIf="description?.touched && description?.hasError('maxlength')"
+        >
+          Máximo 500 caracteres
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label">Fecha de Inicio<span class="req">*</span></label>
+        <input
+          class="control"
+          type="date"
+          formControlName="executionTime"
+          placeholder="Seleccione la fecha de Inicio"
+        />
+        <div
+          class="field-error"
+          *ngIf="executionTime?.touched && executionTime?.hasError('required')"
+        >
+          Campo obligatorio
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label">Fecha de Fin<span class="req">*</span></label>
+        <input
+          class="control"
+          type="date"
+          formControlName="executionTime"
+          placeholder="Seleccione la fecha de Finalizacion"
+        />
+        <div
+          class="field-error"
+          *ngIf="executionTime?.touched && executionTime?.hasError('required')"
+        >
+          Campo obligatorio
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label">Objetivo<span class="req">*</span></label>
+        <textarea
+          class="control"
+          formControlName="objetivos"
+          placeholder="Ingrese los objetivos del programa"
+          rows="3"
+          maxlength="300"
+        ></textarea>
+        <div
+          class="field-error"
+          *ngIf="objetivos?.touched && objetivos?.hasError('required')"
+        >
+          Campo obligatorio
+        </div>
+        <div
+          class="field-error"
+          *ngIf="objetivos?.touched && objetivos?.hasError('maxlength')"
+        >
+          Máximo 300 caracteres
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label">Responsables<span class="req">*</span></label>
+        <div class="multi-select-container">
+          <mat-select formControlName="responsables" multiple placeholder="Seleccione los responsables">
+            <mat-option *ngFor="let responsable of responsablesList" [value]="responsable.name">
+              {{ responsable.name }}
+            </mat-option>
+          </mat-select>
+        </div>
+        <div
+          class="field-error"
+          *ngIf="responsables?.touched && responsables?.hasError('required')"
+        >
+          Debe seleccionar al menos un responsable
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label">Objetivos Específicos</label>
+        <div class="objetivos-list">
+          <div *ngFor="let objetivo of objetivosEspecificos; let i = index" class="objetivo-item">
+            <span class="objetivo-text">{{ objetivo }}</span>
+            <button mat-icon-button class="delete-objetivo" (click)="eliminarObjetivoEspecifico(i)">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+          <div class="add-objetivo">
+            <input
+              id="nuevo-objetivo-especifico"
+              class="control"
+              type="text"
+              placeholder="Agregar nuevo objetivo específico"
+              maxlength="200"
+              (keyup.enter)="agregarObjetivoEspecifico()"
+            />
+            <button mat-icon-button class="add-objetivo-btn" (click)="agregarObjetivoEspecifico()">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+<mat-dialog-actions align="end" class="dialog-actions">
+  <button mat-button class="btn-cancel" type="button" (click)="onCancel()">Cancelar</button>
+  <button
+    mat-flat-button
+    class="btn-guardar"
+    type="button"
+    (click)="onSave()"
+    [disabled]="form.invalid"
+  >
+    {{ isEditing ? 'Actualizar' : 'Confirmar' }}
+  </button>
+</mat-dialog-actions>

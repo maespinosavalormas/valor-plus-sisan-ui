@@ -1,0 +1,1039 @@
+// Estilos compartidos para todos los steps del formulario de nutritional monitoring
+
+// Host y layout general
+:host {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--white);
+  padding: 18px 20px;
+  border-radius: 18px;
+  width: 90%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+  margin: 0 auto;
+  min-width: 0;
+}
+
+// Estilos del diálogo
+::ng-deep .cdk-overlay-container {
+  z-index: 5000 !important;
+}
+
+::ng-deep .cdk-global-overlay-wrapper {
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+::ng-deep .cdk-overlay-backdrop {
+  background: rgba(0, 0, 0, 0.6) !important;
+}
+
+::ng-deep .mat-mdc-dialog-container {
+  padding: 0 !important;
+}
+
+::ng-deep .mat-mdc-dialog-container .mdc-dialog__surface {
+  border-radius: 18px !important;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55) !important;
+  max-height: 95vh !important;
+  max-width: calc(100vw - 20px) !important;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+// Responsive dialog adjustments
+@media (max-width: 768px) {
+  ::ng-deep .mat-mdc-dialog-container .mdc-dialog__surface {
+    max-width: calc(100vw - 32px) !important;
+    width: 90% !important;
+    padding: 16px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  ::ng-deep .mat-mdc-dialog-container .mdc-dialog__surface {
+    max-width: calc(100vw - 24px) !important;
+    width: 95% !important;
+    padding: 12px !important;
+  }
+}
+
+@media (max-width: 360px) {
+  ::ng-deep .mat-mdc-dialog-container .mdc-dialog__surface {
+    max-width: calc(100vw - 16px) !important;
+    width: 98% !important;
+    padding: 8px !important;
+  }
+}
+
+@media (max-width: 320px) {
+  ::ng-deep .mat-mdc-dialog-container .mdc-dialog__surface {
+    max-width: calc(100vw - 12px) !important;
+    width: 99% !important;
+    padding: 6px !important;
+  }
+}
+
+::ng-deep .mat-mdc-dialog-container .mdc-dialog__content {
+  padding: 0 !important;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+::ng-deep .mat-mdc-dialog-container .mdc-dialog__actions {
+  flex: 0 0 auto;
+  padding: 0 !important;
+  margin: 0 !important;
+  background: var(--white);
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+}
+
+::ng-deep .mat-mdc-dialog-container .mdc-dialog__actions::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.08);
+}
+
+// Header del formulario
+.form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  margin-bottom: 12px;
+  flex-shrink: 0;
+}
+
+.form-title {
+  text-align: center !important;
+  font-size: 26px !important;
+  font-weight: 800 !important;
+  margin: 0 0 12px 0 !important;
+  padding-bottom: 10px !important;
+  color: var(--strong-blue-primary) !important;
+  position: relative !important;
+  flex: 1 !important;
+}
+
+.form-title::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 2px;
+  background-color: var(--white);
+}
+
+.close-button {
+  width: 36px !important;
+  height: 36px !important;
+  border: none !important;
+  color: var(--gray-primary) !important;
+  transition: all 0.2s ease !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.close-button mat-icon {
+  font-size: 20px !important;
+  width: 20px !important;
+  height: 20px !important;
+  line-height: 20px !important;
+}
+
+// Grid del formulario
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  padding: 8px 0;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  width: 100%;
+  padding-bottom: 18px !important;
+}
+
+.form-col {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 100%;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 100% !important;
+}
+
+.field.full-width {
+  grid-column: 1 / -1;
+}
+
+// Estilos para títulos de sección
+.section-title {
+  grid-column: 1 / -1;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--strong-blue-primary);
+  margin: 1.5rem 0 1rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--blue-primary);
+}
+
+.section-title:first-child {
+  margin-top: 0;
+}
+
+// Estilos para checkboxes
+.checkboxes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  padding: 8px 0;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.checkbox-item:hover {
+  background-color: var(--blue-tertiary);
+}
+
+.checkbox-input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--blue-primary);
+}
+
+.checkbox-label {
+  margin: 0;
+  font-size: 13px;
+  color: var(--strong-blue-primary);
+  cursor: pointer;
+  line-height: 1.2;
+}
+
+// Estilos para multi-select container - usa los mismos estilos que control-select
+.multi-select-container {
+  width: 100%;
+  margin-right: 25px !important;
+  
+  // Aplicar estilos de control-select al mat-select interno
+  .mat-mdc-select {
+    width: 100%;
+    max-width: 100%;
+    height: 37px;
+    border-radius: 10px;
+    border: 1.5px solid var(--blue-primary);
+    background: var(--white);
+    padding: 0 10px;
+    font-size: 14px;
+    color: var(--black);
+    outline: none;
+    box-sizing: border-box;
+    cursor: pointer;
+    
+    // Agregar la flecha CSS igual que los selects nativos
+    appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, #0b132b 50%),
+      linear-gradient(135deg, #0b132b 50%, transparent 50%);
+    background-position: calc(100% - 16px) 50%, calc(100% - 11px) 50%;
+    background-size: 7px 7px, 7px 7px;
+    background-repeat: no-repeat;
+    padding-right: 36px;
+    
+    // Ocultar la flecha nativa de Material
+    .mat-mdc-select-arrow-wrapper {
+      display: none !important;
+    }
+    
+    .mat-mdc-select-arrow {
+      display: none !important;
+    }
+    
+    // Estilos del trigger
+    .mat-mdc-select-trigger {
+      height: 37px;
+      display: flex;
+      align-items: center;
+      background: transparent;
+      border: none;
+      padding: 0;
+    }
+    
+    .mat-mdc-select-value {
+      color: var(--black);
+      font-size: 14px;
+      font-weight: 400;
+    }
+    
+    .mat-mdc-select-placeholder {
+      color: var(--gray-primary);
+      font-weight: 400;
+    }
+    
+    // Focus
+    &.mat-focused {
+      border-color: var(--blue-primary);
+      box-shadow: 0 0 0 3px rgba(74, 163, 255, 0.18);
+    }
+    
+    // Invalid
+    &.mat-invalid {
+      border-color: var(--warning);
+    }
+    
+    &.mat-invalid.mat-focused {
+      border-color: var(--warning);
+      box-shadow: 0 0 0 3px rgba(244, 67, 54, 0.18);
+    }
+    
+    // Hover
+    &:hover {
+      border-color: var(--blue-secondary);
+    }
+  }
+}
+
+// Estilos para el panel del multi-select - mismos colores que el resto
+::ng-deep .mat-mdc-select-panel {
+  background-color: var(--white) !important;
+  border: 1.5px solid var(--blue-primary) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+  margin-top: 4px !important;
+  overflow: hidden !important;
+  max-height: 240px !important;
+
+  .mat-mdc-option {
+    color: var(--strong-blue-primary) !important;
+    padding: 8px 16px !important;
+    font-size: 14px !important;
+    background-color: var(--white) !important;
+    min-height: 40px !important;
+    height: 40px !important;
+    line-height: 16px !important;
+    display: flex !important;
+    align-items: center !important;
+
+    .mdc-list-item__primary-text {
+      font-size: 14px !important;
+      line-height: 16px !important;
+    }
+
+    &:hover:not(.mat-mdc-option-disabled) {
+      background-color: rgba(59, 130, 246, 0.1) !important;
+    }
+
+    &.mat-mdc-option-active {
+      background-color: rgba(59, 130, 246, 0.08) !important;
+    }
+
+    &.mdc-list-item--selected:not(.mat-mdc-option-multiple) {
+      background-color: rgba(59, 130, 246, 0.15) !important;
+      font-weight: 500 !important;
+      
+      .mdc-list-item__primary-text {
+        font-weight: 500 !important;
+      }
+    }
+    
+    // Estilos para checkboxes en multi-select
+    .mat-pseudo-checkbox {
+      width: 18px !important;
+      height: 18px !important;
+      margin-right: 12px !important;
+      border-color: var(--blue-primary) !important;
+      
+      &::after {
+        width: 10px !important;
+        height: 5px !important;
+      }
+    }
+    
+    &.mdc-list-item--selected .mat-pseudo-checkbox {
+      background-color: var(--blue-primary) !important;
+      border-color: var(--blue-primary) !important;
+      
+      &::after {
+        color: var(--white) !important;
+      }
+    }
+
+    &:not(:last-child) {
+      border-bottom: 1px solid var(--blue-primary) !important;
+    }
+  }
+}
+
+.field-no-label {
+  gap: 5px;
+}
+
+.field-label {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--strong-blue-primary);
+  line-height: 1.2;
+  margin-bottom: 0;
+  min-width: 100% !important;
+}
+
+.req {
+  color: var(--strong-blue-primary);
+}
+
+// Controles
+.control {
+  margin-right: 25px !important;
+  width: 100%;
+  max-width: 100%;
+  height: 37px;
+  border-radius: 10px;
+  border: 1.5px solid var(--blue-primary);
+  background: var(--white);
+  padding: 0 10px;
+  font-size: 14px;
+  color: var(--black);
+  outline: none;
+  box-sizing: border-box;
+}
+
+.control.ng-invalid.ng-touched {
+  border-color: var(--warning);
+}
+
+.control.ng-invalid.ng-touched:focus {
+  border-color: var(--warning);
+  box-shadow: 0 0 0 3px rgba(244, 67, 54, 0.18);
+}
+
+.control::placeholder {
+  color: var(--gray-primary);
+  font-weight: 400;
+}
+
+.control:focus {
+  border-color: var(--blue-primary);
+  box-shadow: 0 0 0 3px rgba(74, 163, 255, 0.18);
+}
+
+.control-select {
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, #0b132b 50%),
+    linear-gradient(135deg, #0b132b 50%, transparent 50%);
+  background-position: calc(100% - 16px) 50%, calc(100% - 11px) 50%;
+  background-size: 7px 7px, 7px 7px;
+  background-repeat: no-repeat;
+  padding-right: 36px;
+  cursor: pointer;
+  height: 37px;
+  width: 100%;
+  max-width: 100%;
+}
+
+.control-select option {
+  color: var(--strong-blue-primary);
+}
+
+.control-select option[value=''] {
+  color: var(--gray-secondary);
+  font-style: italic;
+}
+
+.control-select.ng-invalid.ng-touched {
+  border-color: var(--warning);
+}
+
+.control-select.ng-invalid.ng-touched:focus {
+  border-color: var(--warning);
+  box-shadow: 0 0 0 3px rgba(244, 67, 54, 0.18);
+}
+
+.control-textarea {
+  margin-right: 25px !important;
+  width: 100%;
+  max-width: 100%;
+  min-height: 100px;
+  border-radius: 10px;
+  border: 1.5px solid var(--blue-primary);
+  background: var(--white);
+  padding: 10px;
+  font-size: 14px;
+  color: var(--black);
+  outline: none;
+  box-sizing: border-box;
+  resize: vertical;
+  font-family: inherit;
+  line-height: 1.4;
+}
+
+.control-textarea::placeholder {
+  color: var(--gray-primary);
+  font-weight: 400;
+}
+
+.control-textarea:focus {
+  border-color: var(--blue-primary);
+  box-shadow: 0 0 0 3px rgba(74, 163, 255, 0.18);
+}
+
+.control-textarea.ng-invalid.ng-touched {
+  border-color: var(--warning);
+}
+
+.control-textarea.ng-invalid.ng-touched:focus {
+  border-color: var(--warning);
+  box-shadow: 0 0 0 3px rgba(244, 67, 54, 0.18);
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  width: 100%;
+  max-width: 100%;
+}
+
+.field-row .field {
+  width: 100%;
+  min-width: 0;
+}
+
+.field-error {
+  display: block !important;
+  color: var(--error-red) !important;
+  font-size: 12px !important;
+  margin-top: 4px !important;
+  line-height: 1.2 !important;
+}
+
+// Iconos
+.control-icon-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 330px;
+}
+
+.control-icon-input {
+  width: 100%;
+  padding-right: 20px;
+}
+
+.control-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  width: 20px;
+  height: 20px;
+  transform: translateY(-50%);
+  border: 2px solid var(--strong-gray-primary);
+  border-radius: 5px;
+  box-sizing: border-box;
+  pointer-events: none;
+}
+
+.control-icon::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 4px;
+  height: 2px;
+  background: var(--strong-gray-primary);
+}
+
+.control-icon::after {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 8px;
+  width: 10px;
+  height: 7px;
+  border-top: 2px solid rgba(43, 43, 43, 0.35);
+  border-left: 2px solid rgba(43, 43, 43, 0.35);
+}
+
+// Step counter
+.step-counter {
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--gray-primary);
+  display: block;
+  padding: 0 16px;
+  margin: 5px auto;
+  background-color: var(--white);
+}
+
+// Botones
+.dialog-actions {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  padding: 16px 24px;
+  flex-shrink: 0;
+  justify-items: center;
+}
+
+.btn-cancel,
+.btn-guardar {
+  width: 100% !important;
+  max-width: 300px !important;
+  min-width: 160px !important;
+  height: 44px !important;
+  border-radius: 12px !important;
+  font-weight: 600 !important;
+  font-size: 16px !important;
+  text-transform: none !important;
+  letter-spacing: 0.5px !important;
+  transition: all 0.2s ease !important;
+  padding: 0 24px !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
+}
+
+.btn-cancel {
+  border: 1.4px solid var(--strong-blue-secondary) !important;
+  color: var(--strong-blue-secondary) !important;
+  background-color: var(--white) !important;
+}
+
+.btn-cancel:hover {
+  background-color: var(--strong-blue-secondary) !important;
+  color: var(--white) !important;
+}
+
+.btn-guardar {
+  background-color: var(--blue-primary) !important;
+  color: var(--white) !important;
+  border: none !important;
+}
+
+.btn-guardar[disabled] {
+  background-color: var(--gray-secondary) !important;
+  color: var(--gray-tertiary) !important;
+  cursor: not-allowed !important;
+  opacity: 0.6 !important;
+}
+
+// Media queries
+@media (max-height: 760px) {
+  :host {
+    padding: 18px 24px;
+  }
+
+  .dialog-actions {
+    padding: 12px 24px 14px;
+  }
+}
+
+@media (max-width: 768px) {
+  :host {
+    padding: 16px;
+    width: calc(100vw - 32px);
+  }
+
+  .form-header {
+    padding: 0 16px;
+    margin-bottom: 8px;
+  }
+
+  .form-title {
+    font-size: 22px;
+    margin: 0 0 8px 0;
+  }
+
+  .close-button {
+    width: 32px !important;
+    height: 32px !important;
+  }
+
+  .close-button mat-icon {
+    font-size: 18px !important;
+    width: 18px !important;
+    height: 18px !important;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .section-title {
+    font-size: 1.1rem;
+    margin: 1rem 0 0.75rem 0;
+  }
+
+  .field-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .checkboxes-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .dialog-actions {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 16px 20px;
+  }
+
+  .btn-cancel,
+  .btn-guardar {
+    max-width: 100% !important;
+    min-width: 120px !important;
+    height: 42px !important;
+    font-size: 15px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  :host {
+    padding: 12px;
+  }
+
+  .form-header {
+    padding: 0 12px;
+    margin-bottom: 6px;
+  }
+
+  .form-title {
+    font-size: 20px;
+    margin: 0 0 6px 0;
+  }
+
+  .close-button {
+    width: 28px !important;
+    height: 28px !important;
+  }
+
+  .close-button mat-icon {
+    font-size: 16px !important;
+    width: 16px !important;
+    height: 16px !important;
+  }
+
+  .form-grid {
+    gap: 10px;
+    padding: 4px 0;
+    overflow-x: hidden;
+  }
+
+  .field {
+    gap: 4px;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .field-label {
+    font-size: 12px;
+    line-height: 1.1;
+  }
+
+  .control,
+  .control-select {
+    height: 38px;
+    font-size: 13px;
+    padding: 0 15px 0 8px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  .control-select {
+    padding-right: 28px;
+    background-size: 6px 6px, 6px 6px;
+    background-position: calc(100% - 14px) 50%, calc(100% - 9px) 50%;
+  }
+
+  .control-icon-wrap {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+  }
+
+  .control-icon {
+    right: 8px;
+    width: 18px;
+    height: 18px;
+  }
+
+  .control-icon-input {
+    width: 100%;
+    padding-right: 16px;
+  }
+
+  .field-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .checkboxes-grid {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .checkbox-item {
+    padding: 6px;
+  }
+
+  .checkbox-label {
+    font-size: 12px;
+  }
+
+  .dialog-actions {
+    padding: 12px 16px;
+    gap: 10px;
+  }
+
+  .btn-cancel,
+  .btn-guardar {
+    height: 40px !important;
+    font-size: 14px !important;
+    padding: 0 12px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0;
+  }
+
+  .step-counter {
+    font-size: 12px;
+    padding: 0 12px;
+  }
+}
+
+@media (max-width: 360px) {
+  :host {
+    padding: 8px;
+    overflow: hidden;
+  }
+
+  .form-header {
+    padding: 0 8px;
+    margin-bottom: 4px;
+  }
+
+  .form-title {
+    font-size: 18px;
+    margin: 0 0 4px 0;
+  }
+
+  .close-button {
+    width: 24px !important;
+    height: 24px !important;
+  }
+
+  .close-button mat-icon {
+    font-size: 14px !important;
+    width: 14px !important;
+    height: 14px !important;
+  }
+
+  .form-grid {
+    gap: 8px;
+    padding: 2px 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .field {
+    gap: 3px;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .field-label {
+    font-size: 11px;
+    line-height: 1.0;
+  }
+
+  .control,
+  .control-select {
+    height: 36px;
+    font-size: 12px;
+    padding: 0 6px;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  .control-select {
+    padding-right: 24px;
+    background-size: 5px 5px, 5px 5px;
+    background-position: calc(100% - 12px) 50%, calc(100% - 7px) 50%;
+  }
+
+  .control-icon-wrap {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+  }
+
+  .control-icon {
+    right: 6px;
+    width: 16px;
+    height: 16px;
+  }
+
+  .control-icon-input {
+    width: 100%;
+    padding-right: 12px;
+  }
+
+  .field-row {
+    grid-template-columns: 1fr;
+    gap: 6px;
+    width: 100%;
+  }
+
+  .checkboxes-grid {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+
+  .checkbox-item {
+    padding: 4px;
+  }
+
+  .checkbox-label {
+    font-size: 11px;
+  }
+
+  .dialog-actions {
+    padding: 8px 10px;
+    gap: 8px;
+  }
+
+  .btn-cancel,
+  .btn-guardar {
+    height: 38px !important;
+    font-size: 12px !important;
+    padding: 0 8px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0;
+  }
+
+  .step-counter {
+    font-size: 10px;
+    padding: 0 8px;
+  }
+}
+
+// Ultra small screens (max-width: 320px)
+@media (max-width: 320px) {
+  :host {
+    padding: 6px;
+    overflow: hidden;
+  }
+
+  .form-title {
+    font-size: 16px;
+  }
+
+  .control,
+  .control-select {
+    height: 32px;
+    font-size: 11px;
+    padding: 0 4px;
+  }
+
+  .control-select {
+    padding-right: 20px;
+  }
+
+  .btn-cancel,
+  .btn-guardar {
+    height: 34px !important;
+    font-size: 11px !important;
+    padding: 0 6px !important;
+  }
+}
+
+// Landscape orientation for mobile
+@media (max-width: 768px) and (orientation: landscape) {
+  :host {
+    padding: 12px;
+    max-height: 90vh;
+  }
+
+  .form-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .field-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .checkboxes-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+// Small screens in landscape
+@media (max-width: 480px) and (orientation: landscape) {
+  .form-header {
+    padding: 0 12px 4px;
+  }
+
+  .form-title {
+    font-size: 16px;
+    margin: 0 0 4px 0;
+  }
+
+  .form-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+
+  .control,
+  .control-select {
+    height: 32px;
+    font-size: 11px;
+    padding: 0 6px;
+  }
+
+  .dialog-actions {
+    padding: 8px 12px;
+  }
+
+  .btn-cancel,
+  .btn-guardar {
+    height: 32px !important;
+    font-size: 12px !important;
+    padding: 0 10px !important;
+  }
+}

@@ -1,0 +1,170 @@
+<!-- Embedded mode: solo el contenido, sin overlay -->
+<ng-container *ngIf="embedded">
+  <div class="info-section">
+    <!-- Sección de búsqueda y filtros -->
+    <div class="search-section">
+      <div class="search-container">
+        <mat-icon class="search-icon">search</mat-icon>
+        <input 
+          class="search-input" 
+          placeholder="Buscar por acción, usuario o descripción..." 
+          (input)="onSearchChange($any($event).target.value)"
+          [value]="searchTerm">
+        <mat-icon 
+          class="clear-search" 
+          *ngIf="searchTerm"
+          (click)="clearSearch()">clear</mat-icon>
+      </div>
+
+      <div class="filter-container">
+        <select 
+          class="status-filter" 
+          (change)="onActionChange($any($event).target.value)"
+          [value]="selectedAction">
+          <option value="all">Todas las acciones</option>
+          <option *ngFor="let action of getAvailableActions()" [value]="action">
+            {{ action }}
+          </option>
+        </select>
+      </div>
+
+      <button mat-raised-button 
+              color="primary" 
+              class="clear-btn"
+              (click)="clearFilters()"
+              *ngIf="trazabilidadData.length > 0">
+        <mat-icon>clear_all</mat-icon>
+        Limpiar filtros
+      </button>
+    </div>
+
+    <!-- Results Summary -->
+    <div class="results-summary" *ngIf="filteredTrazabilidadData.length !== trazabilidadData.length">
+      <span class="summary-text">
+        Mostrando {{ filteredTrazabilidadData.length }} de {{ trazabilidadData.length }} registros
+      </span>
+    </div>
+
+    <div class="trazabilidad-list">
+      <div class="trazabilidad-item" *ngFor="let item of filteredTrazabilidadData">
+        <div class="trazabilidad-accion">
+          <span class="accion-label">Acción:</span>
+          <span class="accion-value">{{ item.accion }}</span>
+        </div>
+        <div class="trazabilidad-fecha">
+          <span class="fecha-label">Fecha:</span>
+          <span class="fecha-value">{{ item.fecha }}</span>
+        </div>
+        <div class="trazabilidad-usuario">
+          <span class="usuario-label">Usuario:</span>
+          <span class="usuario-value">{{ item.usuario }}</span>
+        </div>
+        <div class="trazabilidad-descripcion">
+          <span class="descripcion-label">Descripción:</span>
+          <span class="descripcion-value">{{ item.descripcion }}</span>
+        </div>
+      </div>
+      
+      <div class="no-trazabilidad" *ngIf="filteredTrazabilidadData.length === 0">
+        <mat-icon>history</mat-icon>
+        <span>No hay registros de trazabilidad para este caso</span>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<!-- Standalone mode with full overlay -->
+<div class="case-info-modal-overlay" *ngIf="!embedded">
+  <div class="case-info-modal-container">
+    <div class="case-info-modal-header">
+      <h3>Trazabilidad del Caso - Código UPGD: {{ selectedCaseInfo?.upgdCode || 'N/A' }}</h3>
+      <button mat-icon-button class="close-btn" (click)="goBack()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+    
+    <div class="case-info-modal-content">
+      <div class="info-section">
+        <div class="section-header">
+          <div class="trazabilidad-actions">
+            <button mat-stroked-button class="btn-back" (click)="goBack()">
+              <mat-icon>arrow_back</mat-icon>
+              <span>Volver al Detalle del Caso</span>
+            </button>
+          </div>
+          <h4 class="section-title">Historial de Trazabilidad</h4>
+        </div>
+
+        <!-- Sección de búsqueda y filtros -->
+        <div class="search-section">
+          <div class="search-container">
+            <mat-icon class="search-icon">search</mat-icon>
+            <input 
+              class="search-input" 
+              placeholder="Buscar por acción, usuario o descripción..." 
+              (input)="onSearchChange($any($event).target.value)"
+              [value]="searchTerm">
+            <mat-icon 
+              class="clear-search" 
+              *ngIf="searchTerm"
+              (click)="clearSearch()">clear</mat-icon>
+          </div>
+
+          <div class="filter-container">
+            <select 
+              class="status-filter" 
+              (change)="onActionChange($any($event).target.value)"
+              [value]="selectedAction">
+              <option value="all">Todas las acciones</option>
+              <option *ngFor="let action of getAvailableActions()" [value]="action">
+                {{ action }}
+              </option>
+            </select>
+          </div>
+
+          <button mat-raised-button 
+                  color="primary" 
+                  class="clear-btn"
+                  (click)="clearFilters()"
+                  *ngIf="trazabilidadData.length > 0">
+            <mat-icon>clear_all</mat-icon>
+            Limpiar filtros
+          </button>
+        </div>
+
+        <!-- Results Summary -->
+        <div class="results-summary" *ngIf="filteredTrazabilidadData.length !== trazabilidadData.length">
+          <span class="summary-text">
+            Mostrando {{ filteredTrazabilidadData.length }} de {{ trazabilidadData.length }} registros
+          </span>
+        </div>
+
+        <div class="trazabilidad-list">
+          <div class="trazabilidad-item" *ngFor="let item of filteredTrazabilidadData">
+            <div class="trazabilidad-accion">
+              <span class="accion-label">Acción:</span>
+              <span class="accion-value">{{ item.accion }}</span>
+            </div>
+            <div class="trazabilidad-fecha">
+              <span class="fecha-label">Fecha:</span>
+              <span class="fecha-value">{{ item.fecha }}</span>
+            </div>
+            <div class="trazabilidad-usuario">
+              <span class="usuario-label">Usuario:</span>
+              <span class="usuario-value">{{ item.usuario }}</span>
+            </div>
+            <div class="trazabilidad-descripcion">
+              <span class="descripcion-label">Descripción:</span>
+              <span class="descripcion-value">{{ item.descripcion }}</span>
+            </div>
+          </div>
+          
+          <div class="no-trazabilidad" *ngIf="filteredTrazabilidadData.length === 0">
+            <mat-icon>history</mat-icon>
+            <span>No hay registros de trazabilidad para este caso</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

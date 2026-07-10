@@ -1,0 +1,186 @@
+<div class="targeting-up-details-page">
+  <app-targeting-up-details-header
+    [targetingUp]="targetingUp"
+    [showBackButton]="true"
+    [activeView]="currentView"
+    (backClicked)="onBack()"
+    (viewChanged)="onViewChange($event)"
+    (editClicked)="onEdit()">
+  </app-targeting-up-details-header>
+
+  <div class="targeting-up-info-content" *ngIf="currentView === 'details'">
+    <!-- SECCION 1: InformacionTecnico -->
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon">
+          <mat-icon>person</mat-icon>
+        </div>
+        <div class="section-title">
+          <h4>Información Técnico</h4>
+        </div>
+      </div>
+      <div class="section-content">
+        <div class="info-grid">
+          <div class="info-item"><span class="info-label">Región:</span><span class="info-value">{{ targetingUp?.regionTecnico || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Municipio:</span><span class="info-value">{{ targetingUp?.municipioTecnico || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Nombre y apellidos técnico municipio:</span><span class="info-value">{{ targetingUp?.nombreTecnicoMunicipio || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Tipo de documento técnico municipio:</span><span class="info-value">{{ targetingUp?.tipoDocumentoTecnicoMunicipio || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Número de documento técnico municipio:</span><span class="info-value">{{ targetingUp?.numeroDocumentoTecnicoMunicipio || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Tipo de unidad productiva sobre la cual va a focalizar:</span><span class="info-value">{{ targetingUp?.tipoUnidadProductiva || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Pueblo indígena:</span><span class="info-value">{{ targetingUp?.puebloIndigena || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Otro pueblo. ¿Cuál?:</span><span class="info-value">{{ targetingUp?.otroPueblo || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Comunidad:</span><span class="info-value">{{ targetingUp?.comunidad || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Otra Comunidad. ¿Cuál?:</span><span class="info-value">{{ targetingUp?.otraComunidad || 'N/A' }}</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECCION 2: UnidadesproductivasFamiliares -->
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon">
+          <mat-icon>family_restroom</mat-icon>
+        </div>
+        <div class="section-title">
+          <h4>Unidades Productivas Familiares</h4>
+        </div>
+      </div>
+      <div class="section-content">
+        <div class="info-grid">
+          <div class="info-item"><span class="info-label">Tipo de documento representante o responsable:</span><span class="info-value">{{ targetingUp?.tipoDocumentoRepresentanteFamiliar || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Número de documento representante o responsable:</span><span class="info-value">{{ targetingUp?.numeroDocumentoRepresentanteFamiliar || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Primer nombre representante o responsable:</span><span class="info-value">{{ targetingUp?.primerNombreRepresentanteFamiliar || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Segundo nombre representante o responsable:</span><span class="info-value">{{ targetingUp?.segundoNombreRepresentanteFamiliar || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Primer Apellido representante o responsable:</span><span class="info-value">{{ targetingUp?.primerApellidoRepresentanteFamiliar || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Segundo Apellido representante o responsable:</span><span class="info-value">{{ targetingUp?.segundoApellidoRepresentanteFamiliar || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Número telefónico de contacto:</span><span class="info-value">{{ targetingUp?.telefonoContactoFamiliar || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Clasificación del SISBEN:</span><span class="info-value">{{ targetingUp?.clasificacionSisben || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Cuantas personas son menores de 18 años:</span><span class="info-value">{{ targetingUp?.menores18Familiar || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Cuantas personas son mayores de 18 años:</span><span class="info-value">{{ targetingUp?.mayores18Familiar || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Area disponible en m2 para implementación:</span><span class="info-value">{{ targetingUp?.areaDisponibleFamiliar || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Tipo de documento a cargar certificado de posesión:</span><span class="info-value">{{ targetingUp?.tipoDocumentoPosesionFamiliar || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Cargue de documento:</span><span class="info-value">{{ formatFileName(targetingUp?.documentoPosesionFamiliar) }}</span></div>
+          <div class="info-item"><span class="info-label">Tipo Barrio o Vereda:</span><span class="info-value">{{ targetingUp?.tipoBarrioVeredaFamiliar || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Diligencie el nombre del barrio:</span><span class="info-value">{{ targetingUp?.nombreBarrioFamiliar || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Seleccione la vereda:</span><span class="info-value">{{ targetingUp?.veredaFamiliar || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Otra:</span><span class="info-value">{{ targetingUp?.otraVeredaFamiliar || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Tipo de convenio:</span><span class="info-value">{{ targetingUp?.tipoConvenioFamiliar || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Número de convenio UP Familiares:</span><span class="info-value">{{ targetingUp?.numeroConvenioFamiliar || 'N/A' }}</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECCION 3: UnidadesproductivasEscolares -->
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon">
+          <mat-icon>school</mat-icon>
+        </div>
+        <div class="section-title">
+          <h4>Unidades Productivas Escolares</h4>
+        </div>
+      </div>
+      <div class="section-content">
+        <div class="info-grid">
+          <div class="info-item"><span class="info-label">Nombre IE ó CER:</span><span class="info-value">{{ targetingUp?.nombreInstitucionEducativa || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Código consecutivo DANE sede IE o CER:</span><span class="info-value">{{ targetingUp?.codigoDaneInstitucion || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Tipo de documento del docente o responsable:</span><span class="info-value">{{ targetingUp?.tipoDocumentoDocenteEscolar || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Número de documento del docente o responsable:</span><span class="info-value">{{ targetingUp?.numeroDocumentoDocenteEscolar || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Primer nombre del docente o responsable:</span><span class="info-value">{{ targetingUp?.primerNombreDocenteEscolar || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Segundo nombre del docente o responsable:</span><span class="info-value">{{ targetingUp?.segundoNombreDocenteEscolar || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Primer Apellido del docente o responsable:</span><span class="info-value">{{ targetingUp?.primerApellidoDocenteEscolar || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Segundo Apellido del docente o responsable:</span><span class="info-value">{{ targetingUp?.segundoApellidoDocenteEscolar || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Número telefónico de contacto:</span><span class="info-value">{{ targetingUp?.telefonoContactoEscolar || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Tipo de documento a cargar certificado de posesión:</span><span class="info-value">{{ targetingUp?.tipoDocumentoPosesionEscolar || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Cargue de documento:</span><span class="info-value">{{ formatFileName(targetingUp?.documentoPosesionEscolar) }}</span></div>
+          <div class="info-item"><span class="info-label">Cargue de Anexo listado de estudiantes:</span><span class="info-value">{{ formatFileName(targetingUp?.anexoListadoEstudiantes) }}</span></div>
+          <div class="info-item"><span class="info-label">Tipo barrio o vereda:</span><span class="info-value">{{ targetingUp?.tipoBarrioVeredaEscolar || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Diligencie el nombre del barrio:</span><span class="info-value">{{ targetingUp?.nombreBarrioEscolar || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Seleccione la vereda:</span><span class="info-value">{{ targetingUp?.veredaEscolar || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Otra:</span><span class="info-value">{{ targetingUp?.otraVeredaEscolar || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Tipo de convenio:</span><span class="info-value">{{ targetingUp?.tipoConvenioEscolar || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Número de convenio UP Escolares:</span><span class="info-value">{{ targetingUp?.numeroConvenioEscolar || 'N/A' }}</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECCION 4: UnidadesproductivasComunitarias -->
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon">
+          <mat-icon>groups</mat-icon>
+        </div>
+        <div class="section-title">
+          <h4>Unidades Productivas Comunitarias</h4>
+        </div>
+      </div>
+      <div class="section-content">
+        <div class="info-grid">
+          <div class="info-item"><span class="info-label">Nombre de la asociación:</span><span class="info-value">{{ targetingUp?.nombreAsociacion || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Código ó NIT de la asociación:</span><span class="info-value">{{ targetingUp?.codigoNitAsociacion || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Tipo de documento representante legal:</span><span class="info-value">{{ targetingUp?.tipoDocumentoRepresentanteComunitaria || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Número de documento del representante legal:</span><span class="info-value">{{ targetingUp?.numeroDocumentoRepresentanteComunitaria || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Primer nombre representante legal:</span><span class="info-value">{{ targetingUp?.primerNombreRepresentanteComunitaria || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Segundo nombre representante legal:</span><span class="info-value">{{ targetingUp?.segundoNombreRepresentanteComunitaria || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Primer apellido representante legal:</span><span class="info-value">{{ targetingUp?.primerApellidoRepresentanteComunitaria || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Segundo apellido representante legal:</span><span class="info-value">{{ targetingUp?.segundoApellidoRepresentanteComunitaria || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Número telefónico de contacto:</span><span class="info-value">{{ targetingUp?.telefonoContactoComunitaria || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Tipo de documento a cargar certificado de posesión:</span><span class="info-value">{{ targetingUp?.tipoDocumentoPosesionComunitaria || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Cargue de documento:</span><span class="info-value">{{ formatFileName(targetingUp?.documentoPosesionComunitaria) }}</span></div>
+          <div class="info-item"><span class="info-label">Cargue de certificado de representación legal:</span><span class="info-value">{{ formatFileName(targetingUp?.certificadoRepresentacionComunitaria) }}</span></div>
+          <div class="info-item"><span class="info-label">Tipo barrio o vereda:</span><span class="info-value">{{ targetingUp?.tipoBarrioVeredaComunitaria || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Diligencie el nombre del barrio:</span><span class="info-value">{{ targetingUp?.nombreBarrioComunitaria || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Seleccione la vereda:</span><span class="info-value">{{ targetingUp?.veredaComunitaria || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Otra:</span><span class="info-value">{{ targetingUp?.otraVeredaComunitaria || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Tipo de convenio:</span><span class="info-value">{{ targetingUp?.tipoConvenioComunitaria || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Número de convenio UP Comunitarias:</span><span class="info-value">{{ targetingUp?.numeroConvenioComunitaria || 'N/A' }}</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECCION 5: UnidadesproductivasFamiliaresind -->
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon">
+          <mat-icon>nature_people</mat-icon>
+        </div>
+        <div class="section-title">
+          <h4>Unidades Productivas Familiares Indígenas</h4>
+        </div>
+      </div>
+      <div class="section-content">
+        <div class="info-grid">
+          <div class="info-item"><span class="info-label">Tipo de documento representante o responsable:</span><span class="info-value">{{ targetingUp?.tipoDocumentoRepresentanteIndigena || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Número de documento representante o responsable:</span><span class="info-value">{{ targetingUp?.numeroDocumentoRepresentanteIndigena || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Primer nombre representante o responsable:</span><span class="info-value">{{ targetingUp?.primerNombreRepresentanteIndigena || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Segundo nombre representante o responsable:</span><span class="info-value">{{ targetingUp?.segundoNombreRepresentanteIndigena || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Primer Apellido representante o responsable:</span><span class="info-value">{{ targetingUp?.primerApellidoRepresentanteIndigena || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Segundo Apellido representante o responsable:</span><span class="info-value">{{ targetingUp?.segundoApellidoRepresentanteIndigena || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Fecha de nacimiento:</span><span class="info-value">{{ targetingUp?.fechaNacimientoIndigena || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Edad en años:</span><span class="info-value">{{ targetingUp?.edadIndigena || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Género:</span><span class="info-value">{{ targetingUp?.generoIndigena || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Número telefónico de contacto:</span><span class="info-value">{{ targetingUp?.telefonoContactoIndigena || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Cuantas personas son menores de 18 años:</span><span class="info-value">{{ targetingUp?.menores18Indigena || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Cuantas personas son menores de 5 años:</span><span class="info-value">{{ targetingUp?.menores5Indigena || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Menores de 5 años, participan en un programa de atención a la primera infancia:</span><span class="info-value">{{ targetingUp?.programaPrimeraInfancia || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Cuál programa:</span><span class="info-value">{{ targetingUp?.cualPrograma || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Cuantas personas tienen entre 6 y 17 años:</span><span class="info-value">{{ targetingUp?.entre6y17Indigena || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Cuantas personas son mayores de 18 años:</span><span class="info-value">{{ targetingUp?.mayores18Indigena || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Area disponible en m2 para implementación:</span><span class="info-value">{{ targetingUp?.areaDisponibleIndigena || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Tipo Barrio o Vereda:</span><span class="info-value">{{ targetingUp?.tipoBarrioVeredaIndigena || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Diligencie el nombre del barrio:</span><span class="info-value">{{ targetingUp?.nombreBarrioIndigena || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Seleccione la vereda:</span><span class="info-value">{{ targetingUp?.veredaIndigena || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Otra:</span><span class="info-value">{{ targetingUp?.otraVeredaIndigena || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Tipo de convenio UPFI:</span><span class="info-value">{{ targetingUp?.tipoConvenioIndigena || 'N/A' }}</span></div>
+          <div class="info-item"><span class="info-label">Número de convenio UP Familiares indígenas:</span><span class="info-value">{{ targetingUp?.numeroConvenioIndigena || 'N/A' }}</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <app-targeting-up-traceability
+    *ngIf="currentView === 'traceability'"
+    [targetingUp]="targetingUp"
+    (back)="onBack()">
+  </app-targeting-up-traceability>
+</div>

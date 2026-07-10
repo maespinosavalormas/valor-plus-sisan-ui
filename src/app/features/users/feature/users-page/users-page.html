@@ -1,0 +1,18 @@
+<div class="users-container">
+  <div class="users-header">
+    <div class="header-title">
+      <mat-icon>group</mat-icon>
+      <span>Administrar usuarios</span>
+    </div>
+
+    <button mat-flat-button color="primary" class="btn-new-user" (click)="openUserForm()">
+      Nuevo Usuario
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+
+  <div class="users-content">
+    <app-users-table [users]="users" (edit)="editUser($event)" (toggleStatus)="toggleUserStatus($event)">
+    </app-users-table>
+  </div>
+</div>

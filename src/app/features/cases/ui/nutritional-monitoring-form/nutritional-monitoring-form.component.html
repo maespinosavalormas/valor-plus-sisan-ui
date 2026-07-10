@@ -1,0 +1,316 @@
+<div class="form-header">
+  <h2 mat-dialog-title class="form-title">{{ data.isEdit ? 'Editar Monitoreo Nutricional' : 'Monitoreo Nutricional' }}</h2>
+  <button mat-icon-button class="close-button" (click)="onCancel()">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+<form [formGroup]="form" mat-dialog-content>
+  <div class="form-grid">
+    <div class="form-col">
+      <!-- Fecha de Monitoreo -->
+      <div class="section-title">Información General</div>
+      
+      <div class="field full-width">
+        <label class="field-label">Fecha de Monitoreo<span class="req">*</span></label>
+        <input
+          class="control"
+          type="date"
+          formControlName="fechaMonitoreo"
+          [max]="today"
+        />
+        <div
+          class="field-error"
+          *ngIf="fechaMonitoreo?.touched && fechaMonitoreo?.hasError('required')"
+        >
+          Campo obligatorio
+        </div>
+      </div>
+
+      <!-- Medidas Antropométricas -->
+      <div class="section-title">Medidas Antropométricas</div>
+      
+      <div class="field-row">
+        <div class="field">
+          <label class="field-label">Talla/Edad<span class="req">*</span></label>
+          <input
+            class="control"
+            type="text"
+            formControlName="tallaEdad"
+            placeholder="Ingrese Talla/Edad"
+            autocomplete="off"
+            maxlength="50"
+          />
+          <div
+            class="field-error"
+            *ngIf="tallaEdad?.touched && tallaEdad?.hasError('required')"
+          >
+            Campo obligatorio
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label">PC<span class="req">*</span></label>
+          <input
+            class="control"
+            type="text"
+            formControlName="pc"
+            placeholder="Ingrese PC"
+            autocomplete="off"
+            maxlength="50"
+          />
+          <div
+            class="field-error"
+            *ngIf="pc?.touched && pc?.hasError('required')"
+          >
+            Campo obligatorio
+          </div>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label class="field-label">Peso/Talla<span class="req">*</span></label>
+          <input
+            class="control"
+            type="text"
+            formControlName="pesoTalla"
+            placeholder="Ingrese Peso/Talla"
+            autocomplete="off"
+            maxlength="50"
+          />
+          <div
+            class="field-error"
+            *ngIf="pesoTalla?.touched && pesoTalla?.hasError('required')"
+          >
+            Campo obligatorio
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label">IMC/Edad<span class="req">*</span></label>
+          <input
+            class="control"
+            type="text"
+            formControlName="imcEdad"
+            placeholder="Ingrese IMC/Edad"
+            autocomplete="off"
+            maxlength="50"
+          />
+          <div
+            class="field-error"
+            *ngIf="imcEdad?.touched && imcEdad?.hasError('required')"
+          >
+            Campo obligatorio
+          </div>
+        </div>
+      </div>
+
+      <!-- Clasificación Estado Nutricional -->
+      <div class="field full-width">
+        <label class="field-label">Clasificación Estado Nutricional<span class="req">*</span></label>
+        <select
+          class="control control-select"
+          formControlName="clasificacionEstadoNutricional"
+        >
+          <option value="">Seleccione una opción</option>
+          <option *ngFor="let option of clasificacionEstadoNutricionalOptions" [value]="option">
+            {{ option }}
+          </option>
+        </select>
+        <div
+          class="field-error"
+          *ngIf="clasificacionEstadoNutricional?.touched && clasificacionEstadoNutricional?.hasError('required')"
+        >
+          Campo obligatorio
+        </div>
+      </div>
+
+      <!-- Signos de Enfermedad Actual -->
+      <div class="section-title">Signos de Enfermedad Actual</div>
+      
+      <div class="field full-width">
+        <label class="field-label">Seleccione los signos presentes:</label>
+        <div class="multi-select-container">
+          <mat-select
+            formControlName="signosEnfermedadActualMultiple"
+            multiple
+            placeholder="Seleccione los signos..."
+            class="control control-select"
+          >
+            <mat-option *ngFor="let signo of signosEnfermedadOptions" [value]="signo.value">
+              {{ signo.label }}
+            </mat-option>
+          </mat-select>
+        </div>
+      </div>
+
+      <!-- Frecuencia de Enfermedad -->
+      <div class="section-title">Frecuencia de Enfermedad</div>
+      
+      <div class="field full-width">
+        <label class="field-label">¿Enferma con frecuencia?<span class="req">*</span></label>
+        <select
+          class="control control-select"
+          formControlName="enfermaConFrecuencia"
+        >
+          <option value="">Seleccione una opción</option>
+          <option value="si">Sí</option>
+          <option value="no">No</option>
+        </select>
+        <div
+          class="field-error"
+          *ngIf="enfermaConFrecuencia?.touched && enfermaConFrecuencia?.hasError('required')"
+        >
+          Campo obligatorio
+        </div>
+      </div>
+
+      <!-- ¿Cuál tiene? (solo se muestra si responde "sí") -->
+      <div class="field full-width" *ngIf="enfermaConFrecuencia?.value === 'si'">
+        <label class="field-label">¿Cuál tiene?</label>
+        <div class="multi-select-container">
+          <mat-select
+            formControlName="cualTiene"
+            multiple
+            placeholder="Seleccione las opciones..."
+            class="control control-select"
+          >
+            <mat-option *ngFor="let option of cualTieneOptions" [value]="option">
+              {{ option }}
+            </mat-option>
+          </mat-select>
+        </div>
+      </div>
+
+      <!-- Historial Médico -->
+      <div class="section-title">Historial Médico</div>
+      
+      <div class="field-row">
+        <div class="field">
+          <label class="field-label">Hospitalizaciones<span class="req">*</span></label>
+          <select
+            class="control control-select"
+            formControlName="hospitalizaciones"
+          >
+            <option *ngFor="let option of siNoDesconocidoOptions" [value]="option">
+              {{ option === 'si' ? 'Sí' : option === 'no' ? 'No' : 'Desconocido' }}
+            </option>
+          </select>
+          <div
+            class="field-error"
+            *ngIf="hospitalizaciones?.touched && hospitalizaciones?.hasError('required')"
+          >
+            Campo obligatorio
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label">Cirugías<span class="req">*</span></label>
+          <select
+            class="control control-select"
+            formControlName="cirugias"
+          >
+            <option *ngFor="let option of siNoDesconocidoOptions" [value]="option">
+              {{ option === 'si' ? 'Sí' : option === 'no' ? 'No' : 'Desconocido' }}
+            </option>
+          </select>
+          <div
+            class="field-error"
+            *ngIf="cirugias?.touched && cirugias?.hasError('required')"
+          >
+            Campo obligatorio
+          </div>
+        </div>
+      </div>
+
+      <div class="field full-width">
+        <label class="field-label">Toma medicamentos habitualmente<span class="req">*</span></label>
+        <select
+          class="control control-select"
+          formControlName="tomaMedicamentos"
+        >
+          <option *ngFor="let option of siNoDesconocidoOptions" [value]="option">
+            {{ option === 'si' ? 'Sí' : option === 'no' ? 'No' : 'Desconocido' }}
+          </option>
+        </select>
+        <div
+          class="field-error"
+          *ngIf="tomaMedicamentos?.touched && tomaMedicamentos?.hasError('required')"
+        >
+          Campo obligatorio
+        </div>
+      </div>
+
+      <!-- ¿Cuál medicamento? (solo se muestra si responde "sí") -->
+      <div class="field full-width" *ngIf="tomaMedicamentos?.value === 'si'">
+        <label class="field-label">¿Cuál?</label>
+        <input
+          class="control"
+          type="text"
+          formControlName="cualMedicamento"
+          placeholder="Ingrese el nombre del medicamento"
+          autocomplete="off"
+          maxlength="100"
+        />
+      </div>
+
+      <div class="field full-width">
+        <label class="field-label">Tiene alguna limitación/discapacidad<span class="req">*</span></label>
+        <select
+          class="control control-select"
+          formControlName="limitacionDiscapacidad"
+        >
+          <option *ngFor="let option of siNoDesconocidoOptions" [value]="option">
+            {{ option === 'si' ? 'Sí' : option === 'no' ? 'No' : 'Desconocido' }}
+          </option>
+        </select>
+        <div
+          class="field-error"
+          *ngIf="limitacionDiscapacidad?.touched && limitacionDiscapacidad?.hasError('required')"
+        >
+          Campo obligatorio
+        </div>
+      </div>
+
+      <!-- Tipo de limitación (solo se muestra si responde "sí") -->
+      <div class="field full-width" *ngIf="limitacionDiscapacidad?.value === 'si'">
+        <label class="field-label">Tipo de limitación</label>
+        <select
+          class="control control-select"
+          formControlName="tipoLimitacion"
+        >
+          <option value="">Seleccione una opción</option>
+          <option *ngFor="let option of tipoLimitacionOptions" [value]="option">
+            {{ option.charAt(0).toUpperCase() + option.slice(1) }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Observación -->
+      <div class="field full-width">
+        <label class="field-label">Observación</label>
+        <textarea
+          class="control control-textarea"
+          formControlName="observacion"
+          placeholder="Ingrese cualquier observación adicional..."
+          rows="4"
+          maxlength="500"
+        ></textarea>
+      </div>
+    </div>
+  </div>
+</form>
+
+<mat-dialog-actions align="end" class="dialog-actions">
+  <button mat-button class="btn-cancel" type="button" (click)="onCancel()">Cancelar</button>
+  <button
+    mat-flat-button
+    class="btn-guardar"
+    type="button"
+    (click)="onSave()"
+    [disabled]="form.invalid"
+  >
+    {{ isEditing ? 'Actualizar' : 'Confirmar' }}
+  </button>
+</mat-dialog-actions>

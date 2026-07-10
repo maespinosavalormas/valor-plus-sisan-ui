@@ -1,0 +1,18 @@
+<div class="programs-container">
+  <div class="programs-header">
+    <div class="header-title">
+      <mat-icon>assignment</mat-icon>
+      <span>Administrar programas</span>
+    </div>
+
+    <button mat-flat-button color="primary" class="btn-new-program" (click)="openProgramForm()">
+      Nuevo Programa
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+
+  <div class="programs-content">
+    <app-programs-list [programs]="programs" (edit)="editProgram($event)" (toggleStatus)="toggleProgramStatus($event)">
+    </app-programs-list>
+  </div>
+</div>

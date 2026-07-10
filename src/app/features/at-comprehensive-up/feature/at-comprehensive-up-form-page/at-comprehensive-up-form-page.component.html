@@ -1,0 +1,349 @@
+<div class="form-container">
+  <div class="form-header">
+    <div class="form-title">
+      <span>{{ title }}</span>
+    </div>
+    <button mat-icon-button class="close-button" (click)="onCancel()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <form [formGroup]="form" class="form-grid">
+    <!-- SECCION 1: Información General -->
+    <h4 class="section-title">
+      <mat-icon>info</mat-icon>
+      Información General
+    </h4>
+    <div class="field">
+      <span class="field-label req">Código de la unidad productiva (código registrado en la focalización):</span>
+      <input class="control" formControlName="codigoUnidadProductiva" placeholder="Ingrese código" required>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Nombre completo del beneficiario:</span>
+      <input class="control" formControlName="nombreCompletoBeneficiario" placeholder="Campo informativo" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label req">Tipo de unidad productiva:</span>
+      <mat-select class="control" formControlName="tipoUnidadProductiva" placeholder="Seleccione tipo" required>
+        <mat-option *ngFor="let tipo of tiposUnidadProductiva" [value]="tipo">{{ tipo }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">No se encuentra caracterizado:</span>
+      <input class="control" formControlName="noSeEncuentraCaracterizado" placeholder="Campo informativo" readonly>
+    </div>
+
+    <!-- SECCION 2: Datos Representante Unidad Productiva -->
+    <h4 class="section-title">
+      <mat-icon>person</mat-icon>
+      Datos Representante Unidad Productiva
+    </h4>
+    <div class="field readonly-field">
+      <span class="field-label">Nombre del responsable:</span>
+      <input class="control" formControlName="nombreResponsable" placeholder="Campo informativo" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label req">Tipo de documento del responsable (a):</span>
+      <mat-select class="control" formControlName="tipoDocumentoResponsable" placeholder="Seleccione tipo documento" required>
+        <mat-option *ngFor="let tipo of tiposDocumento" [value]="tipo">{{ tipo }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Número de documento representante o responsable de la unidad productiva:</span>
+      <input class="control" type="text" formControlName="numeroDocumentoResponsable" placeholder="Ingrese número documento" pattern="[0-9]*" required>
+    </div>
+    <div class="field">
+      <span class="field-label req">Teléfono de contacto:</span>
+      <input class="control" type="text" formControlName="telefonoContactoResponsable" placeholder="Ingrese teléfono" pattern="[0-9]*" required>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">Convenio:</span>
+      <input class="control" formControlName="convenio" placeholder="Campo informativo" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label req">Región:</span>
+      <mat-select class="control" formControlName="region" placeholder="Seleccione región" required>
+        <mat-option *ngFor="let region of regions" [value]="region">{{ region }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Municipio:</span>
+      <mat-select class="control" formControlName="municipio" placeholder="Seleccione municipio" required>
+        <mat-option *ngFor="let municipio of municipios" [value]="municipio">{{ municipio }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Zona:</span>
+      <mat-select class="control" formControlName="zona" placeholder="Seleccione zona" required>
+        <mat-option *ngFor="let zona of zonas" [value]="zona">{{ zona }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Tipo Barrio o Vereda:</span>
+      <mat-select class="control" formControlName="tipoBarrioVereda" placeholder="Seleccione tipo" required>
+        <mat-option *ngFor="let tipo of tiposBarrioVereda" [value]="tipo">{{ tipo }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Nombre del barrio:</span>
+      <input class="control" formControlName="nombreBarrio" placeholder="Ingrese nombre barrio" required>
+    </div>
+    <div class="field">
+      <span class="field-label req">Vereda:</span>
+      <mat-select class="control" formControlName="vereda" placeholder="Seleccione vereda" required>
+        <mat-option *ngFor="let vereda of veredas" [value]="vereda">{{ vereda }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Dirección o ubicación:</span>
+      <input class="control" formControlName="direccionUbicacion" placeholder="Ingrese dirección" required>
+    </div>
+
+    <!-- SECCION 3: Información del funcionario -->
+    <h4 class="section-title">
+      <mat-icon>engineering</mat-icon>
+      Información del funcionario
+    </h4>
+    <div class="field">
+      <span class="field-label req">Número de documento del funcionario:</span>
+      <input class="control" type="text" formControlName="numeroDocumentoFuncionario" placeholder="Ingrese número documento" pattern="[0-9]*" required>
+    </div>
+    <div class="field">
+      <span class="field-label req">Nombres y apellidos del funcionario que realiza la visita:</span>
+      <input class="control" formControlName="nombreFuncionario" placeholder="Ingrese nombre completo" required>
+    </div>
+    <div class="field">
+      <span class="field-label req">Función de quién realiza la visita:</span>
+      <mat-select class="control" formControlName="funcionFuncionario" placeholder="Seleccione función" required>
+        <mat-option *ngFor="let funcion of funcionesFuncionario" [value]="funcion">{{ funcion }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">Fecha Asistencia tecnica:</span>
+      <input class="control" type="date" formControlName="fechaAsistenciaTecnica" required>
+    </div>
+    <div class="field">
+      <span class="field-label req">Numero de la asistencia tecnica:</span>
+      <input class="control" type="number" formControlName="numeroAsistenciaTecnica" placeholder="Ingrese número" required>
+    </div>
+
+    <!-- SECCION 4: Detalles de la asistencia -->
+    <h4 class="section-title">
+      <mat-icon>location_on</mat-icon>
+      Detalles de la asistencia
+    </h4>
+    <div class="field full-width">
+      <span class="field-label req">Ubicación Georeferenciación unidad productiva:</span>
+      <div
+        *ngIf="isBrowser"
+        class="map-container"
+        #mapContainer>
+      </div>
+      <div class="coordinates-display">
+        <strong>Coordenadas seleccionadas:</strong>
+        <div class="coordinates-row">
+          <div class="field inline-field coordinate-field">
+            <span class="field-label">Latitud:</span>
+            <input class="control" type="number" step="0.000001" formControlName="latitud" (blur)="onCoordinatesInput()" placeholder="No seleccionada">
+          </div>
+          <div class="field inline-field coordinate-field">
+            <span class="field-label">Longitud:</span>
+            <input class="control" type="number" step="0.000001" formControlName="longitud" (blur)="onCoordinatesInput()" placeholder="No seleccionada">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <span class="field-label req">Fase del proceso de producción:</span>
+      <mat-select class="control" formControlName="faseProcesoProduccion" placeholder="Seleccione fase" multiple required>
+        <mat-option *ngFor="let fase of fasesProcesoProduccion" [value]="fase">{{ fase }}</mat-option>
+      </mat-select>
+    </div>
+
+    <!-- SECCION 5: Detalles de la cosecha -->
+    <h4 class="section-title">
+      <mat-icon>agriculture</mat-icon>
+      Detalles de la cosecha
+    </h4>
+    <div formArrayName="productosProducidos" class="field full-width">
+      <div *ngFor="let producto of productosProducidos.controls; let i = index" [formGroupName]="i" class="field full-width repeat-container">
+        <div class="section-title">Producto {{ i + 1 }}</div>
+        <div class="repeat-fields-grid">
+          <div class="field">
+            <span class="field-label req">Seleccione el producto:</span>
+            <mat-select class="control" formControlName="seleccioneProducto" placeholder="Seleccione producto" required>
+              <mat-option *ngFor="let productoDisp of productosDisponibles" [value]="productoDisp">{{ productoDisp }}</mat-option>
+            </mat-select>
+          </div>
+          <div class="field" *ngIf="producto.get('seleccioneProducto')?.value === 'Otro'">
+            <span class="field-label req">¿Cuál?:</span>
+            <input class="control" formControlName="cualProducto" placeholder="Ingrese producto" required>
+          </div>
+          <div class="field">
+            <span class="field-label req">Kilos producidos:</span>
+            <input class="control" type="number" step="0.01" formControlName="kilosProducidos" placeholder="0.00" required>
+          </div>
+          <div class="field readonly-field">
+            <span class="field-label">Lista productos total:</span>
+            <input class="control" formControlName="listaProductosTotal" placeholder="Campo informativo" readonly>
+          </div>
+          <div class="field readonly-field">
+            <span class="field-label">productos check:</span>
+            <input class="control" type="checkbox" formControlName="productosCheck" readonly>
+          </div>
+          <div class="field readonly-field">
+            <span class="field-label">suma de los kilos producidos:</span>
+            <input class="control" type="number" step="0.01" formControlName="sumaKilosProducidos" placeholder="0.00" readonly>
+          </div>
+          <div class="field">
+            <span class="field-label req">Foto formato seguimiento a la producción:</span>
+            <div class="file-upload-container">
+              <input class="file-input" type="file" id="fotoSeguimiento{{i}}" formControlName="fotoSeguimiento" accept=".pdf" (change)="onFileSelected($event, 'fotoSeguimiento' + i)">
+              <label class="file-upload-label" for="fotoSeguimiento{{i}}" [class.active]="selectedFiles['fotoSeguimiento' + i]">
+                <mat-icon class="upload-icon">cloud_upload</mat-icon>
+                <span class="upload-text">{{ selectedFiles['fotoSeguimiento' + i] || 'Seleccionar archivo PDF' }}</span>
+              </label>
+            </div>
+          </div>
+          <div class="field">
+            <span class="field-label req">¿Cuántos kilos destinados en Autoconsumo?:</span>
+            <input class="control" type="number" step="0.01" formControlName="kilosAutoconsumo" placeholder="0.00" required>
+          </div>
+          <div class="field">
+            <span class="field-label req">¿Cuántos kilos destinados en PAE?:</span>
+            <input class="control" type="number" step="0.01" formControlName="kilosPAE" placeholder="0.00" required>
+          </div>
+          <div class="field">
+            <span class="field-label req">¿Cuántos kilos destinados en Trueque?:</span>
+            <input class="control" type="number" step="0.01" formControlName="kilosTrueque" placeholder="0.00" required>
+          </div>
+          <div class="field">
+            <span class="field-label req">¿Cuántos kilos destinados en Venta Directa?:</span>
+            <input class="control" type="number" step="0.01" formControlName="kilosVentaDirecta" placeholder="0.00" required>
+          </div>
+          <div class="field">
+            <span class="field-label req">¿Cuántos kilos destinados en Donación?:</span>
+            <input class="control" type="number" step="0.01" formControlName="kilosDonacion" placeholder="0.00" required>
+          </div>
+          <div class="field">
+            <span class="field-label req">¿Cuántos kilos destinados en Hoteles?:</span>
+            <input class="control" type="number" step="0.01" formControlName="kilosHoteles" placeholder="0.00" required>
+          </div>
+          <div class="field">
+            <span class="field-label req">¿Cuántos kilos destinados en Restaurantes?:</span>
+            <input class="control" type="number" step="0.01" formControlName="kilosRestaurantes" placeholder="0.00" required>
+          </div>
+          <div class="field">
+            <span class="field-label req">¿Cuántos kilos destinados en Cafeteria?:</span>
+            <input class="control" type="number" step="0.01" formControlName="kilosCafeteria" placeholder="0.00" required>
+          </div>
+          <div class="field readonly-field">
+            <span class="field-label">suma de todos los destinos:</span>
+            <input class="control" type="number" step="0.01" formControlName="sumaTodosDestinos" placeholder="0.00" readonly>
+          </div>
+          <div class="field readonly-field">
+            <span class="field-label">total producido - total destinos:</span>
+            <input class="control" type="number" step="0.01" formControlName="totalProducidoMenosDestinos" placeholder="0.00" readonly>
+          </div>
+          <div class="field readonly-field">
+            <span class="field-label">Total destinos: {{ productosProducidos.at(i)?.get('sumaTodosDestinos')?.value || 0 }} kg Diferencia con producción: {{ productosProducidos.at(i)?.get('totalProducidoMenosDestinos')?.value || 0 }} kg:</span>
+            <input class="control" formControlName="totalDestinosKg" placeholder="Campo informativo" readonly>
+          </div>
+        </div>
+        <button mat-button type="button" (click)="removeProducto(i)">Remover Producto</button>
+      </div>
+      <button mat-button type="button" (click)="addProducto()" class="repeat-container">Agregar Producto</button>
+    </div>
+
+    <!-- SECCION 6: Detalles de la asistencia tecnica -->
+    <h4 class="section-title">
+      <mat-icon>support</mat-icon>
+      Detalles de la asistencia tecnica
+    </h4>
+    <div class="field readonly-field">
+      <span class="field-label">mostrar situacion previa:</span>
+      <input class="control" formControlName="mostrarSituacionPrevia" placeholder="Campo informativo" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label req">¿Cual es la Situación encontrada en la Unidad Productiva?:</span>
+      <textarea class="control" formControlName="situacionEncontrada" rows="4" placeholder="Describa la situación encontrada" required></textarea>
+    </div>
+    <div class="field readonly-field">
+      <span class="field-label">mostrar recomendacion previa:</span>
+      <input class="control" formControlName="mostrarRecomendacionPrevia" placeholder="Campo informativo" readonly>
+    </div>
+    <div class="field">
+      <span class="field-label req">Recomendaciones técnicas:</span>
+      <textarea class="control" formControlName="recomendacionesTecnicas" rows="4" placeholder="Ingrese recomendaciones técnicas" required></textarea>
+    </div>
+    <div class="field">
+      <span class="field-label">Fotografía del interior de la Unidad Productiva:</span>
+      <div class="file-upload-container">
+        <input class="file-input" type="file" id="fotografiaInterior" formControlName="fotografiaInterior" accept=".pdf" (change)="onFileSelected($event, 'fotografiaInterior')">
+        <label class="file-upload-label" for="fotografiaInterior" [class.active]="selectedFiles['fotografiaInterior']">
+          <mat-icon class="upload-icon">cloud_upload</mat-icon>
+          <span class="upload-text">{{ selectedFiles['fotografiaInterior'] || 'Seleccionar archivo PDF' }}</span>
+        </label>
+      </div>
+    </div>
+    <div class="field">
+      <span class="field-label req">¿La unidad productiva esta implementada?:</span>
+      <mat-select class="control" formControlName="unidadProductivaImplementada" placeholder="Seleccione" required>
+        <mat-option *ngFor="let estado of estadosImplementacion" [value]="estado">{{ estado }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="field">
+      <span class="field-label req">¿La unidad productiva esta activa o inactiva?:</span>
+      <mat-select class="control" formControlName="unidadProductivaActiva" placeholder="Seleccione" required>
+        <mat-option *ngFor="let situacion of situacionesUnidadProductiva" [value]="situacion">{{ situacion }}</mat-option>
+      </mat-select>
+    </div>
+
+    <!-- SECCION 7: Consentimiento informado -->
+    <h4 class="section-title">
+      <mat-icon>assignment</mat-icon>
+      Consentimiento informado
+    </h4>
+    <div class="field readonly-field">
+      <span class="field-label">Fecha y hora de finalización de la encuesta:</span>
+      <input class="control" type="datetime-local" formControlName="fechaHoraFinalizacion" placeholder="Campo informativo" readonly>
+    </div>
+    <div class="field full-width">
+      <span class="field-label autorizo">1. Yo, actuando en representación y con la autorización expresa de todos los miembros de mi hogar, incluyendo a menores y mayores de edad, autorizo a la GOBERNACIÓN DE ANTIOQUIA para que en cumplimiento a lo determinado en la Ley 1581 de 2012 (uso de los datos personales), en el marco de sus procesos de atención, actúe como responsable del tratamiento de los datos personales de los cuales somos titulares, realice la recolección, uso y tratamiento de nuestros datos, ya sea de forma conjunta o separada, conforme a la política de tratamiento de datos personales de la Gobernación de Antioquia, disponible en https://sedeelectronica.antioquia.gov.co/publicaciones/203/politica-para-el-tratamiento-de-datos-personales/:</span>
+      <mat-select class="control" formControlName="consentimientoDatosPersonales" placeholder="Seleccione" required>
+        <mat-option value="si">Sí</mat-option>
+        <mat-option value="no">No</mat-option>
+      </mat-select>
+    </div>
+    <div class="field full-width">
+      <span class="field-label autorizo">2. Asimismo, autorizo a la administración departamental para captar, tomar, almacenar, editar, divulgar y publicar imágenes, audios o datos de nuestra familia, o de alguno de sus integrantes, (incluyendo menores y mayores de edad), con fines estadísticos, académicos o para la promoción de los derechos de los niños, niñas, adolescentes y familias. Esto se realizará conforme a la política de tratamiento de datos personales de la Gobernación de Antioquia, y dando cumplimiento a lo dispuesto en la Ley 1581 de 2012.:</span>
+      <mat-select class="control" formControlName="consentimientoImagenesAudios" placeholder="Seleccione" required>
+        <mat-option value="si">Sí</mat-option>
+        <mat-option value="no">No</mat-option>
+      </mat-select>
+    </div>
+    <div class="field full-width">
+      <span class="field-label req">Firma del representante de la Unidad productiva:</span>
+      <div class="file-upload-container">
+        <input class="file-input" type="file" id="firmaRepresentante" formControlName="firmaRepresentante" accept=".pdf" (change)="onFileSelected($event, 'firmaRepresentante')">
+        <label class="file-upload-label" for="firmaRepresentante" [class.active]="selectedFiles['firmaRepresentante']">
+          <mat-icon class="upload-icon">cloud_upload</mat-icon>
+          <span class="upload-text">{{ selectedFiles['firmaRepresentante'] || 'Seleccionar archivo PDF' }}</span>
+        </label>
+      </div>
+    </div>
+
+
+  </form>
+      <!-- Actions -->
+    <div class="actions">
+      <button mat-raised-button type="button" (click)="onCancel()" class="btn-cancel">
+        <mat-icon>cancel</mat-icon>
+        Cancelar
+      </button>
+      <button mat-raised-button color="primary" type="button" (click)="onSave()" [disabled]="!form.valid" class="btn-guardar">
+        <mat-icon>save</mat-icon>
+        {{ isEditMode ? 'Actualizar' : 'Guardar' }}
+      </button>
+    </div>
+</div>

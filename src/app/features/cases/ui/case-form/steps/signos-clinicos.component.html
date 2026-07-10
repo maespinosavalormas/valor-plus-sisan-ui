@@ -1,0 +1,95 @@
+<div class="form-header">
+  <h2 mat-dialog-title class="form-title">
+    {{ data.isEdit ? 'Editar Signos Clínicos' : 'Signos Clínicos' }}
+  </h2>
+
+  <button mat-icon-button class="close-button" (click)="cancelForm()">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+<form [formGroup]="form" mat-dialog-content>
+  <div class="form-grid">
+    <div class="field">
+      <label class="field-label">Edema</label>
+
+      <select class="control control-select" formControlName="edemaPresentCode">
+        <option value="">Seleccione</option>
+
+        <option value="1">Sí</option>
+
+        <option value="2">No</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Desnutrición emaciación o delgadez visible</label>
+
+      <select class="control control-select" formControlName="visibleWastingCode">
+        <option value="">Seleccione</option>
+
+        <option value="1">Sí</option>
+
+        <option value="2">No</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Piel reseca o áspera</label>
+
+      <select class="control control-select" formControlName="dryOrRoughSkinCode">
+        <option value="">Seleccione</option>
+
+        <option value="1">Sí</option>
+
+        <option value="2">No</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Hipo o hiperpigmentación de la piel</label>
+
+      <select class="control control-select" formControlName="skinPigmentationChangesCode">
+        <option value="">Seleccione</option>
+
+        <option value="1">Sí</option>
+
+        <option value="2">No</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Cambios en el cabello</label>
+
+      <select class="control control-select" formControlName="hairChangesCode">
+        <option value="">Seleccione</option>
+
+        <option value="1">Sí</option>
+
+        <option value="2">No</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Anemia detectada por palidez palmar o mucosas</label>
+
+      <select class="control control-select" formControlName="clinicalAnemiaSignsCode">
+        <option value="">Seleccione</option>
+
+        <option value="1">Sí</option>
+
+        <option value="2">No</option>
+      </select>
+    </div>
+  </div>
+</form>
+
+<div class="step-counter">{{ currentStep }}/{{ totalSteps }}</div>
+
+<div mat-dialog-actions class="dialog-actions">
+  <button mat-button class="btn-cancel" (click)="goBack()" [disabled]="false">Anterior</button>
+
+  <button mat-button class="btn-guardar" (click)="saveForm()" [disabled]="!form.valid">
+    {{ isLastStep ? 'Finalizar' : 'Siguiente' }}
+  </button>
+</div>

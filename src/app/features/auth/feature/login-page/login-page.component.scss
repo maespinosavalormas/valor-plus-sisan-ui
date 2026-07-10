@@ -1,0 +1,787 @@
+:host {
+  background-color: var(--white) !important;
+}
+
+.login-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: 100vh;
+  width: 100%;
+  background-color: var(--white) !important;
+}
+
+.image-side {
+  position: relative;
+  display: flex;
+  align-items: center;      
+  justify-content: center;    
+  overflow: hidden;  
+  height: 100vh;
+}
+
+.image-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  opacity: 0;
+  transform: translateX(-40px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  z-index: 1;
+}
+
+.image-bg.active {
+  opacity: 1;
+  transform: translateX(0);
+  z-index: 2;
+}
+
+.image-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+
+.image-indicators {
+  position: absolute;
+  bottom: 1.2rem;
+  display: flex;
+  gap: 8px;
+  z-index: 3;
+}
+
+.image-indicators span {
+  width: 28px;
+  height: 3px;
+  background-color: rgba(255, 255, 255, 0.4);
+  border-radius: 2px;
+  transition: background-color 0.3s ease;
+}
+
+.image-indicators span.active {
+  background-color: var(--white);
+}
+
+.image-top-left {
+  position: absolute;
+  top: 1.6rem;
+  left: 1.5rem;
+  z-index: 3;
+  color: var(--white);
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.image-overlay-text {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  color: var(--white);
+  padding: 2rem 5rem;
+  max-width: 80%;
+
+}
+
+/* LOGO */
+.login-logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+.login-logo {
+  height: 60% !important; 
+  width: auto;
+}
+
+.logos-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 40px 15% 0px;
+  
+  .logo-valormas {
+    height: 30px;
+    width: auto;
+  }
+  .logo-gobernacion {
+    height: 50px;
+    width: auto;
+  }
+}
+
+.copyright {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  
+  span {
+    font-size: 10px;
+    color: var(--black);
+    opacity: 0.7;
+    font-weight: 400;
+  }
+}
+
+/* TÍTULO IMAGEN*/
+.image-overlay-text h1 {
+  font-size: 25px;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  letter-spacing: 1px;
+}
+
+/* TEXTO IMAGEN*/
+.image-overlay-text p {
+  font-size: 15px;
+  line-height: 1.5;
+  font-weight: 400;
+}
+  /* CARD DERECHA */
+  .login-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 0;
+    max-width: 800px;
+    max-height: 100%;
+    box-shadow: none;
+    border-radius: 0;
+    padding: 0 3rem;
+    background-color: var(--white) !important;
+  }
+
+  mat-card-header {
+    justify-content: center;
+    margin:0 0 2rem 0 !important;
+  }
+
+  mat-card-title {
+    font-size: 30px;
+    font-weight: 700;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--strong-blue-primary);
+  }
+
+  mat-card-content {
+    padding: 0;
+  }
+
+  .full-width {
+    width: 100%;
+    margin-bottom: 1.2rem;
+  }
+
+  mat-form-field {
+    font-size: 13px;
+  }
+
+
+::ng-deep .mat-mdc-form-field {
+  width: 100%;
+  --mdc-filled-text-field-active-indicator-height: 0px; 
+  --mdc-filled-text-field-focus-active-indicator-height: 0px;
+  background-color: transparent;
+}
+
+::ng-deep .mdc-text-field--filled {
+  border: 1.5px solid var(--blue-primary) !important;
+  border-radius: 10px !important;
+  background-color: var(--white) !important;
+  overflow: hidden; 
+}
+
+
+
+::ng-deep .mat-mdc-text-field-wrapper {
+  height: 40px !important;
+  background-color: var(--white);
+  padding: 0;
+}
+
+
+::ng-deep .mat-mdc-form-field-subscript-wrapper::before,
+::ng-deep .mat-mdc-form-field-subscript-wrapper::after {
+  display: none !important;
+}
+
+::ng-deep .mdc-line-ripple {
+  display: none !important;
+}
+
+/* CONTENEDOR FLEX INTERNO */
+::ng-deep .mat-mdc-form-field-flex {
+  height: 100%;
+  padding: 0 !important;
+  align-items: center;
+}
+
+/* INPUT */
+::ng-deep .mat-mdc-input-element {
+  height: 40px;
+  padding: 0 !important;
+  line-height: 40px; 
+  color: var(--black) !important;
+  display: flex;
+  align-items: center;
+}
+
+/* Hide browser's native password visibility toggle */
+::ng-deep .mat-mdc-input-element::-webkit-credentials-auto-fill-button,
+::ng-deep .mat-mdc-input-element::-webkit-caps-lock-indicator,
+::ng-deep .mat-mdc-input-element::-webkit-reveal-password-button {
+  display: none !important;
+}
+
+::ng-deep .mat-mdc-input-element::-ms-reveal,
+::ng-deep .mat-mdc-input-element::-ms-clear {
+  display: none !important;
+}
+
+/* Custom password toggle button styling */
+.password-toggle-btn {
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+  width: 32px !important;
+  height: 32px !important;
+  min-width: 32px !important;
+  min-height: 32px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background-color: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+  
+  &:hover {
+    opacity: 1;
+  }
+  
+  &:focus {
+    background-color: transparent !important;
+    outline: none !important;
+    box-shadow: none !important;
+  }
+  
+  &:active {
+    background-color: transparent !important;
+    box-shadow: none !important;
+  }
+  
+  mat-icon {
+    font-size: 18px !important;
+    width: 18px !important;
+    height: 18px !important;
+    color: var(--strong-gray-primary);
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+}
+
+/* Fix positioning for mat-icon-button suffix */
+::ng-deep .mat-mdc-form-field-icon-suffix {
+  display: flex !important;
+  align-items: center !important;
+  height: 100% !important;
+  padding-right: 8px !important;
+}
+
+::ng-deep .mat-mdc-form-field-infix {
+  display: flex !important;
+  align-items: center !important;
+  padding: 0 !important;
+  min-height: 40px !important;
+  border: 0 !important;
+}
+
+::ng-deep .mat-mdc-input-element::placeholder {
+  color: var(--gray-primary) !important;
+  line-height: 40px;
+}
+
+/* ERROR */
+::ng-deep mat-error {
+  color: var(--warning) !important;
+  font-size: 12px;
+  text-align: start;
+}
+
+.field-group {
+  margin-bottom: 1.5rem;
+}
+
+.field-label {
+  display: block;
+  margin-bottom: 15px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--strong-blue-primary);
+}
+
+::ng-deep .input-icon {
+  width: 15px;
+  height: 15px;
+  min-width: 15px;
+  min-height: 15px;
+  object-fit: contain;     
+  object-position: center;
+  margin-right: 12px;
+  display: block;
+}
+::ng-deep .mat-mdc-form-field-icon-prefix {
+  padding-left: 12px;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  color: var(--strong-gray-primary) !important;
+}
+
+
+  /* BOTÓN */
+.button-container {
+  margin-top: 2rem;
+
+  button[mat-raised-button] {
+    width: 100%;
+    height: 48px;
+    border-radius: 18px;
+    background-color: var(--blue-primary);
+    color: var(--white);
+    font-weight: bolder;
+
+    // Forzar flex en el contenido interno del botón de Material
+    ::ng-deep .mdc-button__label {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      width: 100%;
+    }
+
+    &:disabled {
+      opacity: 0.7;
+    }
+
+    .loading-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .spinner {
+      display: flex; 
+    }
+
+    .loading-text {
+      font-weight: bold;
+      animation: pulse 1.2s infinite;
+      line-height: 1; 
+    }
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+mat-spinner {
+  margin: 0 auto;
+}
+
+  /* RESPONSIVE */
+@media (min-width: 1400px) {
+  .login-card {
+    max-width: 1000px !important;
+    padding: 0 4rem !important;
+  }
+  
+  mat-card-title {
+    font-size: 36px !important;
+  }
+  
+  .field-label {
+    font-size: 16px !important;
+    margin-bottom: 18px !important;
+  }
+  
+  mat-form-field {
+    font-size: 15px !important;
+  }
+  
+  ::ng-deep .mat-mdc-text-field-wrapper {
+    height: 48px !important;
+  }
+  
+  ::ng-deep .mat-mdc-input-element {
+    height: 48px;
+    line-height: 48px;
+    font-size: 16px !important;
+  }
+  
+  ::ng-deep .mat-mdc-form-field-infix {
+    min-height: 48px !important;
+  }
+  
+  ::ng-deep .mat-mdc-form-field-icon-prefix {
+    padding-left: 16px !important;
+  }
+  
+  ::ng-deep .input-icon {
+    width: 18px !important;
+    height: 18px !important;
+    min-width: 18px !important;
+    min-height: 18px !important;
+    margin-right: 14px !important;
+  }
+  
+  .button-container button[mat-raised-button] {
+    height: 56px !important;
+    font-size: 18px !important;
+    border-radius: 20px !important;
+  }
+  
+  .full-width {
+    margin-bottom: 1.5rem !important;
+  }
+  
+  .logos-container {
+    padding: 50px 20% 0px !important;
+    
+    .logo-valormas {
+      height: 36px !important;
+    }
+    
+    .logo-gobernacion {
+      height: 60px !important;
+    }
+  }
+  
+  .copyright span {
+    font-size: 12px !important;
+  }
+  
+  /* Image side scaling */
+  .image-overlay-text h1 {
+    font-size: 30px !important;
+  }
+  
+  .image-overlay-text p {
+    font-size: 18px !important;
+  }
+  
+  .image-top-left {
+    font-size: 32px !important;
+  }
+}
+
+@media (min-width: 1600px) {
+  .login-card {
+    max-width: 1200px !important;
+    padding: 0 5rem !important;
+  }
+  
+  mat-card-title {
+    font-size: 42px !important;
+  }
+  
+  .field-label {
+    font-size: 18px !important;
+    margin-bottom: 20px !important;
+  }
+  
+  mat-form-field {
+    font-size: 16px !important;
+  }
+  
+  ::ng-deep .mat-mdc-text-field-wrapper {
+    height: 52px !important;
+  }
+  
+  ::ng-deep .mat-mdc-input-element {
+    height: 52px;
+    line-height: 52px;
+    font-size: 18px !important;
+  }
+  
+  ::ng-deep .mat-mdc-form-field-infix {
+    min-height: 52px !important;
+  }
+  
+  ::ng-deep .mat-mdc-form-field-icon-prefix {
+    padding-left: 18px !important;
+  }
+  
+  ::ng-deep .input-icon {
+    width: 20px !important;
+    height: 20px !important;
+    min-width: 20px !important;
+    min-height: 20px !important;
+    margin-right: 16px !important;
+  }
+  
+  .button-container button[mat-raised-button] {
+    height: 64px !important;
+    font-size: 20px !important;
+    border-radius: 22px !important;
+  }
+  
+  .full-width {
+    margin-bottom: 1.8rem !important;
+  }
+  
+  .logos-container {
+    padding: 60px 25% 0px !important;
+    
+    .logo-valormas {
+      height: 42px !important;
+    }
+    
+    .logo-gobernacion {
+      height: 70px !important;
+    }
+  }
+  
+  .copyright span {
+    font-size: 14px !important;
+  }
+  
+  /* Image side scaling */
+  .image-overlay-text h1 {
+    font-size: 35px !important;
+  }
+  
+  .image-overlay-text p {
+    font-size: 20px !important;
+  }
+  
+  .image-top-left {
+    font-size: 36px !important;
+  }
+}
+
+@media (max-width: 1200px) {
+  .login-card {
+    padding: 0 2rem !important;
+    max-width: 600px !important;
+  }
+  
+  .image-overlay-text {
+    padding: 2rem 3rem;
+    max-width: 90%;
+  }
+  
+  .image-overlay-text h1 {
+    font-size: 22px;
+  }
+  
+  .image-overlay-text p {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 900px) {
+  .login-container {
+    grid-template-columns: 1fr;
+    height: 100vh; /* Mantener altura completa */
+    min-height: 100vh;
+  }
+
+  .image-side {
+    height: 50vh;
+    min-height: 400px;
+  }
+
+  .login-card {
+    max-width: 100%;
+    padding: 2rem 1.5rem !important;
+    min-height: 50vh;
+  }
+
+  .image-overlay-text {
+    padding: 1.5rem 2rem;
+    max-width: 95%;
+  }
+
+  .image-overlay-text h1 {
+    font-size: 20px;
+    margin-bottom: 0.8rem;
+  }
+
+  .image-overlay-text p {
+    font-size: 13px;
+  }
+
+  .image-top-left {
+    font-size: 24px;
+    top: 1rem;
+    left: 1rem;
+  }
+
+  .image-indicators {
+    bottom: 1rem;
+  }
+
+  mat-card-title {
+    font-size: 24px;
+  }
+
+  .logos-container {
+    padding: 30px 10% 0px;
+    
+    .logo-gobernacion {
+      height: 40px;
+    }
+    
+    .logo-valormas {
+      height: 25px;
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .image-side {
+    height: 40vh;
+    min-height: 300px;
+  }
+
+  .login-card {
+    padding: 1.5rem 1rem !important;
+  }
+
+  .image-overlay-text {
+    padding: 1rem 1.5rem;
+    max-width: 98%;
+  }
+
+  .image-overlay-text h1 {
+    font-size: 18px;
+    margin-bottom: 0.6rem;
+  }
+
+  .image-overlay-text p {
+    font-size: 12px;
+  }
+
+  .image-top-left {
+    font-size: 20px;
+    top: 0.8rem;
+    left: 0.8rem;
+  }
+
+  .image-indicators {
+    bottom: 0.8rem;
+  }
+
+  .image-indicators span {
+    width: 20px;
+    height: 2px;
+  }
+
+  mat-card-title {
+    font-size: 20px;
+    margin-bottom: 1.5rem !important;
+  }
+
+  .field-label {
+    font-size: 13px;
+    margin-bottom: 10px;
+  }
+
+  .full-width {
+    margin-bottom: 1rem;
+  }
+
+  .button-container {
+    margin-top: 1.5rem;
+    
+    button[mat-raised-button] {
+      height: 44px;
+      border-radius: 15px;
+      font-size: 14px;
+    }
+  }
+
+  .logos-container {
+    padding: 20px 5% 0px;
+    gap: 15px;
+    
+    .logo-gobernacion {
+      height: 35px;
+    }
+    
+    .logo-valormas {
+      height: 22px;
+    }
+  }
+
+  .copyright span {
+    font-size: 9px;
+  }
+}
+
+@media (max-width: 400px) {
+  .image-side {
+    height: 35vh;
+    min-height: 250px;
+  }
+
+  .login-card {
+    padding: 1rem 0.8rem !important;
+  }
+
+  .image-overlay-text {
+    padding: 0.8rem 1rem;
+  }
+
+  .image-overlay-text h1 {
+    font-size: 16px;
+  }
+
+  .image-overlay-text p {
+    font-size: 11px;
+  }
+
+  .image-top-left {
+    font-size: 18px;
+  }
+
+  mat-card-title {
+    font-size: 18px;
+  }
+
+  .button-container button[mat-raised-button] {
+    height: 40px;
+    font-size: 13px;
+  }
+
+  .logos-container {
+    padding: 15px 3% 0px;
+    
+    .logo-gobernacion {
+      height: 30px;
+    }
+    
+    .logo-valormas {
+      height: 20px;
+    }
+  }
+}
