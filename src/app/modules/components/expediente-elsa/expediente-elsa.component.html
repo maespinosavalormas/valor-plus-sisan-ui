@@ -1,0 +1,62 @@
+<div class="expediente-container" [attr.data-testid]="'expediente-page-' + elsa_id">
+  <div class="error-message" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <div class="loading" *ngIf="loadingExpediente">
+    Cargando expediente...
+  </div>
+
+  <div *ngIf="expediente && !loadingExpediente" class="expediente-content">
+    <h1>Expediente ELSA - {{ expediente.paciente.nombre }}</h1>
+
+    <mat-tab-group (selectedIndexChange)="onTabChange($event)">
+      <!-- TAB 1: DETALLE -->
+      <mat-tab label="Detalle">
+        <ng-template mat-tab-label>
+          <span data-testid="tab-detalle">Detalle</span>
+        </ng-template>
+        <div class="tab-content">
+          <app-detalle-elsa [expediente]="expediente"></app-detalle-elsa>
+        </div>
+      </mat-tab>
+
+      <!-- TAB 2: CÁLCULOS OMS -->
+      <mat-tab label="Cálculos OMS">
+        <ng-template mat-tab-label>
+          <span data-testid="tab-calculos">Cálculos OMS</span>
+        </ng-template>
+        <div class="tab-content">
+          <app-calculos-oms [calculos]="expediente.calculos"></app-calculos-oms>
+        </div>
+      </mat-tab>
+
+      <!-- TAB 3: TRAZABILIDAD (LAZY LOAD) -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <span data-testid="tab-trazabilidad">Trazabilidad</span>
+        </ng-template>
+        <div class="tab-content">
+          <div *ngIf="loadingTrazabilidad" class="loading">Cargando trazabilidad...</div>
+          <app-trazabilidad *ngIf="trazabilidad$ | async as trazabilidad" [trazabilidad]="trazabilidad"></app-trazabilidad>
+        </div>
+      </mat-tab>
+
+      <!-- TAB 4: EVOLUCIÓN Y SEGUIMIENTO (LAZY LOAD) -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <span data-testid="tab-seguimientos">Evolución y Seguimiento</span>
+        </ng-template>
+        <div class="tab-content">
+          <div *ngIf="loadingSeguimientos" class="loading">Cargando seguimientos...</div>
+          <app-evolucion-seguimiento
+            *ngIf="seguimientos$ | async as seguimientos"
+            [seguimientos]="seguimientos"
+            [elsa_id]="elsa_id"
+            (onSeguimientoSaved)="onSeguimientoSaved()"
+          ></app-evolucion-seguimiento>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>
