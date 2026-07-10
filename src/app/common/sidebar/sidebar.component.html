@@ -202,16 +202,17 @@
             </button>
             <button 
               class="filter-btn" 
-              [class.active]="activeFilter === 'following'" 
-              (click)="setFilter('following')">
-              Leidos
-              <span class="filter-badge">{{ getFilterCount('following') }}</span>
+              [class.active]="activeFilter === 'read'" 
+              (click)="setFilter('read')">
+              Leídos
+              <span class="filter-badge">{{ getFilterCount('read') }}</span>
             </button>
             <button 
               class="filter-btn" 
-              [class.active]="activeFilter === 'archive'" 
-              (click)="setFilter('archive')">
+              [class.active]="activeFilter === 'unread'" 
+              (click)="setFilter('unread')">
               Sin Leer
+              <span class="filter-badge">{{ getFilterCount('unread') }}</span>
             </button>
           </div>
 
@@ -226,28 +227,28 @@
               mat-menu-item 
               *ngFor="let notification of getFilteredNotifications()" 
               class="notification-item"
-              [class.unread]="!notification.read"
+              [class.unread]="!notification.isRead"
               (click)="handleNotificationClick(notification)">
               
               <div class="notification-content">
                 <div class="notification-message" [innerHTML]="notification.message"></div>
                 <div class="notification-meta">
-                  {{ notification.time }} • {{ notification.category }}
+                  {{ notification.createdAt | date:'short' }}
                 </div>
                 
-                <!-- Archivo adjunto -->
+                <!-- Campos eliminados del backend: attachment, preview, actions -->
+                <!-- Si el backend los agrega en el futuro, descomentar las siguientes secciones -->
+                <!-- 
                 <div class="notification-attachment" *ngIf="notification.attachment">
                   <mat-icon>insert_drive_file</mat-icon>
                   <span class="attachment-name">{{ notification.attachment.name }}</span>
                   <span class="attachment-size">{{ notification.attachment.size }}</span>
                 </div>
 
-                <!-- Vista previa de texto -->
                 <div class="notification-preview" *ngIf="notification.preview">
                   {{ notification.preview }}
                 </div>
 
-                <!-- Acciones para solicitudes -->
                 <div class="notification-actions" *ngIf="notification.actions">
                   <button 
                     class="action-btn accept" 
@@ -260,9 +261,10 @@
                     Rechazar
                   </button>
                 </div>
+                -->
               </div>
 
-              <div class="notification-indicator" *ngIf="!notification.read"></div>
+              <div class="notification-indicator" *ngIf="!notification.isRead"></div>
             </button>
           </div>
         </mat-menu>

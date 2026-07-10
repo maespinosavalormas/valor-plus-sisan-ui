@@ -1,0 +1,61 @@
+<div class="historial-table" data-testid="historial-table">
+  <table mat-table [dataSource]="tamizajes" class="mat-elevation-z8">
+    <ng-container matColumnDef="fecha">
+      <th mat-header-cell *matHeaderCellDef>Fecha</th>
+      <td mat-cell *matCellDef="let row">{{ row.fechaTamizaje | date: 'yyyy-MM-dd' }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="peso">
+      <th mat-header-cell *matHeaderCellDef>Peso (kg)</th>
+      <td mat-cell *matCellDef="let row">{{ row.pesoKg }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="talla">
+      <th mat-header-cell *matHeaderCellDef>Talla (cm)</th>
+      <td mat-cell *matCellDef="let row">{{ row.tallaCm }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="pb">
+      <th mat-header-cell *matHeaderCellDef>PB (cm)</th>
+      <td
+        mat-cell
+        *matCellDef="let row"
+        data-testid="historial-pb-cell"
+        [attr.data-testid]="isPbBajo(row.perimetroBraquialCm) ? 'historial-pb-bajo' : 'historial-pb-cell'"
+        [class.pb-bajo]="isPbBajo(row.perimetroBraquialCm)"
+      >
+        {{ row.perimetroBraquialCm ?? '—' }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="zPt">
+      <th mat-header-cell *matHeaderCellDef>Z P/T</th>
+      <td mat-cell *matCellDef="let row">{{ row.zScorePt }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="clasificacion">
+      <th mat-header-cell *matHeaderCellDef>Clasificación</th>
+      <td mat-cell *matCellDef="let row">{{ row.clasificacionPt }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="acciones">
+      <th mat-header-cell *matHeaderCellDef>Acciones</th>
+      <td mat-cell *matCellDef="let row">
+        <div class="actions-container">
+          <button
+            mat-flat-button
+            type="button"
+            class="btn-editar"
+            data-testid="historial-edit-btn"
+            (click)="onEdit(row)"
+          >
+            <mat-icon>edit</mat-icon>
+          </button>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; let i = index; columns: displayedColumns" [attr.data-testid]="'tamizaje-fila-' + i"></tr>
+  </table>
+</div>

@@ -1,0 +1,127 @@
+:host {
+  display: block;
+  background-color: var(--white);
+  border-radius: 8px;
+  overflow: hidden;
+  overflow-x: auto;
+}
+
+.historial-table {
+  width: 100%;
+}
+
+.mat-elevation-z8 {
+  box-shadow: none !important;
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 6px;
+  background-color: var(--white);
+}
+
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 6px;
+}
+
+.mat-mdc-header-row {
+  background-color: var(--background-pages);
+  border-radius: 6px;
+  margin-bottom: 4px;
+  height: 32px;
+
+  &::after {
+    display: none;
+  }
+}
+
+.mat-mdc-header-cell {
+  border-bottom: none !important;
+  color: var(--gray-tertiary);
+  font-weight: 400;
+  font-size: 12px;
+  padding: 0 6px;
+}
+
+.mat-mdc-header-cell:first-child {
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
+
+.mat-mdc-header-cell:last-child {
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+.mat-mdc-row {
+  background-color: var(--white);
+  border-radius: 6px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  margin-bottom: 4px;
+  transition: box-shadow 0.2s ease;
+  font-weight: 400;
+  height: 36px;
+
+  &:hover {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  }
+}
+
+.mdc-data-table__cell {
+  padding: 2px 4px;
+  border-bottom: none;
+  font-size: 12px;
+  color: var(--strong-gray-primary);
+}
+
+.mat-mdc-table {
+  background: transparent;
+
+  .mat-mdc-header-row {
+    border-bottom: none;
+  }
+}
+
+.pb-bajo {
+  color: var(--warning);
+  font-weight: 600;
+  background-color: color-mix(in srgb, var(--warning) 8%, transparent);
+  border-radius: 4px;
+}
+
+.actions-container {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 6px;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 2px 0;
+}
+
+.btn-editar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 6px;
+  border-radius: 8px !important;
+  min-width: 40px !important;
+  height: 26px !important;
+  font-size: 11px;
+  font-weight: 400 !important;
+  line-height: 1.1;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  color: var(--white) !important;
+  background-color: var(--blue-primary) !important;
+
+  mat-icon {
+    margin: 0 auto;
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+}

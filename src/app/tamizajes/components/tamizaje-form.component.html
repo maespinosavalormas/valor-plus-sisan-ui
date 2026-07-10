@@ -1,0 +1,124 @@
+<form
+  class="tamizaje-form"
+  data-testid="tamizaje-form"
+  [formGroup]="form"
+  (ngSubmit)="onSubmit()"
+>
+  <h4 class="section-title">
+    <mat-icon>straighten</mat-icon>
+    Medidas antropométricas
+  </h4>
+
+  <div class="form-grid">
+    <div class="field">
+      <span class="field-label req">Fecha tamizaje</span>
+      <input
+        class="control"
+        type="date"
+        formControlName="fechaTamizaje"
+        data-testid="tamizaje-fecha"
+      />
+    </div>
+
+    <div class="field">
+      <span class="field-label req">Peso (kg)</span>
+      <input
+        class="control"
+        type="text"
+        inputmode="decimal"
+        formControlName="pesoKg"
+        data-testid="tamizaje-peso"
+        placeholder="kg"
+        (input)="onNumericInput($event, 'pesoKg')"
+      />
+    </div>
+
+    <div class="field">
+      <span class="field-label req">Talla (cm)</span>
+      <input
+        class="control"
+        type="text"
+        inputmode="decimal"
+        formControlName="tallaCm"
+        data-testid="tamizaje-talla"
+        placeholder="cm"
+        (input)="onNumericInput($event, 'tallaCm')"
+      />
+    </div>
+
+    <div class="field">
+      <span class="field-label req">Medición talla</span>
+      <mat-select class="control" formControlName="tallaMedicion" data-testid="tamizaje-talla-medicion">
+        @for (opt of tallaMedicionOptions; track opt.value) {
+          <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+        }
+      </mat-select>
+    </div>
+
+    <div class="field">
+      <span class="field-label">Perímetro braquial (cm)</span>
+      <input
+        class="control"
+        type="text"
+        inputmode="decimal"
+        formControlName="perimetroBraquialCm"
+        data-testid="tamizaje-pb"
+        placeholder="cm"
+        (input)="onNumericInput($event, 'perimetroBraquialCm')"
+      />
+      @if (pbOptional) {
+        <span class="field-hint">PB opcional fuera del rango 6–59 meses</span>
+      }
+    </div>
+
+    <div class="field">
+      <span class="field-label req">Edema bilateral</span>
+      <mat-select class="control" formControlName="edemaBilateral" data-testid="tamizaje-edema">
+        @for (opt of edemaOptions; track opt.value) {
+          <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+        }
+      </mat-select>
+    </div>
+
+    @if (isEditMode) {
+      <div class="field full-width">
+        <span class="field-label req">Motivo de edición</span>
+        <input
+          class="control"
+          type="text"
+          formControlName="motivoEdicion"
+          data-testid="tamizaje-motivo-edicion"
+          placeholder="Indique el motivo del cambio"
+          [required]="motivoRequired"
+        />
+        @if (motivoRequired && form.get('motivoEdicion')?.invalid && form.get('motivoEdicion')?.touched) {
+          <span class="field-error">Motivo requerido al cambiar peso o talla</span>
+        }
+      </div>
+    }
+  </div>
+
+  @if (showTallaWarning) {
+    <p class="talla-warning" data-testid="tamizaje-talla-warning">
+      Menor &lt; 24 meses medido de pie: se aplicará ajuste +0.7 cm (CA-01).
+    </p>
+  }
+
+  <div class="actions">
+    <button
+      mat-raised-button
+      class="btn-guardar"
+      type="submit"
+      data-testid="tamizaje-submit"
+      [disabled]="disabled || saving || form.invalid"
+    >
+      @if (saving) {
+        <span data-testid="tamizaje-saving-indicator">Guardando…</span>
+      } @else {
+        {{ isEditMode ? 'Actualizar tamizaje' : 'Registrar tamizaje' }}
+      }
+    </button>
+  </div>
+
+  <input type="hidden" formControlName="confirmacionBiv" data-testid="tamizaje-input-biv-confirm" />
+</form>

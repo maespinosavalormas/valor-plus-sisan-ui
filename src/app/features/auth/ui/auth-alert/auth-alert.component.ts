@@ -21,7 +21,6 @@ export class AuthAlertComponent {
     return this._visible;
   }
   set visible(value: boolean) {
-    console.log('AuthAlertComponent: visible setter called with value:', value);
     this._visible = value;
     if (value) {
       this.show();
@@ -41,15 +40,14 @@ export class AuthAlertComponent {
   isClosing = false;
 
   constructor(private cdr: ChangeDetectorRef) {
-    console.log('AuthAlertComponent: constructor called');
+    //
   }
 
   ngOnChanges(): void {
-    console.log('AuthAlertComponent: ngOnChanges called, visible:', this._visible);
+    //
   }
 
   show(): void {
-    console.log('AuthAlertComponent: show() called');
     this.isClosing = false;
     if (this.autoClose) {
       this.timer = setTimeout(() => {
@@ -61,7 +59,6 @@ export class AuthAlertComponent {
   }
 
   hide(): void {
-    console.log('AuthAlertComponent: hide() called');
     if (this.timer) {
       clearTimeout(this.timer);
       this.timer = null;
@@ -71,7 +68,6 @@ export class AuthAlertComponent {
   }
 
   close(): void {
-    console.log('AuthAlertComponent: close() called');
     this.isClosing = true;
     this.hide();
     setTimeout(() => {

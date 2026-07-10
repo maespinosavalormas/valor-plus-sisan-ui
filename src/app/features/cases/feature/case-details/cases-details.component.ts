@@ -8,12 +8,13 @@ import { CaseTraceabilityComponent } from '../case-traceability/case-traceabilit
 import { CaseNutritionalMonitoringComponent } from '../case-nutritional-monitoring/case-nutritional-monitoring.component';
 import { CaseDetailsHeaderComponent, CaseViewType } from '../../ui/case-details-header/case-details-header.component';
 import { CaseTasksComponent } from '../case-tasks/case-tasks.component';
-import { CaseService, CaseFull, ResolvedMasterRecord } from '../../data-access/services/case.service';
+import { CaseService, CaseFull, ResolvedMasterRecord, CaseResponsible, CaseProfessional } from '../../data-access/services/case.service';
+import { ExpedienteComponent } from '../../../../tamizajes/expediente/expediente.component';
 
 @Component({
   selector: 'app-cases-details',
   standalone: true,
-  imports: [CommonModule, MatIconModule, MatButtonModule, MatDialogModule, CaseTraceabilityComponent, CaseNutritionalMonitoringComponent, CaseDetailsHeaderComponent, CaseTasksComponent],
+  imports: [CommonModule, MatIconModule, MatButtonModule, MatDialogModule, CaseTraceabilityComponent, CaseNutritionalMonitoringComponent, CaseDetailsHeaderComponent, CaseTasksComponent, ExpedienteComponent],
   templateUrl: './cases-details.component.html',
   styleUrls: ['./cases-details.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -35,6 +36,10 @@ export class CasesDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.caseId = this.route.snapshot.paramMap.get('id');
+    const tab = this.route.snapshot.queryParamMap.get('tab');
+    if (tab === 'tamizajes') {
+      this.currentView = 'tamizajes';
+    }
     this.loadCaseDetails();
   }
 
@@ -98,9 +103,6 @@ export class CasesDetailsComponent implements OnInit {
 
     this.caseService.getCaseById(caseIdNum).subscribe({
       next: (caseData) => {
-        console.log('DEBUG - Case data assigned:', caseData);
-        console.log('DEBUG - patientInformation:', caseData.patientInformation);
-        console.log('DEBUG - identificationTypeId:', caseData.patientInformation?.identificationTypeId);
         this.selectedCaseInfo = caseData;
         this.isLoading = false;
         this.cdr.markForCheck();
@@ -124,5 +126,23 @@ export class CasesDetailsComponent implements OnInit {
 
   masterName(record: ResolvedMasterRecord | null | undefined): string {
     return record?.name || '—';
+  }
+
+  getAssignedEntityName(): string {
+    if (!this.selectedCaseInfo?.responsibles || this.selectedCaseInfo.responsibles.length === 0) {
+      return '—';
+    }
+    return this.selectedCaseInfo.responsibles
+      .map(responsible => `${responsible.firstName} ${responsible.lastName}`)
+      .join(', ');
+  }
+
+  getAssignedProfessionalName(): string {
+    if (!this.selectedCaseInfo?.professionals || this.selectedCaseInfo.professionals.length === 0) {
+      return '—';
+    }
+    return this.selectedCaseInfo.professionals
+      .map(professional => `${professional.firstName} ${professional.lastName}`)
+      .join(', ');
   }
 }

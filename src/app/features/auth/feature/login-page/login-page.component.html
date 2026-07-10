@@ -1,4 +1,4 @@
-<div class="login-container">
+<div class="login-container" data-testid="login-page">
   <!-- MITAD IZQUIERDA -->
 <div class="image-side">
   <div
@@ -27,7 +27,7 @@
 </div>
 
   <!-- MITAD DERECHA -->
-<mat-card class="login-card">
+<mat-card class="login-card" data-testid="login-card">
 <div class="login-logo-container">
   <img src="assets/images/logo-sisan.png" alt="Logo SISAN" class="login-logo" />
 </div>
@@ -50,6 +50,7 @@
               type="email"
               formControlName="email"
               placeholder="tucorreo@sitio.com"
+              data-testid="login-email"
             />
             <mat-error *ngIf="loginForm.get('email')?.hasError('required')">
               El correo electrónico es requerido
@@ -75,6 +76,7 @@
               formControlName="password"
               placeholder="************"
               style="appearance: -moz-none; -webkit-appearance: none;"
+              data-testid="login-password"
             />
             <button
               mat-icon-button
@@ -96,7 +98,7 @@
             </mat-error>
           </mat-form-field>
 
-          <div class="error-message" *ngIf="error">
+          <div class="error-message" *ngIf="error" data-testid="login-error">
             {{ error }}
           </div>
 
@@ -105,6 +107,7 @@
               mat-raised-button
               color="primary"
               type="submit"
+              data-testid="login-submit"
               [disabled]="!loginForm.valid || loading"
             >
               <span *ngIf="loading" class="loading-content">

@@ -8,19 +8,26 @@
   </app-case-details-header>
 
   <!-- Loading state -->
-  <div class="loading-container" *ngIf="isLoading">
+  <div class="loading-container" *ngIf="isLoading && currentView !== 'tamizajes'">
     <div class="spinner"></div>
     <p>Cargando...</p>
   </div>
 
-  <!-- Error state -->
-  <div class="error-container" *ngIf="errorMessage && !isLoading">
+  <!-- Error state (hidden when tamizajes tab handles its own errors) -->
+  <div class="error-container" *ngIf="errorMessage && !isLoading && currentView !== 'tamizajes'">
     <mat-icon color="warn">error</mat-icon>
     <span>{{ errorMessage }}</span>
     <button mat-button (click)="loadCaseDetails()">Reintentar</button>
   </div>
 
-  <div class="case-info-modal-container" *ngIf="!isLoading && !errorMessage" (click)="$event.stopPropagation()">
+  <div class="case-info-modal-container" *ngIf="currentView === 'tamizajes' && caseId">
+    <app-expediente
+      [embedded]="true"
+      [casoIdInput]="caseId">
+    </app-expediente>
+  </div>
+
+  <div class="case-info-modal-container" *ngIf="currentView !== 'tamizajes' && !isLoading && !errorMessage" (click)="$event.stopPropagation()">
     <div class="case-info-modal-content" *ngIf="currentView === 'details' && selectedCaseInfo">
       <!-- Sección 1: Datos Básicos del Caso -->
       <div class="info-section">
@@ -493,6 +500,14 @@
             <div class="info-item">
               <span class="info-label">Diagnóstico Médico (CIE-10):</span>
               <span class="info-value">{{ masterName(selectedCaseInfo.careRoute.medicalDiagnosisId) }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Entidad Asignada:</span>
+              <span class="info-value">{{ getAssignedEntityName() }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Profesional Asignado:</span>
+              <span class="info-value">{{ getAssignedProfessionalName() }}</span>
             </div>
           </div>
         </div>

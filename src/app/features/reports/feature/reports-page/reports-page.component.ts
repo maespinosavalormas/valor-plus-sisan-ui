@@ -17,7 +17,6 @@ import { ReportsFormComponent } from '../../ui/reports-form/reports-form.compone
     RouterModule,
     MatDialogModule,
     ReportsListComponent,
-    ReportsFormComponent,
   ],
   templateUrl: './reports-page.html',
   styleUrl: './reports-page.scss'

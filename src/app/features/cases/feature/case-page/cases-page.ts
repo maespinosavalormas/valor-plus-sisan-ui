@@ -5,17 +5,28 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { CasesListComponent } from '../../ui/cases-list/cases-list.component';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { CaseFormService } from '../../data-access/services/case-form.service';
 import { MasterDataService } from '../../ui/case-form/services/master-data.service';
 import { CaseFormDataService } from '../../ui/case-form/services/form-data.service';
+import { CaseBatchService } from '../../data-access/services/case-batch.service';
 import { Subscription } from 'rxjs';
+import { ConfirmDialogService, ConfirmDialogData } from '../../ui/confirm-dialog/confirm-dialog';
 
 @Component({
   selector: 'app-cases-page',
   standalone: true,
-  imports: [MatIconModule, MatButtonModule, MatDialogModule, MatMenuModule, CasesListComponent, CommonModule],
+  imports: [
+    MatIconModule,
+    MatButtonModule,
+    MatDialogModule,
+    MatMenuModule,
+    CasesListComponent,
+    CommonModule,
+    FormsModule,
+  ],
   templateUrl: './cases-page.html',
-  styleUrls: ['./cases-page.scss']
+  styleUrls: ['./cases-page.scss'],
 })
 export class CasesPageComponent implements OnDestroy {
   private step1Data: any = {};
@@ -30,6 +41,7 @@ export class CasesPageComponent implements OnDestroy {
 
   showCsvUploadModal = false;
   selectedCsvFile: File | null = null;
+  sheetName: string = 'Consolidado 2026';
 
   showIcbfUploadModal = false;
   selectedIcbfFile: File | null = null;
@@ -43,8 +55,15 @@ export class CasesPageComponent implements OnDestroy {
   showComfenalcoUploadModal = false;
   selectedComfenalcoFile: File | null = null;
 
-  constructor(private dialog: MatDialog, private caseFormService: CaseFormService, private masterDataService: MasterDataService, private formDataService: CaseFormDataService) {
-    this.editingSubscription = this.caseFormService.getEditingCase().subscribe(caseData => {
+  constructor(
+    private dialog: MatDialog,
+    private caseFormService: CaseFormService,
+    private masterDataService: MasterDataService,
+    private formDataService: CaseFormDataService,
+    private caseBatchService: CaseBatchService,
+    private confirmDialogService: ConfirmDialogService,
+  ) {
+    this.editingSubscription = this.caseFormService.getEditingCase().subscribe((caseData) => {
       if (caseData) {
         this.openEditWizard(caseData);
       }
@@ -60,25 +79,25 @@ export class CasesPageComponent implements OnDestroy {
    */
   private getEducationalLevelCode(educationalLevel: string): string {
     if (!educationalLevel) return '';
-    
+
     // Si ya es un código numérico, devolverlo tal cual
     if (/^\d+$/.test(educationalLevel)) {
       return educationalLevel;
     }
-    
+
     // Mapeo de nombres a códigos
     const nameToCodeMap: { [key: string]: string } = {
-      'primaria': '1',
+      primaria: '1',
       'básica primaria': '1',
-      'secundaria': '2',
+      secundaria: '2',
       'básica secundaria': '2',
-      'técnico': '3',
-      'tecnológico': '4',
-      'universitario': '5',
-      'postgrado': '6',
-      'ninguno': '7'
+      técnico: '3',
+      tecnológico: '4',
+      universitario: '5',
+      postgrado: '6',
+      ninguno: '7',
     };
-    
+
     const normalizedName = educationalLevel.toLowerCase().trim();
     return nameToCodeMap[normalizedName] || educationalLevel;
   }
@@ -103,18 +122,19 @@ export class CasesPageComponent implements OnDestroy {
   }
 
   async openStep1() {
-    const { DatosInformacionGeneralComponent } = await import('../../ui/case-form/steps/datos-informacion-general.component');
-    
+    const { DatosInformacionGeneralComponent } =
+      await import('../../ui/case-form/steps/datos-informacion-general.component');
+
     const dialogRef = this.dialog.open(DatosInformacionGeneralComponent, {
       width: '60%',
       maxWidth: '2000px',
       data: {
         isEdit: false,
-        data: this.step1Data || {} // Restaurar datos guardados o formulario vacío
-      }
+        data: this.step1Data || {}, // Restaurar datos guardados o formulario vacío
+      },
     });
 
-    dialogRef.afterClosed().subscribe(async result => {
+    dialogRef.afterClosed().subscribe(async (result) => {
       console.log('Resultado del paso 1:', result);
       if (result === 'next') {
         this.step1Data = dialogRef.componentInstance.form.value;
@@ -133,7 +153,8 @@ export class CasesPageComponent implements OnDestroy {
   }
 
   async openStep2() {
-    const { IdentificacionDelPacienteComponent } = await import('../../ui/case-form/steps/identificacion-del-paciente.component');
+    const { IdentificacionDelPacienteComponent } =
+      await import('../../ui/case-form/steps/identificacion-del-paciente.component');
     const dialogRef2 = this.dialog.open(IdentificacionDelPacienteComponent, {
       width: '60%',
       maxWidth: '2000px',
@@ -142,11 +163,11 @@ export class CasesPageComponent implements OnDestroy {
         currentStep: 2,
         totalSteps: 7,
         previousStepData: this.step1Data,
-        data: this.step2Data || {} // Restaurar datos guardados o formulario vacío
-      }
+        data: this.step2Data || {}, // Restaurar datos guardados o formulario vacío
+      },
     });
 
-    dialogRef2.afterClosed().subscribe(async result2 => {
+    dialogRef2.afterClosed().subscribe(async (result2) => {
       if (result2 && typeof result2 === 'object' && result2.action === 'back') {
         if (result2.currentStepData) {
           this.step2Data = result2.currentStepData;
@@ -166,7 +187,8 @@ export class CasesPageComponent implements OnDestroy {
   async openStep3() {
     console.log('Paso 3 abierto');
     try {
-      const { DatosNotificacionComponent } = await import('../../ui/case-form/steps/datos-notificacion.component');
+      const { DatosNotificacionComponent } =
+        await import('../../ui/case-form/steps/datos-notificacion.component');
       console.log('DatosNotificacionComponent importado correctamente');
       const dialogRef3 = this.dialog.open(DatosNotificacionComponent, {
         width: '60%',
@@ -176,12 +198,12 @@ export class CasesPageComponent implements OnDestroy {
           currentStep: 3,
           totalSteps: 7,
           previousStepData: this.step2Data,
-          data: this.step3Data || {} // Restaurar datos guardados o formulario vacío
-        }
+          data: this.step3Data || {}, // Restaurar datos guardados o formulario vacío
+        },
       });
       console.log('Diálogo de paso 3 abierto');
 
-      dialogRef3.afterClosed().subscribe(async result3 => {
+      dialogRef3.afterClosed().subscribe(async (result3) => {
         if (result3 && typeof result3 === 'object' && result3.action === 'back') {
           if (result3.currentStepData) {
             this.step3Data = result3.currentStepData;
@@ -210,7 +232,8 @@ export class CasesPageComponent implements OnDestroy {
   async openStep4() {
     console.log('Paso 4 abierto');
     try {
-      const { DatosDeLaMadreComponent } = await import('../../ui/case-form/steps/datos-de-la-madre-o-cuidador.component');
+      const { DatosDeLaMadreComponent } =
+        await import('../../ui/case-form/steps/datos-de-la-madre-o-cuidador.component');
       console.log('DatosDeLaMadreComponent importado correctamente');
       const dialogRef4 = this.dialog.open(DatosDeLaMadreComponent, {
         width: '60%',
@@ -220,12 +243,12 @@ export class CasesPageComponent implements OnDestroy {
           currentStep: 4,
           totalSteps: 7,
           previousStepData: this.step3Data,
-          data: this.step4Data || {} // Restaurar datos guardados o formulario vacío
-        }
+          data: this.step4Data || {}, // Restaurar datos guardados o formulario vacío
+        },
       });
       console.log('Diálogo de paso 4 abierto');
 
-      dialogRef4.afterClosed().subscribe(async result4 => {
+      dialogRef4.afterClosed().subscribe(async (result4) => {
         if (result4 && typeof result4 === 'object' && result4.action === 'back') {
           if (result4.currentStepData) {
             this.step4Data = result4.currentStepData;
@@ -254,7 +277,8 @@ export class CasesPageComponent implements OnDestroy {
   async openStep5() {
     console.log('Paso 5 abierto');
     try {
-      const { IdentificacionDeFactoresComponent } = await import('../../ui/case-form/steps/identificacion-de-factores.component');
+      const { IdentificacionDeFactoresComponent } =
+        await import('../../ui/case-form/steps/identificacion-de-factores.component');
       console.log('IdentificacionDeFactoresComponent importado correctamente');
       const dialogRef5 = this.dialog.open(IdentificacionDeFactoresComponent, {
         width: '60%',
@@ -264,12 +288,12 @@ export class CasesPageComponent implements OnDestroy {
           currentStep: 5,
           totalSteps: 7,
           previousStepData: this.step4Data,
-          data: this.step5Data || {} // Restaurar datos guardados o formulario vacío
-        }
+          data: this.step5Data || {}, // Restaurar datos guardados o formulario vacío
+        },
       });
       console.log('Diálogo de paso 5 abierto');
 
-      dialogRef5.afterClosed().subscribe(async result5 => {
+      dialogRef5.afterClosed().subscribe(async (result5) => {
         if (result5 && typeof result5 === 'object' && result5.action === 'back') {
           if (result5.currentStepData) {
             this.step5Data = result5.currentStepData;
@@ -298,7 +322,8 @@ export class CasesPageComponent implements OnDestroy {
   async openStep6() {
     console.log('Paso 6 abierto');
     try {
-      const { SignosClinicosComponent } = await import('../../ui/case-form/steps/signos-clinicos.component');
+      const { SignosClinicosComponent } =
+        await import('../../ui/case-form/steps/signos-clinicos.component');
       console.log('SignosClinicosComponent importado correctamente');
       const dialogRef6 = this.dialog.open(SignosClinicosComponent, {
         width: '60%',
@@ -308,12 +333,12 @@ export class CasesPageComponent implements OnDestroy {
           currentStep: 6,
           totalSteps: 7,
           previousStepData: this.step5Data,
-          data: this.step6Data || {} // Restaurar datos guardados o formulario vacío
-        }
+          data: this.step6Data || {}, // Restaurar datos guardados o formulario vacío
+        },
       });
       console.log('Diálogo de paso 6 abierto');
 
-      dialogRef6.afterClosed().subscribe(async result6 => {
+      dialogRef6.afterClosed().subscribe(async (result6) => {
         if (result6 && typeof result6 === 'object' && result6.action === 'back') {
           if (result6.currentStepData) {
             this.step6Data = result6.currentStepData;
@@ -342,7 +367,8 @@ export class CasesPageComponent implements OnDestroy {
   async openStep7() {
     console.log('Paso 7 abierto (último paso)');
     try {
-      const { RutaDeAtencionComponent } = await import('../../ui/case-form/steps/ruta-de-atencion.component');
+      const { RutaDeAtencionComponent } =
+        await import('../../ui/case-form/steps/ruta-de-atencion.component');
       console.log('RutaDeAtencionComponent importado correctamente');
       const dialogRef7 = this.dialog.open(RutaDeAtencionComponent, {
         width: '60%',
@@ -352,12 +378,12 @@ export class CasesPageComponent implements OnDestroy {
           currentStep: 7,
           totalSteps: 7,
           previousStepData: this.step6Data,
-          data: this.step7Data || {} // Restaurar datos guardados o formulario vacío
-        }
+          data: this.step7Data || {}, // Restaurar datos guardados o formulario vacío
+        },
       });
       console.log('Diálogo de paso 7 abierto');
 
-      dialogRef7.afterClosed().subscribe(async result7 => {
+      dialogRef7.afterClosed().subscribe(async (result7) => {
         if (result7 && typeof result7 === 'object' && result7.action === 'back') {
           if (result7.currentStepData) {
             this.step7Data = result7.currentStepData;
@@ -374,9 +400,9 @@ export class CasesPageComponent implements OnDestroy {
             step4: this.step4Data,
             step5: this.step5Data,
             step6: this.step6Data,
-            step7: this.step7Data
+            step7: this.step7Data,
           });
-          
+
           // Enviar todos los datos al backend
           this.sendDataToBackend({
             step1: this.step1Data,
@@ -385,9 +411,9 @@ export class CasesPageComponent implements OnDestroy {
             step4: this.step4Data,
             step5: this.step5Data,
             step6: this.step6Data,
-            step7: this.step7Data
+            step7: this.step7Data,
           });
-          
+
           // Limpiar datos después de enviar
           this.clearStepData();
         } else if (result7 === 'next') {
@@ -400,9 +426,9 @@ export class CasesPageComponent implements OnDestroy {
             step4: this.step4Data,
             step5: this.step5Data,
             step6: this.step6Data,
-            step7: this.step7Data
+            step7: this.step7Data,
           });
-          
+
           // Enviar todos los datos al backend
           this.sendDataToBackend({
             step1: this.step1Data,
@@ -411,9 +437,9 @@ export class CasesPageComponent implements OnDestroy {
             step4: this.step4Data,
             step5: this.step5Data,
             step6: this.step6Data,
-            step7: this.step7Data
+            step7: this.step7Data,
           });
-          
+
           // Limpiar datos después de enviar
           this.clearStepData();
         }
@@ -425,7 +451,7 @@ export class CasesPageComponent implements OnDestroy {
 
   sendDataToBackend(data: any) {
     console.log('Enviando datos al backend:', data);
-    
+
     // Unir todos los datos de los pasos en un solo objeto plano
     const flatData = {
       ...data.step1,
@@ -434,14 +460,14 @@ export class CasesPageComponent implements OnDestroy {
       ...data.step4,
       ...data.step5,
       ...data.step6,
-      ...data.step7
+      ...data.step7,
     };
-    
+
     console.log('Datos unificados en objeto plano:', flatData);
-    
+
     // Guardar los datos del caso como objeto plano usando el servicio
     this.caseFormService.saveCreatedCase(flatData);
-    
+
     // TODO: Implementar la lógica para enviar los datos al backend
     // Por ejemplo:
     // this.caseService.createCase(flatData).subscribe(
@@ -466,8 +492,8 @@ export class CasesPageComponent implements OnDestroy {
 
   onCsvFileSelected(event: any) {
     const file = event.target.files[0];
-    if (file && file.type !== 'text/csv') {
-      alert('Solo se permiten archivos CSV');
+    if (!this.caseBatchService.isValidExcelFile(file)) {
+      alert('Solo se permiten archivos Excel (.xlsx, .xls)');
       return;
     }
     this.selectedCsvFile = file;
@@ -475,8 +501,33 @@ export class CasesPageComponent implements OnDestroy {
 
   uploadCsvFile() {
     if (this.selectedCsvFile) {
-      console.log('Uploading CSV:', this.selectedCsvFile);
-      this.closeCsvUploadModal();
+      console.log('Uploading Excel file:', this.selectedCsvFile);
+      this.caseBatchService.uploadBatchCases(this.selectedCsvFile, this.sheetName).subscribe({
+        next: (response) => {
+          console.log('Carga masiva exitosa:', response);
+          const confirmData: ConfirmDialogData = {
+            title: 'Carga Masiva Completada',
+            message: `Carga completada: ${response.summary.imported} casos importados, ${response.summary.failed} fallidos`,
+            confirmText: 'Aceptar',
+            type: 'success',
+          };
+          this.confirmDialogService.customConfirm(confirmData).subscribe(() => {
+            this.closeCsvUploadModal();
+            // Notificar que se crearon casos para recargar la lista
+            this.caseFormService.saveCreatedCase({ batchUpload: true, summary: response.summary });
+          });
+        },
+        error: (error) => {
+          console.error('Error en carga masiva:', error);
+          const confirmData: ConfirmDialogData = {
+            title: 'Error en Carga Masiva',
+            message: 'Error al cargar el archivo Excel. Por favor verifique el formato y los datos.',
+            confirmText: 'Aceptar',
+            type: 'error',
+          };
+          this.confirmDialogService.customConfirm(confirmData).subscribe();
+        },
+      });
     }
   }
 
@@ -559,28 +610,60 @@ export class CasesPageComponent implements OnDestroy {
   uploadIcbfFile() {
     if (this.selectedIcbfFile) {
       console.log('Uploading ICBF CSV:', this.selectedIcbfFile);
-      this.closeIcbfUploadModal();
+      const confirmData: ConfirmDialogData = {
+        title: 'Funcionalidad No Implementada',
+        message: 'La carga de archivos ICBF aún no está implementada. Por favor contacte al administrador.',
+        confirmText: 'Aceptar',
+        type: 'warning',
+      };
+      this.confirmDialogService.customConfirm(confirmData).subscribe(() => {
+        this.closeIcbfUploadModal();
+      });
     }
   }
 
   uploadArrullosFile() {
     if (this.selectedArrullosFile) {
       console.log('Uploading Arrullos CSV:', this.selectedArrullosFile);
-      this.closeArrullosUploadModal();
+      const confirmData: ConfirmDialogData = {
+        title: 'Funcionalidad No Implementada',
+        message: 'La carga de archivos Arrullos aún no está implementada. Por favor contacte al administrador.',
+        confirmText: 'Aceptar',
+        type: 'warning',
+      };
+      this.confirmDialogService.customConfirm(confirmData).subscribe(() => {
+        this.closeArrullosUploadModal();
+      });
     }
   }
 
   uploadComfamaFile() {
     if (this.selectedComfamaFile) {
       console.log('Uploading Comfama CSV:', this.selectedComfamaFile);
-      this.closeComfamaUploadModal();
+      const confirmData: ConfirmDialogData = {
+        title: 'Funcionalidad No Implementada',
+        message: 'La carga de archivos Comfama aún no está implementada. Por favor contacte al administrador.',
+        confirmText: 'Aceptar',
+        type: 'warning',
+      };
+      this.confirmDialogService.customConfirm(confirmData).subscribe(() => {
+        this.closeComfamaUploadModal();
+      });
     }
   }
 
   uploadComfenalcoFile() {
     if (this.selectedComfenalcoFile) {
       console.log('Uploading Comfenalco CSV:', this.selectedComfenalcoFile);
-      this.closeComfenalcoUploadModal();
+      const confirmData: ConfirmDialogData = {
+        title: 'Funcionalidad No Implementada',
+        message: 'La carga de archivos Comfenalco aún no está implementada. Por favor contacte al administrador.',
+        confirmText: 'Aceptar',
+        type: 'warning',
+      };
+      this.confirmDialogService.customConfirm(confirmData).subscribe(() => {
+        this.closeComfenalcoUploadModal();
+      });
     }
   }
 
@@ -595,9 +678,9 @@ export class CasesPageComponent implements OnDestroy {
       upgdCode: caseData.upgdCode || '',
       upgdnName: caseData.upgdnName || '',
       eventId: caseData.eventId || '',
-      notificationDate: caseData.notificationDate || new Date()
+      notificationDate: caseData.notificationDate || new Date(),
     };
-    
+
     // Datos del paso 2 - Identificación del Paciente
     this.step2Data = {
       identificationTypeId: caseData.identificationTypeId || 'CC',
@@ -631,9 +714,9 @@ export class CasesPageComponent implements OnDestroy {
       ethnicityOther: caseData.ethnicityOther || '',
       stratumId: caseData.stratumId || '3',
       populationGroupId: caseData.populationGroupId?.toString() || '1',
-      populationGroupPregnant: caseData.populationGroupPregnant || ''
+      populationGroupPregnant: caseData.populationGroupPregnant || '',
     };
-    
+
     // Datos del paso 3 - Datos Notificación
     this.step3Data = {
       notificationSourceId: caseData.notificationSourceId || '1',
@@ -651,9 +734,9 @@ export class CasesPageComponent implements OnDestroy {
       deathCertificateNumber: caseData.deathCertificateNumber || '',
       deathCauseId: caseData.deathCauseId || null,
       professionalName: caseData.professionalName || '',
-      professionalPhoneNumber: caseData.professionalPhoneNumber || ''
+      professionalPhoneNumber: caseData.professionalPhoneNumber || '',
     };
-    
+
     // Datos del paso 4 - Datos de la Madre/Cuidador
     this.step4Data = {
       firstName: caseData.motherFirstName || '',
@@ -663,9 +746,9 @@ export class CasesPageComponent implements OnDestroy {
       documentTypeId: caseData.documentTypeId || 'CC',
       documentNumber: caseData.documentNumber || '',
       educationalLevelId: this.getEducationalLevelCode(caseData.educationalLevelId) || '',
-      childrenNumber: caseData.childrenNumber || 0
+      childrenNumber: caseData.childrenNumber || 0,
     };
-    
+
     // Datos del paso 5 - Identificación de Factores
     this.step5Data = {
       birthWeight: caseData.birthWeight || 3000,
@@ -679,9 +762,9 @@ export class CasesPageComponent implements OnDestroy {
       currentWeight: caseData.currentWeight || 65.5,
       currentHeight: caseData.currentHeight || 165.2,
       midUpperArmCircumference: caseData.midUpperArmCircumference || 25.3,
-      appetiteTestResultId: caseData.appetiteTestResultId || '1' // "1" = Positiva
+      appetiteTestResultId: caseData.appetiteTestResultId || '1', // "1" = Positiva
     };
-    
+
     // Datos del paso 6 - Signos Clínicos
     this.step6Data = {
       edemaPresent: caseData.edemaPresent || false,
@@ -689,20 +772,21 @@ export class CasesPageComponent implements OnDestroy {
       dryOrRoughSkin: caseData.dryOrRoughSkin || false,
       skinPigmentationChanges: caseData.skinPigmentationChanges || false,
       hairChanges: caseData.hairChanges || false,
-      clinicalAnemiaSigns: caseData.clinicalAnemiaSigns || false
+      clinicalAnemiaSigns: caseData.clinicalAnemiaSigns || false,
     };
-    
+
     // Datos del paso 7 - Ruta de Atención
     this.step7Data = {
       carePathwayActivated: caseData.carePathwayActivated || true,
       typeOfCareProvidedId: caseData.typeOfCareProvidedId || 'HOSPITALARIA',
-      medicalDiagnosisId: caseData.medicalDiagnosisId || 150
+      medicalDiagnosisId: caseData.medicalDiagnosisId || 150,
     };
   }
 
   async openStep1Edit() {
-    const { DatosInformacionGeneralComponent } = await import('../../ui/case-form/steps/datos-informacion-general.component');
-    
+    const { DatosInformacionGeneralComponent } =
+      await import('../../ui/case-form/steps/datos-informacion-general.component');
+
     const dialogRef = this.dialog.open(DatosInformacionGeneralComponent, {
       width: '60%',
       maxWidth: '2000px',
@@ -710,11 +794,11 @@ export class CasesPageComponent implements OnDestroy {
         isEdit: true,
         currentStep: 1,
         totalSteps: 7,
-        data: this.step1Data
-      }
+        data: this.step1Data,
+      },
     });
 
-    dialogRef.afterClosed().subscribe(async result => {
+    dialogRef.afterClosed().subscribe(async (result) => {
       if (result && typeof result === 'object' && result.action === 'next') {
         this.step1Data = result.stepData;
         console.log('Datos guardados del paso 1 al continuar:', this.step1Data);
@@ -734,7 +818,8 @@ export class CasesPageComponent implements OnDestroy {
   }
 
   async openStep2Edit() {
-    const { IdentificacionDelPacienteComponent } = await import('../../ui/case-form/steps/identificacion-del-paciente.component');
+    const { IdentificacionDelPacienteComponent } =
+      await import('../../ui/case-form/steps/identificacion-del-paciente.component');
     const dialogRef2 = this.dialog.open(IdentificacionDelPacienteComponent, {
       width: '60%',
       maxWidth: '2000px',
@@ -743,11 +828,11 @@ export class CasesPageComponent implements OnDestroy {
         currentStep: 2,
         totalSteps: 7,
         previousStepData: this.step1Data,
-        data: this.step2Data
-      }
+        data: this.step2Data,
+      },
     });
 
-    dialogRef2.afterClosed().subscribe(async result2 => {
+    dialogRef2.afterClosed().subscribe(async (result2) => {
       if (result2 && typeof result2 === 'object' && result2.action === 'back') {
         if (result2.step2Data) {
           this.step2Data = result2.step2Data;
@@ -769,7 +854,8 @@ export class CasesPageComponent implements OnDestroy {
   }
 
   async openStep3Edit() {
-    const { DatosNotificacionComponent } = await import('../../ui/case-form/steps/datos-notificacion.component');
+    const { DatosNotificacionComponent } =
+      await import('../../ui/case-form/steps/datos-notificacion.component');
     const dialogRef3 = this.dialog.open(DatosNotificacionComponent, {
       width: '60%',
       maxWidth: '2000px',
@@ -778,11 +864,11 @@ export class CasesPageComponent implements OnDestroy {
         currentStep: 3,
         totalSteps: 7,
         previousStepData: this.step2Data,
-        data: this.step3Data
-      }
+        data: this.step3Data,
+      },
     });
 
-    dialogRef3.afterClosed().subscribe(async result3 => {
+    dialogRef3.afterClosed().subscribe(async (result3) => {
       if (result3 && typeof result3 === 'object' && result3.action === 'back') {
         if (result3.currentStepData) {
           this.step3Data = result3.currentStepData;
@@ -803,7 +889,8 @@ export class CasesPageComponent implements OnDestroy {
   }
 
   async openStep4Edit() {
-    const { DatosDeLaMadreComponent } = await import('../../ui/case-form/steps/datos-de-la-madre-o-cuidador.component');
+    const { DatosDeLaMadreComponent } =
+      await import('../../ui/case-form/steps/datos-de-la-madre-o-cuidador.component');
     const dialogRef4 = this.dialog.open(DatosDeLaMadreComponent, {
       width: '60%',
       maxWidth: '2000px',
@@ -812,11 +899,11 @@ export class CasesPageComponent implements OnDestroy {
         currentStep: 4,
         totalSteps: 7,
         previousStepData: this.step3Data,
-        data: this.step4Data
-      }
+        data: this.step4Data,
+      },
     });
 
-    dialogRef4.afterClosed().subscribe(async result4 => {
+    dialogRef4.afterClosed().subscribe(async (result4) => {
       if (result4 && typeof result4 === 'object' && result4.action === 'back') {
         if (result4.currentStepData) {
           this.step4Data = result4.currentStepData;
@@ -837,7 +924,8 @@ export class CasesPageComponent implements OnDestroy {
   }
 
   async openStep5Edit() {
-    const { IdentificacionDeFactoresComponent } = await import('../../ui/case-form/steps/identificacion-de-factores.component');
+    const { IdentificacionDeFactoresComponent } =
+      await import('../../ui/case-form/steps/identificacion-de-factores.component');
     const dialogRef5 = this.dialog.open(IdentificacionDeFactoresComponent, {
       width: '60%',
       maxWidth: '2000px',
@@ -846,11 +934,11 @@ export class CasesPageComponent implements OnDestroy {
         currentStep: 5,
         totalSteps: 7,
         previousStepData: this.step4Data,
-        data: this.step5Data
-      }
+        data: this.step5Data,
+      },
     });
 
-    dialogRef5.afterClosed().subscribe(async result5 => {
+    dialogRef5.afterClosed().subscribe(async (result5) => {
       if (result5 && typeof result5 === 'object' && result5.action === 'back') {
         if (result5.currentStepData) {
           this.step5Data = result5.currentStepData;
@@ -871,7 +959,8 @@ export class CasesPageComponent implements OnDestroy {
   }
 
   async openStep6Edit() {
-    const { SignosClinicosComponent } = await import('../../ui/case-form/steps/signos-clinicos.component');
+    const { SignosClinicosComponent } =
+      await import('../../ui/case-form/steps/signos-clinicos.component');
     const dialogRef6 = this.dialog.open(SignosClinicosComponent, {
       width: '60%',
       maxWidth: '2000px',
@@ -880,11 +969,11 @@ export class CasesPageComponent implements OnDestroy {
         currentStep: 6,
         totalSteps: 7,
         previousStepData: this.step5Data,
-        data: this.step6Data
-      }
+        data: this.step6Data,
+      },
     });
 
-    dialogRef6.afterClosed().subscribe(async result6 => {
+    dialogRef6.afterClosed().subscribe(async (result6) => {
       if (result6 && typeof result6 === 'object' && result6.action === 'back') {
         if (result6.currentStepData) {
           this.step6Data = result6.currentStepData;
@@ -905,7 +994,8 @@ export class CasesPageComponent implements OnDestroy {
   }
 
   async openStep7Edit() {
-    const { RutaDeAtencionComponent } = await import('../../ui/case-form/steps/ruta-de-atencion.component');
+    const { RutaDeAtencionComponent } =
+      await import('../../ui/case-form/steps/ruta-de-atencion.component');
     const dialogRef7 = this.dialog.open(RutaDeAtencionComponent, {
       width: '60%',
       maxWidth: '2000px',
@@ -914,11 +1004,11 @@ export class CasesPageComponent implements OnDestroy {
         currentStep: 7,
         totalSteps: 7,
         previousStepData: this.step6Data,
-        data: this.step7Data
-      }
+        data: this.step7Data,
+      },
     });
 
-    dialogRef7.afterClosed().subscribe(async result7 => {
+    dialogRef7.afterClosed().subscribe(async (result7) => {
       if (result7 && typeof result7 === 'object' && result7.action === 'back') {
         if (result7.currentStepData) {
           this.step7Data = result7.currentStepData;
@@ -947,21 +1037,21 @@ export class CasesPageComponent implements OnDestroy {
       ...this.step4Data,
       ...this.step5Data,
       ...this.step6Data,
-      ...this.step7Data
+      ...this.step7Data,
     };
-    
+
     console.log('Caso actualizado como objeto plano:', flatData);
-    
+
     // Guardar los datos del caso actualizado usando el servicio
     this.caseFormService.saveCreatedCase(flatData);
-    
+
     // TODO: Enviar al backend para actualizar
     // Por ejemplo:
     // this.caseService.updateCase(flatData).subscribe(
     //   response => console.log('Caso actualizado:', response),
     //   error => console.error('Error:', error)
     // );
-    
+
     this.caseFormService.clearEditing();
   }
 }

@@ -3,6 +3,7 @@
      [class.closing]="isClosing">
   
   <div class="auth-alert" 
+       data-testid="auth-alert"
        [ngClass]="'auth-alert--' + type">
     
     <!-- Icono -->
@@ -17,7 +18,7 @@
     </div>
 
     <!-- Botón cerrar -->
-    <button mat-icon-button class="alert-close" (click)="close()">
+    <button mat-icon-button class="alert-close" data-testid="auth-alert-close" (click)="close()">
       <mat-icon>close</mat-icon>
     </button>
   </div>
