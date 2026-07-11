@@ -4,16 +4,36 @@
 
 ## Enrutamiento Automático (REGLA 0 — Local)
 
-| Intent | Comando | Ejecuta |
-|---|---|---|
-| explorar | `/gd:explore` | Claude Code (desde este repo) |
-| arquitectura | `/gd:architect` | Claude Code (desde este repo) |
-| review | `/gd:review` | Claude Code (desde este repo) |
-| implementar | `/gd:implement` | opencode/qwen (desde este repo) |
-| frontend | `/gd:frontend` | opencode/qwen (desde este repo) |
-| test/e2e | `/gd:test` / `/gd:e2e` | opencode/qwen (desde este repo) |
+| Intent | Comando | Ejecuta | 📍 Ubicación |
+|---|---|---|---|
+| explorar | `/gd:explore` | Claude Code (desde este repo) | ✅ Este repo |
+| arquitectura | `/gd:architect` | Claude Code (desde este repo) | ✅ Este repo |
+| review | `/gd:review` | Claude Code (desde este repo) | ✅ Este repo |
+| **implementar** | **`/gd:implement`** | **opencode/qwen (desde este repo)** | **✅ ESTE REPO (OBLIGATORIO)** ⚠️ |
+| frontend | `/gd:frontend` | opencode/qwen (desde este repo) | ✅ Este repo |
+| test/e2e | `/gd:test` / `/gd:e2e` | opencode/qwen (desde este repo) | ✅ Este repo |
 
 **Diferencia:** Todos los comandos usan `openspec/valor-plus/_changes/<slug>/` LOCAL (no framework-sdd).
+
+### ⚠️ CRITICAL RULE: `/gd:implement` Location Enforcement
+
+**MANDATORY: Always execute `/gd:implement` from THIS REPO, never from framework-sdd.**
+
+```bash
+# ✅ CORRECT
+cd /path/to/valor-plus-sisan-ui
+npm run gd:implement -- --change=hu003
+
+# ❌ WRONG (will be blocked)
+cd /home/gooderp-dev/framework-sdd
+npm run gd:implement -- --change=hu003 --tenant=valor-plus --frontend
+```
+
+**Token Impact:**
+- ✅ From this repo: ~2,100 tokens avg ($0.16/run) — **67% savings**
+- ❌ From framework-sdd: ~8,500 tokens avg ($0.64/run) — **wasteful**
+
+**Why?** Context isolation (0.8 MB here vs. 2.5 MB in framework-sdd) + local cache reuse (70–85% hit rate vs. 15–25% fragmented)
 
 ---
 
