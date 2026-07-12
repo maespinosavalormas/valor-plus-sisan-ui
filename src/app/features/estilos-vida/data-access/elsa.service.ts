@@ -7,6 +7,8 @@ import {
   ApiResponse,
   CreateELSAFormDto,
   ELSAFormResponse,
+  ElsaListQuery,
+  ElsaListResponse,
   PatientResponse,
 } from './elsa.contracts';
 
@@ -46,5 +48,23 @@ export class ElsaService {
   /** GET /estilos-vida/elsa/:id */
   getELSA(id: string): Observable<ApiResponse<ELSAFormResponse>> {
     return this.http.get<ApiResponse<ELSAFormResponse>>(`${this.apiUrl}/elsa/${id}`);
+  }
+
+  /** GET /estilos-vida/elsa — paginated list with filters & sorting (HU-003) */
+  listELSA(query: ElsaListQuery): Observable<ElsaListResponse> {
+    let params = new HttpParams()
+      .set('page', String(query.page))
+      .set('pageSize', String(query.pageSize));
+    if (query.patientId) params = params.set('patientId', query.patientId);
+    if (query.dateFrom) params = params.set('dateFrom', query.dateFrom);
+    if (query.dateTo) params = params.set('dateTo', query.dateTo);
+    if (query.riskAlim) params = params.set('riskAlim', query.riskAlim);
+    if (query.riskActividad) params = params.set('riskActividad', query.riskActividad);
+    if (query.riskAlcohol) params = params.set('riskAlcohol', query.riskAlcohol);
+    if (query.sortBy) params = params.set('sortBy', query.sortBy);
+    if (query.sortDir) params = params.set('sortDir', query.sortDir);
+    return this.http
+      .get<ElsaListResponse>(`${this.apiUrl}/elsa`, { params })
+      .pipe(timeout(10000));
   }
 }

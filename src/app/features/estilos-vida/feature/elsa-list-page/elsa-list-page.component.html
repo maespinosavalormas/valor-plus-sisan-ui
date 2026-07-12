@@ -1,0 +1,153 @@
+<section class="elsa-list-page" data-testid="elsa-list-page">
+  <header class="elsa-list-header">
+    <div>
+      <h1>Formularios ELSA</h1>
+      <p class="muted">Consulta de cuestionarios ELSA con filtros, orden y paginación.</p>
+    </div>
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="goToNew()"
+      data-testid="elsa-new-button"
+    >
+      Nuevo cuestionario ELSA
+    </button>
+  </header>
+
+  <form class="elsa-filters" data-testid="elsa-filters">
+    <mat-form-field appearance="outline">
+      <mat-label>Paciente (documento)</mat-label>
+      <input
+        matInput
+        [formControl]="patientIdCtrl"
+        data-testid="filter-patient"
+        placeholder="Cédula del paciente"
+      />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Riesgo alimentación</mat-label>
+      <mat-select [formControl]="riskAlimCtrl" data-testid="filter-risk-alim">
+        <mat-option value="">Todos</mat-option>
+        <mat-option *ngFor="let r of riskLevels" [value]="r">{{ r }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Riesgo actividad</mat-label>
+      <mat-select [formControl]="riskActividadCtrl" data-testid="filter-risk-actividad">
+        <mat-option value="">Todos</mat-option>
+        <mat-option *ngFor="let r of riskLevels" [value]="r">{{ r }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Riesgo alcohol</mat-label>
+      <mat-select [formControl]="riskAlcoholCtrl" data-testid="filter-risk-alcohol">
+        <mat-option value="">Todos</mat-option>
+        <mat-option *ngFor="let r of riskLevels" [value]="r">{{ r }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Desde</mat-label>
+      <input matInput type="date" [formControl]="dateFromCtrl" data-testid="filter-date-from" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Hasta</mat-label>
+      <input matInput type="date" [formControl]="dateToCtrl" data-testid="filter-date-to" />
+    </mat-form-field>
+  </form>
+
+  @if (facade.listLoading$ | async) {
+    <div class="elsa-state" data-testid="elsa-list-loading">
+      <mat-progress-spinner mode="indeterminate" diameter="48" />
+    </div>
+  } @else if (facade.listError$ | async; as error) {
+    <div class="elsa-state error" data-testid="elsa-list-error">
+      <p>{{ error }}</p>
+      <button mat-stroked-button color="warn" (click)="retry()" data-testid="elsa-list-retry">
+        Reintentar
+      </button>
+    </div>
+  } @else if ((facade.list$ | async)?.length) {
+    <table
+      mat-table
+      [dataSource]="(facade.list$ | async) ?? []"
+      matSort
+      (matSortChange)="onSort($event)"
+      class="elsa-table"
+      data-testid="elsa-table"
+    >
+      <ng-container matColumnDef="patientId">
+        <th mat-header-cell *matHeaderCellDef>Paciente</th>
+        <td mat-cell *matCellDef="let row">{{ row.patientId }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="evaluationDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha evaluación</th>
+        <td mat-cell *matCellDef="let row">{{ row.evaluationDate | date: 'short' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="riskNutrition">
+        <th mat-header-cell *matHeaderCellDef>Riesgo nutrición</th>
+        <td mat-cell *matCellDef="let row">{{ row.riskNutrition }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="riskPhysicalActivity">
+        <th mat-header-cell *matHeaderCellDef>Riesgo actividad</th>
+        <td mat-cell *matCellDef="let row">{{ row.riskPhysicalActivity }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="riskAlcohol">
+        <th mat-header-cell *matHeaderCellDef>Riesgo alcohol</th>
+        <td mat-cell *matCellDef="let row">{{ row.riskAlcohol }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="metsScore">
+        <th mat-header-cell *matHeaderCellDef>METs</th>
+        <td mat-cell *matCellDef="let row">{{ row.metsScore }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="nutritionScore">
+        <th mat-header-cell *matHeaderCellDef>Score nutrición</th>
+        <td mat-cell *matCellDef="let row">{{ row.nutritionScore }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="alcoholScore">
+        <th mat-header-cell *matHeaderCellDef>Score alcohol</th>
+        <td mat-cell *matCellDef="let row">{{ row.alcoholScore }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="createdAt">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Creado</th>
+        <td mat-cell *matCellDef="let row">{{ row.createdAt | date: 'short' }}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: displayedColumns"
+        class="elsa-row"
+        [attr.data-testid]="'elsa-row-' + row.id"
+        (click)="goToDetail(row.id)"
+      ></tr>
+    </table>
+
+    @if (facade.listMeta$ | async; as meta) {
+      <mat-paginator
+        [length]="meta.total"
+        [pageSize]="meta.pageSize"
+        [pageIndex]="meta.page - 1"
+        [pageSizeOptions]="[10, 20, 50, 100]"
+        (page)="onPage($event)"
+        data-testid="elsa-paginator"
+      />
+    }
+  } @else {
+    <div class="elsa-state empty" data-testid="elsa-list-empty">
+      <p>No se encontraron formularios ELSA con los filtros aplicados.</p>
+    </div>
+  }
+</section>

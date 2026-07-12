@@ -19,8 +19,8 @@ describe('ElsaFacade', () => {
 
   afterEach(() => jest.clearAllMocks());
 
-  it('expone 9 observables desde el store', () => {
-    expect(mockStore.select).toHaveBeenCalledTimes(9);
+  it('expone 14 observables desde el store', () => {
+    expect(mockStore.select).toHaveBeenCalledTimes(14);
   });
 
   it('buscarPaciente -> dispatch buscarPaciente', () => {

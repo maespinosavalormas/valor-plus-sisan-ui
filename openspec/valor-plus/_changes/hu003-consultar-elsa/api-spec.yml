@@ -1,0 +1,285 @@
+openapi: 3.0.0
+info:
+  title: SISAN ELSA Query API
+  version: 1.0.0
+  description: Query ELSA forms with pagination, filtering, and detail retrieval
+  contact:
+    name: SISAN Backend Team
+    email: backend@sisan.local
+
+servers:
+  - url: https://api.valor-plus.local/api
+    description: Production
+  - url: http://localhost:3000/api
+    description: Development
+
+paths:
+  /estilos-vida/elsa:
+    get:
+      summary: List ELSA forms with pagination and filters
+      operationId: listElsa
+      tags:
+        - Estilos de Vida
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+          description: Page number (1-based)
+        - name: pageSize
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+          description: Items per page
+        - name: patientId
+          in: query
+          schema:
+            type: string
+            format: uuid
+          description: Filter by patient ID
+        - name: dateFrom
+          in: query
+          schema:
+            type: string
+            format: date-time
+          description: Filter from evaluation date (ISO8601)
+        - name: dateTo
+          in: query
+          schema:
+            type: string
+            format: date-time
+          description: Filter to evaluation date (ISO8601)
+        - name: riskAlim
+          in: query
+          schema:
+            type: string
+            enum: [BAJO, MEDIO, ALTO]
+          description: Filter by nutrition risk level
+        - name: riskActividad
+          in: query
+          schema:
+            type: string
+            enum: [BAJO, MEDIO, ALTO]
+          description: Filter by physical activity risk level
+        - name: riskAlcohol
+          in: query
+          schema:
+            type: string
+            enum: [BAJO, MEDIO, ALTO]
+          description: Filter by alcohol risk level
+        - name: sortBy
+          in: query
+          schema:
+            type: string
+            enum: [EVALUATION_DATE, CREATED_AT]
+            default: CREATED_AT
+          description: Sort field
+        - name: sortDir
+          in: query
+          schema:
+            type: string
+            enum: [ASC, DESC]
+            default: DESC
+          description: Sort direction
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ElsaListResponse'
+        400:
+          description: Bad Request (invalid query params)
+        401:
+          description: Unauthorized (missing/invalid JWT)
+        403:
+          description: Forbidden (insufficient permissions)
+        500:
+          description: Internal Server Error
+
+  /estilos-vida/elsa/{id}:
+    get:
+      summary: Get ELSA form detail
+      operationId: getElsaDetail
+      tags:
+        - Estilos de Vida
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: ELSA form ID
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ElsaDetail'
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+        500:
+          description: Internal Server Error
+
+components:
+  schemas:
+    ElsaListItem:
+      type: object
+      required:
+        - id
+        - patientId
+        - evaluationDate
+        - riskNutrition
+        - riskPhysicalActivity
+        - riskAlcohol
+        - metsScore
+        - nutritionScore
+        - alcoholScore
+        - createdAt
+        - createdByUsername
+      properties:
+        id:
+          type: string
+          format: uuid
+        patientId:
+          type: string
+          description: Patient cedula/ID
+        evaluationDate:
+          type: string
+          format: date-time
+        riskNutrition:
+          type: string
+          enum: [BAJO, MEDIO, ALTO]
+        riskPhysicalActivity:
+          type: string
+          enum: [BAJO, MEDIO, ALTO]
+        riskAlcohol:
+          type: string
+          enum: [BAJO, MEDIO, ALTO]
+        metsScore:
+          type: number
+          format: decimal
+          example: 2.5
+        nutritionScore:
+          type: integer
+          example: 18
+        alcoholScore:
+          type: integer
+          example: 5
+        createdAt:
+          type: string
+          format: date-time
+        createdByUsername:
+          type: string
+          example: "clinician@org"
+
+    ElsaListResponse:
+      type: object
+      required:
+        - data
+        - meta
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ElsaListItem'
+        meta:
+          $ref: '#/components/schemas/PaginationMeta'
+
+    PaginationMeta:
+      type: object
+      required:
+        - page
+        - pageSize
+        - total
+        - totalPages
+      properties:
+        page:
+          type: integer
+          example: 1
+        pageSize:
+          type: integer
+          example: 20
+        total:
+          type: integer
+          example: 156
+        totalPages:
+          type: integer
+          example: 8
+
+    ElsaDetail:
+      type: object
+      required:
+        - id
+        - patientId
+        - evaluationDate
+        - nutritionProfile
+        - physicalActivityProfile
+        - alcoholProfile
+        - createdAt
+        - createdByUsername
+      properties:
+        id:
+          type: string
+          format: uuid
+        patientId:
+          type: string
+        evaluationDate:
+          type: string
+          format: date-time
+        nutritionProfile:
+          type: object
+          properties:
+            waterIntake:
+              type: integer
+            fiberIntake:
+              type: integer
+            processedFoodFreq:
+              type: string
+        physicalActivityProfile:
+          type: object
+          properties:
+            metsPerWeek:
+              type: number
+            activityType:
+              type: string
+        alcoholProfile:
+          type: object
+          properties:
+            unitsPerWeek:
+              type: integer
+            consumptionPattern:
+              type: string
+        createdAt:
+          type: string
+          format: date-time
+        createdByUsername:
+          type: string
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: >
+        JWT token with custom:tenant_id claim.
+        Roles required: GOBERNACION, MUNICIPIO, or AUDITOR
+
+tags:
+  - name: Estilos de Vida
+    description: ELSA Form Query endpoints

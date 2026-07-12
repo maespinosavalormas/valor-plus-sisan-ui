@@ -71,4 +71,25 @@ export class ElsaEffects {
       ),
     ),
   );
+
+  cargarListaELSA$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(fromActions.cargarListaELSA),
+      switchMap(({ query }) =>
+        this.service.listELSA(query).pipe(
+          map((response) => fromActions.cargarListaELSAExito({ response })),
+          catchError((err) =>
+            of(
+              fromActions.cargarListaELSAError({
+                error:
+                  err.status === 403
+                    ? 'No tiene permisos para consultar ELSA'
+                    : 'No se pudo cargar el listado de ELSA',
+              }),
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
 }

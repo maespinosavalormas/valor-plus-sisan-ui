@@ -3,6 +3,8 @@ import {
   PatientResponse,
   CreateELSAFormDto,
   ELSAFormResponse,
+  ElsaListQuery,
+  ElsaListResponse,
 } from './elsa.contracts';
 
 export const buscarPaciente = createAction(
@@ -48,6 +50,19 @@ export const cargarELSAExito = createAction(
 );
 export const cargarELSAError = createAction(
   '[ELSA] Cargar ELSA Error',
+  props<{ error: string }>(),
+);
+
+export const cargarListaELSA = createAction(
+  '[ELSA] Cargar Lista ELSA',
+  props<{ query: ElsaListQuery }>(),
+);
+export const cargarListaELSAExito = createAction(
+  '[ELSA] Cargar Lista ELSA Exito',
+  props<{ response: ElsaListResponse }>(),
+);
+export const cargarListaELSAError = createAction(
+  '[ELSA] Cargar Lista ELSA Error',
   props<{ error: string }>(),
 );
 

@@ -1,0 +1,143 @@
+<div class="modal-overlay" data-testid="inactivate-elsa-modal">
+  <div class="modal-content inactivate-theme">
+    <!-- Header -->
+    <div class="modal-header">
+      <h2 data-testid="modal-title">Inactivar Registro ELSA</h2>
+      <button
+        class="close-button"
+        (click)="onCancel()"
+        data-testid="modal-close-button"
+        aria-label="Cerrar"
+      >
+        ✕
+      </button>
+    </div>
+
+    <!-- Body -->
+    <div class="modal-body">
+      <!-- Summary Section -->
+      <div class="summary-section" data-testid="elsa-summary">
+        <h3>Resumen del Registro</h3>
+        <div class="summary-item">
+          <span class="label">ID ELSA:</span>
+          <span class="value" data-testid="elsa-id">{{ elsaId }}</span>
+        </div>
+        <div class="summary-item" *ngIf="elsaData?.evaluationDate">
+          <span class="label">Fecha de Evaluación:</span>
+          <span class="value" data-testid="elsa-eval-date">{{ elsaData.evaluationDate | date }}</span>
+        </div>
+      </div>
+
+      <!-- Inactivation Form -->
+      <form [formGroup]="inactivationForm" data-testid="inactivation-form">
+        <!-- Motivo -->
+        <div class="form-group">
+          <label for="motivo" data-testid="motivo-label">
+            Motivo de Inactivación *
+          </label>
+          <textarea
+            id="motivo"
+            formControlName="motivo_inactivacion"
+            class="form-control"
+            rows="4"
+            placeholder="Indique el motivo (mínimo 15 caracteres)"
+            data-testid="motivo-textarea"
+            [class.is-invalid]="motivoControl.invalid && motivoControl.touched"
+          ></textarea>
+
+          <div class="char-count" data-testid="char-count">
+            {{ charCount }} / {{ maxChars }}
+          </div>
+
+          <!-- Validation Errors -->
+          <div class="error-message" *ngIf="motivoControl.invalid && motivoControl.touched">
+            <span *ngIf="motivoControl.errors?.['required']" data-testid="motivo-required-error">
+              El motivo es obligatorio
+            </span>
+            <span
+              *ngIf="motivoControl.errors?.['minlength']"
+              data-testid="motivo-minlength-error"
+            >
+              Mínimo 15 caracteres (actualmente: {{ charCount }})
+            </span>
+            <span
+              *ngIf="motivoControl.errors?.['maxlength']"
+              data-testid="motivo-maxlength-error"
+            >
+              Máximo 250 caracteres
+            </span>
+          </div>
+        </div>
+
+        <!-- 2FA Token -->
+        <div class="form-group">
+          <label for="token" data-testid="token-label">
+            Token 2FA (6 dígitos) *
+          </label>
+          <input
+            id="token"
+            type="text"
+            formControlName="token_2fa"
+            class="form-control token-input"
+            inputmode="numeric"
+            maxlength="6"
+            placeholder="000000"
+            data-testid="token-input"
+            (input)="onTokenInput($event)"
+            (paste)="onTokenPaste($event)"
+            [class.is-invalid]="tokenControl.invalid && tokenControl.touched"
+          />
+
+          <!-- Validation Errors -->
+          <div class="error-message" *ngIf="tokenControl.invalid && tokenControl.touched">
+            <span *ngIf="tokenControl.errors?.['required']" data-testid="token-required-error">
+              Token obligatorio
+            </span>
+            <span *ngIf="tokenControl.errors?.['pattern']" data-testid="token-pattern-error">
+              Debe ser 6 dígitos (0-9)
+            </span>
+            <span *ngIf="tokenControl.errors?.['minlength']" data-testid="token-minlength-error">
+              Debe tener exactamente 6 dígitos
+            </span>
+          </div>
+        </div>
+      </form>
+
+      <!-- Warning -->
+      <div class="warning-box" data-testid="warning-box">
+        <strong>⚠️ Advertencia:</strong>
+        <p>Esta acción marca el registro como inactivo y no puede revertirse.</p>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="modal-footer">
+      <button
+        class="btn btn-secondary"
+        (click)="onCancel()"
+        data-testid="cancel-button"
+        [disabled]="isSubmitting"
+      >
+        Cancelar
+      </button>
+      <button
+        class="btn btn-danger"
+        (click)="onConfirm()"
+        data-testid="confirm-button"
+        [disabled]="isConfirmButtonDisabled"
+      >
+        <span *ngIf="!isSubmitting" data-testid="confirm-text">
+          🔒 Inactivar Registro
+        </span>
+        <span *ngIf="isSubmitting" data-testid="submitting-text">
+          Procesando...
+        </span>
+      </button>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" *ngIf="isSubmitting" data-testid="loading-overlay">
+      <div class="spinner" data-testid="spinner"></div>
+    </div>
+  </div>
+</div>

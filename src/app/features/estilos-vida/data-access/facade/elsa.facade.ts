@@ -7,6 +7,9 @@ import { ElsaState } from '../elsa.state';
 import {
   CreateELSAFormDto,
   ELSAFormResponse,
+  ElsaListItem,
+  ElsaListQuery,
+  PaginationMeta,
   PatientResponse,
 } from '../elsa.contracts';
 
@@ -23,6 +26,11 @@ export class ElsaFacade {
   searchError$: Observable<string | null> = this.store.select(fromSelectors.selectSearchError);
   createError$: Observable<string | null> = this.store.select(fromSelectors.selectCreateError);
   detailError$: Observable<string | null> = this.store.select(fromSelectors.selectDetailError);
+  list$: Observable<ElsaListItem[]> = this.store.select(fromSelectors.selectList);
+  listMeta$: Observable<PaginationMeta | null> = this.store.select(fromSelectors.selectListMeta);
+  listQuery$: Observable<ElsaListQuery> = this.store.select(fromSelectors.selectListQuery);
+  listLoading$: Observable<boolean> = this.store.select(fromSelectors.selectListLoading);
+  listError$: Observable<string | null> = this.store.select(fromSelectors.selectListError);
 
   constructor(private readonly store: Store<{ elsa: ElsaState }>) {}
 
@@ -43,6 +51,9 @@ export class ElsaFacade {
   }
   cargarELSA(id: string): void {
     this.store.dispatch(fromActions.cargarELSA({ id }));
+  }
+  cargarLista(query: ElsaListQuery): void {
+    this.store.dispatch(fromActions.cargarListaELSA({ query }));
   }
   limpiarEstado(): void {
     this.store.dispatch(fromActions.limpiarEstado());

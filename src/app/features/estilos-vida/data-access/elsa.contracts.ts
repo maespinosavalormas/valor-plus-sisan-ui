@@ -79,3 +79,48 @@ export interface ApiResponse<T> {
   message?: string;
   status: number;
 }
+
+// --- HU-003: Consultar ELSA (list + detail query) ---
+
+export type RiskLevel = 'BAJO' | 'MEDIO' | 'ALTO';
+export type ElsaSortBy = 'EVALUATION_DATE' | 'CREATED_AT';
+export type ElsaSortDir = 'ASC' | 'DESC';
+
+export interface ElsaListQuery {
+  page: number;
+  pageSize: number;
+  patientId?: string;
+  dateFrom?: string;
+  dateTo?: string;
+  riskAlim?: RiskLevel;
+  riskActividad?: RiskLevel;
+  riskAlcohol?: RiskLevel;
+  sortBy?: ElsaSortBy;
+  sortDir?: ElsaSortDir;
+}
+
+export interface ElsaListItem {
+  id: string;
+  patientId: string;
+  evaluationDate: string;
+  riskNutrition: RiskLevel;
+  riskPhysicalActivity: RiskLevel;
+  riskAlcohol: RiskLevel;
+  metsScore: number;
+  nutritionScore: number;
+  alcoholScore: number;
+  createdAt: string;
+  createdByUsername: string;
+}
+
+export interface PaginationMeta {
+  page: number;
+  pageSize: number;
+  total: number;
+  totalPages: number;
+}
+
+export interface ElsaListResponse {
+  data: ElsaListItem[];
+  meta: PaginationMeta;
+}

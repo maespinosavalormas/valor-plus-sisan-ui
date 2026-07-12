@@ -68,5 +68,24 @@ export const elsaReducer = createReducer(
     detailError: error,
   })),
 
+  // Cargar lista (HU-003)
+  on(fromActions.cargarListaELSA, (state, { query }) => ({
+    ...state,
+    listLoading: true,
+    listError: null,
+    listQuery: query,
+  })),
+  on(fromActions.cargarListaELSAExito, (state, { response }) => ({
+    ...state,
+    list: response.data,
+    listMeta: response.meta,
+    listLoading: false,
+  })),
+  on(fromActions.cargarListaELSAError, (state, { error }) => ({
+    ...state,
+    listLoading: false,
+    listError: error,
+  })),
+
   on(fromActions.limpiarEstado, () => initialState),
 );
