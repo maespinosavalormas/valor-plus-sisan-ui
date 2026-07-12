@@ -1,26 +1,29 @@
-import { Component, Input } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { Component, Input, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ExpedienteDetailDto } from '../../../models';
 
 @Component({
   selector: 'app-detalle-elsa',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule],
   template: `
     <form [formGroup]="formulario" class="detalle-form">
       <div class="field">
         <label>Tabaco Actual</label>
-        <input [formControl]="formulario.get('tabaco_actual')" disabled data-testid="field-tabaco_actual-readonly" />
+        <input formControlName="tabaco_actual" [disabled]="true" data-testid="field-tabaco_actual-readonly" />
       </div>
       <div class="field">
         <label>Porciones de Alimentos/Día</label>
-        <input [formControl]="formulario.get('alim_total_porciones_dia')" disabled data-testid="field-alim_total_porciones_dia-readonly" />
+        <input formControlName="alim_total_porciones_dia" [disabled]="true" data-testid="field-alim_total_porciones_dia-readonly" />
       </div>
       <div class="field">
         <label>METs Totales</label>
-        <input [formControl]="formulario.get('af_mets_totales')" disabled data-testid="field-af_mets_totales-readonly" />
+        <input formControlName="af_mets_totales" [disabled]="true" data-testid="field-af_mets_totales-readonly" />
       </div>
       <div class="field">
         <label>AUDIT-C Score</label>
-        <input [formControl]="formulario.get('audit_c_score')" disabled data-testid="field-audit_c_score-readonly" />
+        <input formControlName="audit_c_score" [disabled]="true" data-testid="field-audit_c_score-readonly" />
       </div>
       <div class="info-message">
         ✓ Este formulario es de lectura estricta. No se pueden realizar cambios desde esta vista.
@@ -53,8 +56,8 @@ import { ExpedienteDetailDto } from '../../../models';
     `,
   ],
 })
-export class DetalleElsaComponent {
-  @Input() expediente: ExpedienteDetailDto;
+export class DetalleElsaComponent implements OnInit {
+  @Input() expediente!: ExpedienteDetailDto;
   formulario: FormGroup;
 
   constructor(private fb: FormBuilder) {
@@ -67,8 +70,8 @@ export class DetalleElsaComponent {
   }
 
   ngOnInit(): void {
-    if (this.expediente?.formulario) {
-      this.formulario.patchValue(this.expediente.formulario);
+    if (this.expediente?.['formulario']) {
+      this.formulario.patchValue(this.expediente['formulario']);
     }
   }
 }

@@ -1,13 +1,34 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
+import { MatTabsModule } from '@angular/material/tabs';
 import { Observable, Subject } from 'rxjs';
 import { ExpedienteDetailDto, TrazabilidadResponseDto, ListaSeguimientosResponseDto } from '../../models';
 import { ExpedienteService } from '../../services/expediente.service';
+import { TrazabilidadComponent } from './tabs/trazabilidad.component';
+import { FormularioSeguimientoComponent } from '../formulario-seguimiento/formulario-seguimiento.component';
+import { DetalleElsaComponent } from './tabs/detalle-elsa.component';
+import { CalculosOmsComponent } from './tabs/calculos-oms.component';
+import { EvolucionSeguimientoComponent } from './tabs/evolucion-seguimiento.component';
 
 @Component({
   selector: 'app-expediente-elsa',
+  standalone: true,
+  imports: [
+    CommonModule,
+    MatTabsModule,
+    TrazabilidadComponent,
+    FormularioSeguimientoComponent,
+    DetalleElsaComponent,
+    CalculosOmsComponent,
+    EvolucionSeguimientoComponent,
+  ],
   templateUrl: './expediente-elsa.component.html',
-  styleUrls: ['./expediente-elsa.component.scss'],
+  styles: [`
+    .expediente-container {
+      padding: 20px;
+    }
+  `],
 })
 export class ExpedienteElsaComponent implements OnInit {
   elsa_id: string;

@@ -1,16 +1,19 @@
 import { Component, Input } from '@angular/core';
+import { CommonModule, DatePipe } from '@angular/common';
 import { TrazabilidadResponseDto } from '../../../models';
 
 @Component({
   selector: 'app-trazabilidad',
+  standalone: true,
+  imports: [CommonModule, DatePipe],
   template: `
     <div class="trazabilidad-container">
-      <div *ngIf="trazabilidad.mensaje_expediente_sin_cambios" class="no-changes-message">
-        {{ trazabilidad.mensaje_expediente_sin_cambios }}
+      <div *ngIf="trazabilidad['mensaje_expediente_sin_cambios']" class="no-changes-message">
+        {{ trazabilidad['mensaje_expediente_sin_cambios'] }}
       </div>
 
-      <div class="timeline" *ngIf="trazabilidad.timeline && trazabilidad.timeline.length > 0">
-        <div *ngFor="let item of trazabilidad.timeline; let i = index" class="timeline-item" [attr.data-testid]="'timeline-item-' + i">
+      <div class="timeline" *ngIf="trazabilidad['timeline'] && trazabilidad['timeline'].length > 0">
+        <div *ngFor="let item of trazabilidad['timeline']; let i = index" class="timeline-item" [attr.data-testid]="'timeline-item-' + i">
           <div class="timeline-date">
             {{ item.fecha_cambio | date: 'dd/MM/yyyy HH:mm' }}
           </div>
@@ -75,5 +78,5 @@ import { TrazabilidadResponseDto } from '../../../models';
   ],
 })
 export class TrazabilidadComponent {
-  @Input() trazabilidad: TrazabilidadResponseDto;
+  @Input() trazabilidad!: TrazabilidadResponseDto;
 }

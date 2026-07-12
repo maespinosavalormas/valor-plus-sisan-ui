@@ -1,8 +1,12 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { CommonModule, DatePipe } from '@angular/common';
 import { ListaSeguimientosResponseDto } from '../../../models';
+import { FormularioSeguimientoComponent } from '../../formulario-seguimiento/formulario-seguimiento.component';
 
 @Component({
   selector: 'app-evolucion-seguimiento',
+  standalone: true,
+  imports: [CommonModule, DatePipe, FormularioSeguimientoComponent],
   template: `
     <div class="evolucion-container">
       <div class="seguimientos-list">
@@ -126,7 +130,7 @@ import { ListaSeguimientosResponseDto } from '../../../models';
   ],
 })
 export class EvolucionSeguimientoComponent {
-  @Input() seguimientos: ListaSeguimientosResponseDto;
-  @Input() elsa_id: string;
+  @Input() seguimientos!: ListaSeguimientosResponseDto;
+  @Input() elsa_id!: string;
   @Output() onSeguimientoSaved = new EventEmitter<void>();
 }
