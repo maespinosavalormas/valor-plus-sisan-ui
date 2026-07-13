@@ -8,7 +8,7 @@
   </div>
 
   <div *ngIf="expediente && !loadingExpediente" class="expediente-content">
-    <h1>Expediente ELSA - {{ expediente.paciente.nombre }}</h1>
+    <h1>Expediente ELSA - {{ expediente['paciente']?.['nombre'] }}</h1>
 
     <mat-tab-group (selectedIndexChange)="onTabChange($event)">
       <!-- TAB 1: DETALLE -->
@@ -27,7 +27,7 @@
           <span data-testid="tab-calculos">Cálculos OMS</span>
         </ng-template>
         <div class="tab-content">
-          <app-calculos-oms [calculos]="expediente.calculos"></app-calculos-oms>
+          <app-calculos-oms *ngIf="expediente['calculos']" [calculos]="expediente['calculos']!"></app-calculos-oms>
         </div>
       </mat-tab>
 

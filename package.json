@@ -14,7 +14,16 @@
     "e2e:report": "playwright show-report",
     "e2e:tamizajes": "eval \"$(node ../../backend/sisan-backend/scripts/seed-e2e-tamizajes.mjs --shell)\" && npx playwright test e2e/tests/tamizajes --project=sisan --reporter=list",
     "e2e:tamizajes:seed": "node ../../backend/sisan-backend/scripts/seed-e2e-tamizajes.mjs --write-env",
-    "serve:ssr:sisan-app": "node dist/sisan-app/server/server.mjs"
+    "serve:ssr:sisan-app": "node dist/sisan-app/server/server.mjs",
+    "gd:explore": "node scripts/lib/gd-explore.mjs",
+    "gd:architect": "node scripts/lib/gd-architect.mjs",
+    "gd:implement": "node scripts/lib/gd-implement.mjs",
+    "gd:test": "node scripts/lib/gd-test.mjs",
+    "gd:verify": "node scripts/lib/gd-verify.mjs",
+    "gd:e2e": "node scripts/lib/gd-e2e.mjs",
+    "gd:frontend-e2e": "node scripts/lib/gd-frontend-e2e.mjs",
+    "gd:review": "node scripts/lib/gd-review.mjs",
+    "gd:bug": "node scripts/lib/gd-bug.mjs"
   },
   "prettier": {
     "printWidth": 100,

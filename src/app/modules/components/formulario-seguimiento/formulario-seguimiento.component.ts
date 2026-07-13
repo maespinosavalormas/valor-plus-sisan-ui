@@ -1,9 +1,12 @@
 import { Component, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ExpedienteService } from '../../services/expediente.service';
 
 @Component({
   selector: 'app-formulario-seguimiento',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule],
   template: `
     <form [formGroup]="formulario" (ngSubmit)="onGuardar()" class="formulario-seguimiento">
       <div class="form-group">
@@ -47,7 +50,7 @@ import { ExpedienteService } from '../../services/expediente.service';
           {{ archivoError }}
         </span>
         <span *ngIf="archivoSeleccionado" class="success-message">
-          ✓ {{ archivoSeleccionado.name }}
+          ✓ {{ archivoSeleccionado?.name }}
         </span>
       </div>
 
@@ -137,9 +140,9 @@ import { ExpedienteService } from '../../services/expediente.service';
   ],
 })
 export class FormularioSeguimientoComponent {
-  @Input() elsa_id: string;
+  @Input() elsa_id!: string;
   @Output() onSaved = new EventEmitter<void>();
-  @ViewChild('fileInput') fileInput: ElementRef<HTMLInputElement>;
+  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
   formulario: FormGroup;
   comentarioError: string | null = null;

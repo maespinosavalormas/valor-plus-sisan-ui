@@ -1,42 +1,45 @@
 import { Component, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { CalculosOMS } from '../../../models';
 
 @Component({
   selector: 'app-calculos-oms',
+  standalone: true,
+  imports: [CommonModule],
   template: `
     <div class="calculos-container" *ngIf="calculos">
-      <div class="irev-card" [ngClass]="'color-' + calculos.color">
-        <h2 data-testid="irev-value">{{ calculos.interpretacion }}</h2>
-        <div class="irev-score" [attr.data-testid]="'irev-color-' + calculos.color">
-          IREV = {{ calculos.irev }} / 4
+      <div class="irev-card" [ngClass]="'color-' + calculos['color']">
+        <h2 data-testid="irev-value">{{ calculos['interpretacion'] }}</h2>
+        <div class="irev-score" [attr.data-testid]="'irev-color-' + calculos['color']">
+          IREV = {{ calculos['irev'] }} / 4
         </div>
       </div>
 
       <div class="gauge-grid">
         <div class="gauge-card">
           <h3>METs Semanales</h3>
-          <div class="gauge-value">{{ calculos.mets_categoria }}</div>
-          <p>{{ calculos.af_mets_totales }} METs</p>
+          <div class="gauge-value">{{ calculos['mets_categoria'] }}</div>
+          <p>{{ calculos['af_mets_totales'] }} METs</p>
         </div>
         <div class="gauge-card">
           <h3>Porciones Diarias</h3>
-          <div class="gauge-value">{{ calculos.porciones_diarias_categoria }}</div>
-          <p>{{ calculos.alim_total_porciones_dia }} porciones</p>
+          <div class="gauge-value">{{ calculos['porciones_diarias_categoria'] }}</div>
+          <p>{{ calculos['alim_total_porciones_dia'] }} porciones</p>
         </div>
         <div class="gauge-card">
           <h3>AUDIT-C</h3>
-          <div class="gauge-value">{{ calculos.audit_c_interpretacion }}</div>
-          <p>Score: {{ calculos.audit_c_score }}</p>
+          <div class="gauge-value">{{ calculos['audit_c_interpretacion'] }}</div>
+          <p>Score: {{ calculos['audit_c_score'] }}</p>
         </div>
       </div>
 
       <div class="risk-factors">
         <h3>Factores de Riesgo Identificados:</h3>
         <ul>
-          <li *ngIf="calculos.factores_riesgo.tabaco">✓ Tabaco</li>
-          <li *ngIf="calculos.factores_riesgo.dieta">✓ Dieta Desbalanceada</li>
-          <li *ngIf="calculos.factores_riesgo.actividad">✓ Actividad Física Insuficiente</li>
-          <li *ngIf="calculos.factores_riesgo.alcohol">✓ Consumo Riesgoso de Alcohol</li>
+          <li *ngIf="calculos['factores_riesgo']?.['tabaco']">✓ Tabaco</li>
+          <li *ngIf="calculos['factores_riesgo']?.['dieta']">✓ Dieta Desbalanceada</li>
+          <li *ngIf="calculos['factores_riesgo']?.['actividad']">✓ Actividad Física Insuficiente</li>
+          <li *ngIf="calculos['factores_riesgo']?.['alcohol']">✓ Consumo Riesgoso de Alcohol</li>
         </ul>
       </div>
     </div>
@@ -106,5 +109,5 @@ import { CalculosOMS } from '../../../models';
   ],
 })
 export class CalculosOmsComponent {
-  @Input() calculos: CalculosOMS;
+  @Input() calculos!: CalculosOMS;
 }

@@ -1,0 +1,24 @@
+{
+  "enabled": true,
+  "tenant_id": "valor-plus",
+  "cache_dir": ".cache/claude-cache",
+  "ttl_seconds": 300,
+  "max_size_mb": 1024,
+  "strategies": [
+    {
+      "name": "spec_artifacts",
+      "pattern": "openspec/**/*.md",
+      "ttl_seconds": 600
+    },
+    {
+      "name": "code_context",
+      "pattern": "src/**/*.ts",
+      "ttl_seconds": 300
+    },
+    {
+      "name": "tests",
+      "pattern": "**/*.spec.ts",
+      "ttl_seconds": 300
+    }
+  ]
+}
