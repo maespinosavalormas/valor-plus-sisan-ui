@@ -4,17 +4,21 @@ import {
   FormGroup,
   FormControl,
   Validators,
+  ReactiveFormsModule,
 } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-inactivate-elsa-modal',
   templateUrl: './inactivate-elsa-modal.component.html',
   styleUrls: ['./inactivate-elsa-modal.component.scss'],
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, HttpClientModule],
 })
 export class InactivateElsaModalComponent implements OnInit {
-  @Input() elsaId: string;
+  @Input() elsaId!: string;
   @Input() elsaData: any;
   @Output() modalClosed = new EventEmitter<boolean>();
 
@@ -44,11 +48,12 @@ export class InactivateElsaModalComponent implements OnInit {
   }
 
   private setupFormListeners(): void {
-    this.inactivationForm
-      .get('motivo_inactivacion')
-      .valueChanges.subscribe((value) => {
+    const motivoControl = this.inactivationForm.get('motivo_inactivacion');
+    if (motivoControl) {
+      motivoControl.valueChanges.subscribe((value) => {
         this.charCount = value ? value.length : 0;
       });
+    }
   }
 
   onTokenInput(event: any): void {
@@ -62,7 +67,7 @@ export class InactivateElsaModalComponent implements OnInit {
 
   onTokenPaste(event: ClipboardEvent): void {
     event.preventDefault();
-    const pastedData = event.clipboardData.getData('text');
+    const pastedData = event.clipboardData?.getData('text') || '';
     // Clean up: remove spaces and non-digits
     const cleanedData = pastedData.replace(/\s/g, '').replace(/[^\d]/g, '');
     const limitedData = cleanedData.substring(0, 6);
@@ -82,10 +87,13 @@ export class InactivateElsaModalComponent implements OnInit {
     this.isSubmitting = true;
 
     try {
+      const motivoControl = this.inactivationForm.get('motivo_inactivacion');
+      const tokenControl = this.inactivationForm.get('token_2fa');
+
       const payload = {
         elsa_id: this.elsaId,
-        motivo_inactivacion: this.inactivationForm.get('motivo_inactivacion').value,
-        token_2fa: this.inactivationForm.get('token_2fa').value,
+        motivo_inactivacion: motivoControl?.value || '',
+        token_2fa: tokenControl?.value || '',
       };
 
       const response = await this.http
@@ -93,9 +101,9 @@ export class InactivateElsaModalComponent implements OnInit {
           `http://localhost:3000/api/elsa/${this.elsaId}/inactivate`,
           payload
         )
-        .toPromise();
+        .toPromise() as any;
 
-      if (response['success']) {
+      if (response?.success) {
         await Swal.fire({
           icon: 'success',
           title: 'Éxito',
