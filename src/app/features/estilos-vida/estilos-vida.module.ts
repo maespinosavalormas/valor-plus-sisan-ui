@@ -20,6 +20,11 @@ import { ElsaActividadFisicaSectionComponent } from './ui/elsa-actividad-fisica-
 import { ElsaTabacoSectionComponent } from './ui/elsa-tabaco-section.component';
 import { ElsaAlcoholSectionComponent } from './ui/elsa-alcohol-section.component';
 import { ElsaResumenComponent } from './ui/elsa-resumen.component';
+import { MnaExpedienteComponent } from './ui/expediente/mna-expediente.component';
+import { ExpedienteTab1Component } from './ui/expediente/tabs/expediente-tab1.component';
+import { DiagnosticoTabComponent } from './ui/expediente/tabs/diagnostico-tab.component';
+import { TrazabilidadTabComponent } from './ui/expediente/tabs/trazabilidad-tab.component';
+import { SeguimientoTabComponent } from './ui/expediente/tabs/seguimiento-tab.component';
 
 @NgModule({
   declarations: [],
@@ -43,6 +48,11 @@ import { ElsaResumenComponent } from './ui/elsa-resumen.component';
     ElsaTabacoSectionComponent,
     ElsaAlcoholSectionComponent,
     ElsaResumenComponent,
+    MnaExpedienteComponent,
+    ExpedienteTab1Component,
+    DiagnosticoTabComponent,
+    TrazabilidadTabComponent,
+    SeguimientoTabComponent,
   ],
 })
 export class EstilosVidaModule {}
