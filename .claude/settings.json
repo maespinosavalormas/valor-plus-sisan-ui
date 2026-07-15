@@ -1,0 +1,18 @@
+{
+  "project": "valor-plus-sisan-ui",
+  "tenant": "valor-plus",
+  "type": "frontend",
+  "framework": "angular",
+  "implementation": {
+    "enabled": true,
+    "auto_resolve_changes": true,
+    "change_base_dir": "../../openspec/valor-plus/_changes",
+    "workflow": "gd-implement-orchestrator"
+  },
+  "paths": {
+    "src": "src",
+    "test": "src",
+    "e2e": "e2e",
+    "openspec": "../../openspec/valor-plus/_changes"
+  }
+}

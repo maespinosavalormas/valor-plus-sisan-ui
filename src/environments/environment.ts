@@ -4,10 +4,11 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:3000/api/v1', // Your development API URL
+  apiUrl: 'http://localhost:3000/api/v1',
   appName: 'My Angular App (Development)',
   version: '0.0.1',
   enableDebug: true,
+  defaultTenantId: 'valor-plus',
 };
 
 /*

@@ -1,0 +1,5 @@
+{
+  "agentPath": ".claude/agents",
+  "description": "Agents symlinked from framework-sdd central repository",
+  "refreshNeeded": true
+}

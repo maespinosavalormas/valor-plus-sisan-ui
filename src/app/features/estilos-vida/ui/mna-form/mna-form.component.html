@@ -1,0 +1,167 @@
+<div class="mna-form-wrapper" data-testid="mna-form-enabled">
+  <div class="container-fluid">
+    <h1 class="mb-4">Formulario MNA (Mini Nutritional Assessment)</h1>
+
+    <form [formGroup]="form">
+      <!-- Sección 1: Cribaje (Screening) -->
+      <section class="mna-screening" data-testid="mna-screening-section">
+        <h2 class="section-title">Cribaje (Screening) - Preguntas A a F</h2>
+        <p class="text-muted">Suma máxima: 14 puntos</p>
+
+        <div *ngFor="let q of screeningQuestions" class="mna-question mb-4">
+          <label class="form-label fw-bold">{{ q.label }}</label>
+          <div class="mna-options">
+            <div *ngFor="let opt of q.options" class="form-check">
+              <input
+                type="radio"
+                class="form-check-input"
+                [id]="'mna-option-' + q.key + '-' + opt.value"
+                [formControl]="form.get('question' + q.key)"
+                [value]="opt.value"
+                [attr.data-testid]="'mna-option-' + q.key + '-' + opt.value"
+                (change)="touched = true"
+              />
+              <label class="form-check-label" [for]="'mna-option-' + q.key + '-' + opt.value">
+                {{ opt.label }} ({{ opt.value }})
+              </label>
+            </div>
+          </div>
+          <small
+            class="text-danger d-block"
+            *ngIf="form.get('question' + q.key).invalid && touched"
+            [attr.data-testid]="'mna-error-' + q.key"
+          >
+            Debe seleccionar una opción
+          </small>
+        </div>
+
+        <div class="alert alert-info mt-4">
+          <strong>Subtotal de Cribaje:</strong> {{ screeningScore$ | async }} / 14 puntos
+        </div>
+      </section>
+
+      <!-- Sección 2: Evaluación Global (Assessment) -->
+      <section
+        class="mna-assessment mt-5"
+        [class.hidden]="!(assessmentRequired$ | async)"
+        [@expandCollapse]
+        data-testid="mna-assessment-section"
+      >
+        <h2 class="section-title">
+          Evaluación Global (Preguntas G-R)
+          <span data-testid="mna-assessment-optional" *ngIf="!(assessmentRequired$ | async)" class="badge bg-info">
+            Opcional
+          </span>
+          <span *ngIf="assessmentRequired$ | async" class="badge bg-warning">
+            Obligatoria
+          </span>
+        </h2>
+
+        <div *ngIf="assessmentRequired$ | async" class="alert alert-warning">
+          <strong>⚠️ Paciente en riesgo</strong> - Debe completar esta sección ya que el puntaje de cribaje es ≤11.
+        </div>
+
+        <p class="text-muted">Suma máxima: 16 puntos</p>
+
+        <div *ngFor="let q of assessmentQuestions" class="mna-question mb-4">
+          <label class="form-label fw-bold">{{ q.label }}</label>
+          <div class="mna-options">
+            <div *ngFor="let opt of q.options" class="form-check">
+              <input
+                type="radio"
+                class="form-check-input"
+                [id]="'mna-option-' + q.key + '-' + opt.value"
+                [formControl]="form.get('question' + q.key)"
+                [value]="opt.value"
+                [required]="assessmentRequired$ | async"
+                [attr.data-testid]="'mna-option-' + q.key + '-' + opt.value"
+                (change)="touched = true"
+              />
+              <label class="form-check-label" [for]="'mna-option-' + q.key + '-' + opt.value">
+                {{ opt.label }} ({{ opt.value }})
+              </label>
+            </div>
+          </div>
+          <small
+            class="text-danger d-block"
+            *ngIf="form.get('question' + q.key).invalid && touched"
+            [attr.data-testid]="'mna-error-' + q.key"
+          >
+            {{ (assessmentRequired$ | async) ? 'Campo requerido' : 'Opcional' }}
+          </small>
+        </div>
+      </section>
+
+      <!-- Panel de Clasificación Semaforizada -->
+      <div class="classification-panel mt-5 p-4 rounded border">
+        <h3 class="mb-3">Clasificación Nutricional (OMS)</h3>
+
+        <div class="row align-items-center">
+          <div class="col-md-6">
+            <div
+              class="badge badge-lg"
+              [ngClass]="
+                (classification$ | async) === 'NORMAL'
+                  ? 'bg-success'
+                  : (classification$ | async) === 'RISK'
+                    ? 'bg-warning'
+                    : 'bg-danger'
+              "
+              [attr.data-testid]="'mna-badge-' + ((classification$ | async) | lowercase)"
+            >
+              {{
+                (classification$ | async) === 'NORMAL'
+                  ? '✓ Estado nutricional normal'
+                  : (classification$ | async) === 'RISK'
+                    ? '⚠ Riesgo de malnutrición'
+                    : '✗ Malnutrición'
+              }}
+            </div>
+          </div>
+          <div class="col-md-6 text-end">
+            <h4 [attr.data-testid]="'mna-classification-' + ((classification$ | async) | lowercase)">
+              Score Total: <strong>{{ scoreTotal$ | async | number: '1.2-2' }}</strong> / 30
+            </h4>
+          </div>
+        </div>
+      </div>
+
+      <!-- Botones de Acción -->
+      <div class="form-actions mt-5 d-flex gap-2">
+        <button
+          type="button"
+          (click)="onReset()"
+          class="btn btn-secondary"
+          data-testid="mna-btn-reset"
+        >
+          🔄 Limpiar
+        </button>
+        <button
+          type="submit"
+          (click)="onSave()"
+          [disabled]="saveDisabled || form.invalid"
+          class="btn btn-primary btn-lg"
+          data-testid="mna-btn-save"
+        >
+          {{ saveDisabled ? '⏳ Guardando...' : '💾 Guardar Tamizaje' }}
+        </button>
+      </div>
+
+      <!-- Mensajes de Error/Éxito -->
+      <div class="mt-4">
+        <div class="alert alert-danger" *ngIf="error$ | async" [attr.data-testid]="'mna-error-assessment-required'">
+          {{ error$ | async }}
+        </div>
+        <div class="alert alert-warning" *ngIf="timeoutError$ | async" [attr.data-testid]="'mna-timeout-error'">
+          {{ timeoutError$ | async }}
+        </div>
+        <div class="alert alert-success" *ngIf="successMessage$ | async">
+          ✓ {{ successMessage$ | async }}
+        </div>
+        <div class="alert alert-info" *ngIf="!(isOnline$ | async)">
+          📡 Sin conexión. Los datos se guardarán cuando recupere la conexión.
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
