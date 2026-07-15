@@ -1,5 +1,6 @@
 import { Component, Input, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
 import { CalculatedMetrics } from '../../../data-access/services/mna-expediente.service';
 
 declare const echarts: unknown;
@@ -7,69 +8,122 @@ declare const echarts: unknown;
 @Component({
   selector: 'app-diagnostico-tab',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatIconModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="tab2-container">
-      <h3>Métricas WHO - Diagnóstico</h3>
-      
-      <div class="gauges-grid">
-        <!-- Gauge Sarcopenia Risk -->
-        <div class="gauge-card" data-testid="gauge-sarcopenia-risk">
-          <h4>Riesgo de Sarcopenia (EWGSOP 2019)</h4>
-          <div #sarcopeniaGauge id="sarcopenia-gauge" class="chart-container"></div>
-          <p class="level-label" [class]="'level-' + this.metrics.riesgo_sarcopenia_color">
-            {{ this.metrics.riesgo_sarcopenia_calculado }}
-          </p>
+      <!-- Sección: Métricas WHO -->
+      <div class="info-section">
+        <div class="section-header">
+          <div class="section-icon">
+            <mat-icon>analytics</mat-icon>
+          </div>
+          <div class="section-title">
+            <h4>Métricas WHO - Diagnóstico</h4>
+          </div>
         </div>
+        <div class="section-content">
+          <div class="gauges-grid">
+            <!-- Gauge Sarcopenia Risk -->
+            <div class="gauge-card" data-testid="gauge-sarcopenia-risk">
+              <h4>Riesgo de Sarcopenia (EWGSOP 2019)</h4>
+              <div #sarcopeniaGauge id="sarcopenia-gauge" class="chart-container"></div>
+              <p class="level-label" [class]="'level-' + this.metrics.riesgo_sarcopenia_color">
+                {{ this.metrics.riesgo_sarcopenia_calculado }}
+              </p>
+            </div>
 
-        <!-- Gauge ICDI -->
-        <div class="gauge-card" data-testid="gauge-icdi-ingesta">
-          <h4>Diversidad Dietética (ICDI - OMS 2021)</h4>
-          <div #icdiGauge id="icdi-gauge" class="chart-container"></div>
-          <p class="level-label" [class]="'level-' + this.metrics.clasificacion_ingesta_color">
-            {{ this.metrics.clasificacion_ingesta }} ({{ this.metrics.porcentaje_ingesta_icdi }}%)
-          </p>
+            <!-- Gauge ICDI -->
+            <div class="gauge-card" data-testid="gauge-icdi-ingesta">
+              <h4>Diversidad Dietética (ICDI - OMS 2021)</h4>
+              <div #icdiGauge id="icdi-gauge" class="chart-container"></div>
+              <p class="level-label" [class]="'level-' + this.metrics.clasificacion_ingesta_color">
+                {{ this.metrics.clasificacion_ingesta }} ({{ this.metrics.porcentaje_ingesta_icdi }}%)
+              </p>
+            </div>
+          </div>
+
+          <div class="metrics-info">
+            <p><strong>EWGSOP 2019:</strong> Evaluación de riesgo de pérdida muscular basada en movilidad, perímetros y pérdida de peso.</p>
+            <p><strong>OMS DDS 2021:</strong> Índice de diversidad dietética basado en 9 grupos de alimentos.</p>
+          </div>
         </div>
-      </div>
-
-      <div class="metrics-info">
-        <p><strong>EWGSOP 2019:</strong> Evaluación de riesgo de pérdida muscular basada en movilidad, perímetros y pérdida de peso.</p>
-        <p><strong>OMS DDS 2021:</strong> Índice de diversidad dietética basado en 9 grupos de alimentos.</p>
       </div>
     </div>
   `,
   styles: [`
     .tab2-container {
-      padding: 0.5rem;
+      padding: 0;
     }
 
-    h3 {
-      color: #333;
-      border-bottom: 2px solid #1976d2;
-      padding-bottom: 0.5rem;
-      margin-bottom: 1.5rem;
+    .info-section {
+      margin-bottom: 20px;
+
+      .section-header {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 0 10px 12px;
+        background-color: var(--white);
+        border-radius: 8px 8px 0 0;
+        border-bottom: 1px solid var(--gray-primary);
+
+        .section-icon {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          background-color: var(--blue-primary);
+          flex-shrink: 0;
+
+          mat-icon {
+            font-size: 24px;
+            color: var(--white);
+          }
+        }
+
+        .section-title {
+          flex: 1;
+
+          h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--strong-blue-primary);
+            line-height: 1.3;
+            margin: 0;
+          }
+        }
+      }
+
+      .section-content {
+        padding: 16px 20px;
+        background-color: var(--white);
+        border-radius: 0 0 8px 8px;
+      }
     }
 
     .gauges-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 1.5rem;
+      gap: 24px;
+      margin-bottom: 24px;
     }
 
     .gauge-card {
-      background: #fff;
-      border: 1px solid #e0e0e0;
+      background: var(--white);
+      border: 1px solid var(--gray-secondary);
       border-radius: 8px;
-      padding: 1rem;
+      padding: 16px;
       text-align: center;
-    }
 
-    .gauge-card h4 {
-      margin: 0 0 1rem 0;
-      color: #555;
-      font-size: 0.95rem;
+      h4 {
+        margin: 0 0 16px 0;
+        color: var(--strong-gray-primary);
+        font-size: 14px;
+        font-weight: 500;
+      }
     }
 
     .chart-container {
@@ -78,10 +132,10 @@ declare const echarts: unknown;
     }
 
     .level-label {
-      margin-top: 1rem;
+      margin-top: 16px;
       font-weight: 600;
-      font-size: 1rem;
-      padding: 0.5rem;
+      font-size: 14px;
+      padding: 8px 12px;
       border-radius: 4px;
     }
 
@@ -106,20 +160,67 @@ declare const echarts: unknown;
     }
 
     .level-gris {
-      color: #757575;
-      background: #f5f5f5;
+      color: var(--strong-gray-primary);
+      background: var(--background-pages);
     }
 
     .metrics-info {
-      background: #f8f9fa;
-      padding: 1rem;
+      background: var(--background-pages);
+      padding: 16px;
       border-radius: 6px;
-      font-size: 0.85rem;
-      color: #666;
+      font-size: 13px;
+      color: var(--strong-gray-primary);
+
+      p {
+        margin: 6px 0;
+      }
     }
 
-    .metrics-info p {
-      margin: 0.25rem 0;
+    @media (max-width: 768px) {
+      .info-section {
+        .section-header {
+          padding: 0 8px 10px;
+
+          .section-icon {
+            width: 36px;
+            height: 36px;
+
+            mat-icon {
+              font-size: 20px;
+            }
+          }
+
+          .section-title h4 {
+            font-size: 14px;
+          }
+        }
+
+        .section-content {
+          padding: 12px 16px;
+        }
+      }
+
+      .gauges-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      .gauge-card {
+        padding: 12px;
+
+        h4 {
+          font-size: 13px;
+        }
+      }
+
+      .chart-container {
+        height: 200px;
+      }
+
+      .metrics-info {
+        padding: 12px;
+        font-size: 12px;
+      }
     }
   `],
 })
